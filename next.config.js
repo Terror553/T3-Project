@@ -5,6 +5,10 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  allowedDevOrigins: ["http://localhost:3000", "localhost", "192.168.178.117"],
+  output: "standalone",
+  distDir: "build",
+};
 
 export default config;
