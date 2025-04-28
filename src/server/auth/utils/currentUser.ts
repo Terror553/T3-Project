@@ -14,8 +14,7 @@ export type fullUser = {
     gradient: number;
     start: string | null;
     end: string | null;
-  } | null;
-} & {
+  };
   id: number;
   username: string;
   email: string;
@@ -39,8 +38,11 @@ export async function getCurrentUser() {
   }
 
   const fullUser = await getUserFromDb(user.id);
+
   // This should never happen
   if (fullUser == null) return null;
+  if (!fullUser.groups) return null;
+
   return fullUser;
 }
 

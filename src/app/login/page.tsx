@@ -12,8 +12,7 @@ export default function LoginPage() {
               <div>
                 <div className="separator">Noch nicht registriert?</div>
                 <a href="/register" className="btn btn-success btn-block">
-                  {" "}
-                  Regestrieren{" "}
+                  Regestrieren
                 </a>
               </div>
             </div>

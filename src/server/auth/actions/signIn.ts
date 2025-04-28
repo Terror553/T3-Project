@@ -33,5 +33,5 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 
   await createUserSession(user, await cookies());
 
-  redirect("/");
+  redirect(`/profile/${user.id}`);
 }

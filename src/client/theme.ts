@@ -32,11 +32,11 @@ export function useTheme() {
   }
 
   function copy(elementSelector: string) {
-    let element = document.querySelector(elementSelector);
-    let temp = document.createElement("input");
+    const element = document.querySelector(elementSelector);
+    const temp = document.createElement("input");
     document.body.append(temp);
     if (!element?.textContent) return;
-    temp.value = element?.textContent;
+    temp.value = element.textContent;
     temp.select();
     document.execCommand("copy");
     temp.remove();

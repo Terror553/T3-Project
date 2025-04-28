@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { db } from "~/server/db";
-import { getForum } from "~/server/forum/forum";
+import { getCategories } from "~/server/forum/forum";
+import type { ForumCategory } from "~/server/types/forum";
 
 export async function GET() {
   try {
-    const forum = await getForum();
+    const forum: ForumCategory[] = await getCategories();
     return NextResponse.json(forum, { status: 200 });
   } catch (error) {
     console.error("Error fetching forum:", error);

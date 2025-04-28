@@ -39,7 +39,8 @@ export const formatDate = (
   try {
     date = new Date(date);
     if (!(date instanceof Date) || isNaN(date.getTime())) {
-      throw new Error("Invalid Date object provided: " + date);
+      console.error("Invalid Date object provided:", date);
+      return "Invalid Date";
     }
 
     if (!relative) {

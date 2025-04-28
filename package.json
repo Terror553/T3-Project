@@ -23,11 +23,16 @@
   "dependencies": {
     "@prisma/client": "^6.5.0",
     "@t3-oss/env-nextjs": "^0.12.0",
+    "@tinymce/tinymce-react": "^6.1.0",
+    "@types/express": "^5.0.1",
+    "express": "^5.1.0",
     "iron-session": "^8.0.4",
-    "next": "^15.2.3",
+    "next": "^15.3.1",
+    "path-to-regexp": "^8.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",
+    "tinymce": "^7.8.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

@@ -7,6 +7,7 @@ import { signUpSchema } from "../authSchemas";
 import { createUserSession } from "../session";
 import { generateSalt, hashPassword } from "../utils/passwordHasher";
 import { db } from "~/server/db";
+import { getDefaultRole } from "../utils/defaultRole";
 
 export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
   const { success, data } = signUpSchema.safeParse(unsafeData);
@@ -28,6 +29,7 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
   try {
     const salt = generateSalt();
     const hashedPassword = await hashPassword(data.password, salt);
+    const defaultRole = await getDefaultRole();
 
     const user = await db.forum_user.create({
       data: {
@@ -37,6 +39,7 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
         salt,
         createdAt: new Date(),
         updatedAt: new Date(),
+        roleId: defaultRole.id,
       },
     });
 

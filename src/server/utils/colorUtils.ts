@@ -56,10 +56,10 @@ function isMinecraftColorCode(input: string): boolean {
 }
 
 export function replaceColor(colorCode: {
-  color: string;
-  gradient: boolean | null;
-  start: string | null;
-  end: string | null;
+  color: string | undefined;
+  gradient: number | undefined;
+  start: string | undefined;
+  end: string | undefined;
   isBadge: boolean;
 }): {
   background?: string;
@@ -86,25 +86,34 @@ export function replaceColor(colorCode: {
     "&e": "#FFFF55", // Yellow
     "&f": "#FFFFFF", // White
   };
+
+  if (!colorCode.color) {
+    return { color: colorMap["&7"] ?? "#AAAAAA" };
+  }
+
   if (colorCode.gradient) {
     const start = colorCode.start;
     const end = colorCode.end;
     if (start && end) {
-      if (!colorCode.isBadge) {
+      if (colorCode.isBadge) {
         return {
           background: `-webkit-linear-gradient(0deg, #${start} 0%, #${end} 100%)`,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
+          color: "white",
         };
       }
       return {
-        background: `-webkit-linear-gradient(0deg, #${start} 0%, #${end} 100%);`,
+        background: `-webkit-linear-gradient(0deg, #${start} 0%, #${end} 100%)`,
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
       };
     }
   } else {
     if (isMinecraftColorCode(colorCode.color)) {
       if (colorCode.isBadge) {
-        return { backgroundColor: minecraftColorToRGB(colorCode.color) };
+        return {
+          backgroundColor: minecraftColorToRGB(colorCode.color),
+          color: "white",
+        };
       }
       return {
         color: minecraftColorToRGB(colorCode.color),

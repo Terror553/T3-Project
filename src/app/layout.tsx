@@ -11,6 +11,7 @@ import "~/styles/fonts/css.css";
 import "~/styles/cookies/cookieconsent.min.css";
 import "~/styles/theme/theme.css";
 import "~/styles/theme/theme-dark.css";
+import { Footer } from "~/components/footer";
 
 export default function RootLayout({
   children,
@@ -68,12 +69,13 @@ export default function RootLayout({
           <main className="main">
             <div className="container">{children}</div>
           </main>
-          <div className="loading-bar"></div>
+          <Footer />
           <div className="scroll-to-top" id="button-scrollToTop">
-            <a href="#" data-bs-toggle="tooltip" title="Scroll To Top">
+            <a href="#" data-popper-placement="top" title="Scroll To Top">
               <i className="fas fa-angle-up"></i>
             </a>
           </div>
+          <div className="loading-bar"></div>
         </div>
 
         <Script
