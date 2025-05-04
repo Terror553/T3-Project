@@ -45,6 +45,41 @@ export async function getUserFromSession(cookies: Pick<Cookies, "get">) {
   return getUserSessionById(sessionId);
 }
 
+export async function getUserFromSessionForNav(cookies: Pick<Cookies, "get">) {
+  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
+  if (sessionId == null) return null;
+  const user = await db.forum_user.findFirst({
+    where: {
+      userAuthToken: sessionId,
+    },
+    select: {
+      id: true,
+      username: true,
+      avatar_url: true,
+      banner_url: true,
+      signature: true,
+      createdAt: true,
+      updatedAt: true,
+      groups: {
+        select: {
+          id: true,
+          name: true,
+          color: true,
+          default: true,
+          team: true,
+          high_team: true,
+          priority: true,
+          gradient: true,
+          start: true,
+          end: true,
+        },
+      },
+    },
+  });
+
+  return user;
+}
+
 export async function updateUserSessionData(
   user: UserSession,
   cookies: Pick<Cookies, "get">,

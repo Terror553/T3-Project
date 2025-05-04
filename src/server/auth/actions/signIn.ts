@@ -32,6 +32,4 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
   if (!isCorrectPassword) return "Unable to log you in";
 
   await createUserSession(user, await cookies());
-
-  redirect(`/profile/${user.id}`);
 }

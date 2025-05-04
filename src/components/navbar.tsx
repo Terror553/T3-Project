@@ -1,51 +1,56 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import type { NavItem } from "~/server/types/navigation";
 import { replaceColor } from "~/server/utils/colorUtils";
+// Ensure this ForumUser type matches what getUserFromSession returns, including the 'groups' structure
 import type { ForumUser } from "~/server/types/forum";
 import { LogOutButton } from "./logOut";
+import { LoginModal } from "./loginModal";
 
-export const Navbar = () => {
-  const [user, setUser] = useState<ForumUser | null>(null);
+// 1. Accept initialUser prop
+export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
+  // 2. Initialize user state with the prop
+  const [user, setUser] = useState<ForumUser | null>(initialUser);
   const [navigation, setNav] = useState<NavItem[]>([]);
+  const userNavRef = useRef<HTMLUListElement>(null); // Ref für den User-Navigationsbereich
   const pathname = usePathname();
+  // Innerhalb der Navbar Komponente, vor den useEffects
 
   const isActive = (path: string) => {
-    // Home route matches only if the pathname is exactly "/"
     if (path === "/") {
       return pathname === "/" ? "active" : "";
     }
-    // Other routes match if the pathname includes the path
     return pathname?.startsWith(path) ? "active" : "";
   };
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [userRes, navRes] = await Promise.all([
-          fetch("/api/auth/user"),
-          fetch("/api/auth/navigation"),
-        ]);
+    setUser(initialUser);
+  }, [initialUser]);
 
-        if (!userRes.ok) throw new Error(`User API Error ${userRes.status}`);
+  // 3. Modify useEffect: Remove user fetching, keep navigation fetching
+  useEffect(() => {
+    async function fetchNavData() {
+      // Renamed function for clarity
+      try {
+        // Only fetch navigation data now
+        const navRes = await fetch("/api/auth/navigation");
+
         if (!navRes.ok) throw new Error(`Nav API Error ${navRes.status}`);
 
-        const userData = (await userRes.json()) as ForumUser;
         const navData = (await navRes.json()) as NavItem[];
 
-        setUser(userData);
+        // Only set navigation state
         setNav(navData ?? []);
       } catch (err) {
-        console.error("Error fetching user or nav:", err);
-        setNav([]);
+        console.error("Error fetching navigation:", err); // Updated error message
+        setNav([]); // Set empty array on error
       }
     }
 
-    // explicitly ignore the returned Promise
-    void fetchData();
+    void fetchNavData();
   }, []);
 
   return (
@@ -53,6 +58,7 @@ export const Navbar = () => {
       <nav className="navbar navbar-user navbar-expand">
         <div className="container">
           <div className="collapse navbar-collapse" id="nav-user">
+            {/* This conditional rendering now uses the server-provided initial state */}
             {user && (
               <ul className="navbar-nav">
                 <li className="nav-item">
@@ -75,11 +81,16 @@ export const Navbar = () => {
                 </li>
               </ul>
             )}
-            <ul className="navbar-nav ms-auto">
+            <ul className="navbar-nav ms-auto" ref={userNavRef}>
+              {/* This conditional rendering also uses the server-provided initial state */}
               {!user ? (
                 <>
                   <li className="nav-item">
-                    <Link href="/login" className="nav-link" target="_blank">
+                    <Link
+                      className="nav-link"
+                      href="#modal-login"
+                      data-bs-toggle="modal"
+                    >
                       <div className="nav-link-icon">
                         <i className="fas fa-key icon"></i>
                       </div>
@@ -101,7 +112,9 @@ export const Navbar = () => {
                   </li>
                 </>
               ) : (
+                // Logged-in user section
                 <>
+                  {/* Messages Dropdown */}
                   <li className="nav-item dropdown dropdown-hover">
                     <Link
                       href="/"
@@ -126,6 +139,7 @@ export const Navbar = () => {
                       </div>
                     </ul>
                   </li>
+                  {/* Alerts Dropdown */}
                   <li className="nav-item dropdown dropdown-hover">
                     <Link
                       href="/"
@@ -150,24 +164,27 @@ export const Navbar = () => {
                       </div>
                     </ul>
                   </li>
+                  {/* Account Dropdown */}
                   <li className="nav-item dropdown dropdown-hover">
                     <Link
-                      href="/"
+                      href="/" // Should this link somewhere specific?
                       className="nav-link dropdown-toggle no-caret"
                       id="button-account"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
                       <div className="nav-link-icon">
+                        {/* Ensure user.avatar_url is available */}
                         <img src={user.avatar_url} alt={user.username} />
                       </div>
                       <div
                         className="nav-link-text"
+                        // Ensure user.groups is available and has the expected structure
                         style={replaceColor({
-                          color: user.groups.color,
-                          gradient: user.groups.gradient,
-                          start: user.groups.start,
-                          end: user.groups.end,
+                          color: user.groups?.color ?? "#ffffff", // Add nullish coalescing for safety
+                          gradient: user.groups?.gradient ?? 0,
+                          start: user.groups?.start,
+                          end: user.groups?.end,
                           isBadge: false,
                         })}
                       >
@@ -179,10 +196,10 @@ export const Navbar = () => {
                         <span
                           className="dropdown-header"
                           style={replaceColor({
-                            color: user.groups.color,
-                            gradient: user.groups.gradient,
-                            start: user.groups.start,
-                            end: user.groups.end,
+                            color: user.groups?.color ?? "#ffffff",
+                            gradient: user.groups?.gradient ?? 0,
+                            start: user.groups?.start,
+                            end: user.groups?.end,
                             isBadge: false,
                           })}
                         >
@@ -191,8 +208,9 @@ export const Navbar = () => {
                       </li>
                       <div id="list-account">
                         <li>
+                          {/* Correctly format profile link */}
                           <Link
-                            href="/profile/{user.id}"
+                            href={`/profile/${user.id}`}
                             className="dropdown-item"
                           >
                             Profile
@@ -200,7 +218,7 @@ export const Navbar = () => {
                         </li>
                         <li>
                           <Link
-                            href="/profile/settings/overview"
+                            href="/profile/settings/overview" // Assuming this path exists
                             className="dropdown-item"
                           >
                             Einstellungen
@@ -222,6 +240,8 @@ export const Navbar = () => {
         </div>
       </nav>
 
+      {/* Rest of the Navbar component (second nav, oc-nav, header-logo etc.) */}
+      {/* ... */}
       <nav className="navbar navbar-default navbar-expand-lg" id="navbar">
         <div className="container">
           <div className="navbar-brand">
@@ -257,6 +277,7 @@ export const Navbar = () => {
       </nav>
 
       <nav className="oc-nav inverted" id="nav-oc">
+        {/* ... oc-nav content ... */}
         <div className="oc-nav-container">
           <div className="oc-nav-header">
             <span>Menu</span>
@@ -270,9 +291,9 @@ export const Navbar = () => {
                 <li className="oc-nav-item" key={nav.id}>
                   <Link
                     href={nav.full_link}
-                    target=""
+                    target="" // Consider if target should always be empty
                     className={`oc-nav-link ${isActive(nav.full_link)}`}
-                    key={nav.id}
+                    // Removed duplicate key={nav.id}
                   >
                     {nav.name}
                   </Link>
@@ -281,7 +302,7 @@ export const Navbar = () => {
               <hr className="oc-nav-divider" />
               <li className="oc-nav-item">
                 <Link
-                  href={"#"}
+                  href={"#"} // Link to actual store page?
                   className="oc-nav-link oc-nav-link-highlighted"
                 >
                   <i className="fas fa-shopping-basket fa-fw"></i>
@@ -293,6 +314,7 @@ export const Navbar = () => {
         </div>
       </nav>
       <div className="container">
+        {/* ... header-logo and header-status links ... */}
         <div className="header-logo animated">
           <Link href="/">
             <img
@@ -302,12 +324,13 @@ export const Navbar = () => {
           </Link>
         </div>
         <Link
-          href={"#"}
+          href={"#"} // Link somewhere useful?
           className="header-status header-status-left"
           id="status-minecraft"
           data-ip="MelonenMC.de"
-          data-cf-modified-=""
+          data-cf-modified-="" // Remove if not needed
         >
+          {/* ... status content ... */}
           <div className="header-status-icon">
             <i className="fas fa-cube"></i>
           </div>
@@ -321,9 +344,10 @@ export const Navbar = () => {
           </div>
         </Link>
         <Link
-          href="https://coldfiredzn.com/discord"
+          href="https://coldfiredzn.com/discord" // Verify link
           className="header-status header-status-right"
         >
+          {/* ... status content ... */}
           <div className="header-status-icon">
             <i className="fab fa-discord"></i>
           </div>
@@ -335,6 +359,8 @@ export const Navbar = () => {
           </div>
         </Link>
       </div>
+
+      <LoginModal />
     </header>
   );
 };

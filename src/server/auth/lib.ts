@@ -10,7 +10,7 @@ export interface SessionData {
   token?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  role?: {
+  group?: {
     id?: number;
     name?: string;
     color?: string;
