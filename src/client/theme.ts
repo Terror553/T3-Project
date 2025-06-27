@@ -42,5 +42,17 @@ export function useTheme() {
     temp.remove();
   }
 
-  return { showLoadingBar, hideLoadingBar, copy };
+  function isDarkMode() {
+    return document.documentElement.classList.contains("dark");
+  }
+
+  function toggleTheme() {
+    if (typeof window !== "undefined") {
+      document.documentElement.classList.toggle("dark");
+      const isDark = isDarkMode();
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    }
+  }
+
+  return { showLoadingBar, hideLoadingBar, copy, isDarkMode, toggleTheme };
 }

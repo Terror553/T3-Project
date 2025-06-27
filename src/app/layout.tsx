@@ -1,17 +1,18 @@
 import Script from "next/script";
 // Import server-side utilities
 import { cookies } from "next/headers";
-import {
-  getUserFromSession,
-  getUserFromSessionForNav,
-} from "~/server/auth/session"; // Adjust path if needed
+import { getUserFromSessionForNav } from "~/server/auth/session";
+import type { ForumUser } from "~/server/types/forum";
+
+// Import providers
+import { UserProvider } from "~/client/user";
+import { NotificationProvider } from "~/client/notification";
 
 // Import components
 import { Navbar } from "~/components/navbar";
-import ToastContainer from "~/components/toastContainer";
 import { Footer } from "~/components/footer";
 
-// Import styles (remain the same)
+// Import styles
 import "~/styles/fontawesome-free/all.min.css";
 import "~/styles/prism/prism_light_default.css";
 import "~/styles/bootstrap/bootstrap.min.css";
@@ -20,9 +21,8 @@ import "~/styles/fonts/css.css";
 import "~/styles/cookies/cookieconsent.min.css";
 import "~/styles/theme/theme.css";
 import "~/styles/theme/theme-dark.css";
-import type { ForumUser } from "~/server/types/forum";
+import ToastContainer from "~/components/toastContainer";
 
-// Make the function async to await user fetching
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -34,7 +34,6 @@ export default async function RootLayout({
   )) as ForumUser;
 
   return (
-    // Add suppressHydrationWarning if needed due to theme/class changes
     <html
       lang="en"
       data-theme="dark"
@@ -47,7 +46,7 @@ export default async function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
         />
-        <title>Home &bull; Waleed</title>
+        <title>Home &bull; MelonenMC</title>
         <style>
           {`
             :root {
@@ -60,27 +59,24 @@ export default async function RootLayout({
             }
           `}
         </style>
-        {/* Inline critical config script if needed before interactive scripts */}
         <Script
           id="config-inline"
-          strategy="beforeInteractive" // Load before any interactive scripts
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              var siteName = "Test";
+              var siteName = "MelonenMC";
               var siteURL = "/";
-              var fullSiteURL = "https://lithium.coldfiredzn.com/";
-              var page = "index"; // Note: This might become less reliable in Server Components
-              var route = "/"; // Note: This might become less reliable
+              var fullSiteURL = "https://melonenmc.de/";
+              var page = "index";
+              var route = "/";
               var avatarSource = "https://mc-heads.net/avatar/{identifier}/{size}";
-              var csrfToken = "84ac47220c003e91862f8d84831352fd"; // Consider managing CSRF differently
+              var csrfToken = "84ac47220c003e91862f8d84831352fd";
               var debugging = false;
-              // var loggedIn = true; // Remove - rely on actual user state
               var cookieNotice = false;
-              var loadingTime = "Page loaded in 0.062s"; // Remove - not accurate here
               var collapsibleForums = true;
               var prefetchForms = true;
               var stickyNavbar = false;
-              var darkMode = true; // Consider managing theme state differently
+              var darkMode = true;
               var darkModeToggle = true;
               var headerZoomOnScroll = false;
               var headerParticles = false;
@@ -106,49 +102,52 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className={`antialiased`}>
-        <div className="wrapper" id="wrapper">
-          <Navbar initialUser={sessionUser} />
-          <main className="main">
-            <div className="container">{children}</div>
-          </main>
-          <Footer />
-          <div className="scroll-to-top" id="button-scrollToTop">
-            <a href="#" data-popper-placement="top" title="Scroll To Top">
-              <i className="fas fa-angle-up"></i>
-            </a>
-          </div>
-          <div className="loading-bar"></div>
-        </div>
+      <body className="antialiased">
+        <NotificationProvider>
+          <UserProvider initialUser={sessionUser}>
+            <div className="wrapper" id="wrapper">
+              <Navbar initialUser={sessionUser} />
+              <main className="main">
+                <div className="container">{children}</div>
+              </main>
+              <Footer />
+              <div className="scroll-to-top" id="button-scrollToTop">
+                <a href="#" data-popper-placement="top" title="Scroll To Top">
+                  <i className="fas fa-angle-up"></i>
+                </a>
+              </div>
+              <div className="loading-bar"></div>
+            </div>
 
-        {/* Load external scripts using Next.js Script component */}
-        {/* jQuery is often needed first */}
-        <Script
-          src="/new/jquery/dist/jquery.min.js"
-          strategy="afterInteractive"
-        />
-        {/* Popper depends on jQuery potentially */}
-        <Script
-          src="/new/popper.js/2.9.1/umd/popper.min.js"
-          strategy="afterInteractive"
-        />
-        {/* Bootstrap JS depends on Popper */}
-        <Script
-          src="/new/bootstrap/js/bootstrap.min.js"
-          strategy="afterInteractive"
-        />
-        {/* Other scripts */}
-        <Script src="/new/toastr/toastr.min.js" strategy="afterInteractive" />
-        <Script
-          src="/new/cookies/assets/js/cookieconsent.min.js"
-          strategy="afterInteractive"
-        />
-        <Script
-          src="/new/theme/assets/js/theme.js"
-          strategy="afterInteractive"
-        />
+            <ToastContainer />
 
-        <ToastContainer />
+            {/* Load external scripts using Next.js Script component */}
+            <Script
+              src="/new/jquery/dist/jquery.min.js"
+              strategy="afterInteractive"
+            />
+            <Script
+              src="/new/popper.js/2.9.1/umd/popper.min.js"
+              strategy="afterInteractive"
+            />
+            <Script
+              src="/new/bootstrap/js/bootstrap.min.js"
+              strategy="afterInteractive"
+            />
+            <Script
+              src="/new/toastr/toastr.min.js"
+              strategy="afterInteractive"
+            />
+            <Script
+              src="/new/cookies/assets/js/cookieconsent.min.js"
+              strategy="afterInteractive"
+            />
+            <Script
+              src="/new/theme/assets/js/theme.js"
+              strategy="afterInteractive"
+            />
+          </UserProvider>
+        </NotificationProvider>
       </body>
     </html>
   );
