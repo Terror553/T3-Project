@@ -219,6 +219,12 @@ model forum_topics {
     @@index([authorId], map: "FK_c228733246cf2aee0240663b354")
 }
 
+model profile_banners {
+    id   Int    @id @default(autoincrement())
+    name String @unique(map: "name") @db.VarChar(255)
+    url  String @unique(map: "url") @db.VarChar(255)
+}
+
 model forum_user {
     id                                                                 Int                           @id @default(autoincrement())
     username                                                           String                        @db.Text

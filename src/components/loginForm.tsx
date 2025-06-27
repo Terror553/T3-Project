@@ -1,65 +1,68 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import type { z } from "zod";
+import { useFormContext } from "../lib/useFormManager";
+import { TextInput } from "./form/TextInput";
+import { loginSchema, type LoginFormValues } from "../lib/schemas/loginSchema";
 import { signIn } from "~/server/auth/actions/signIn";
-import type { signInSchema } from "~/server/auth/authSchemas";
+import { useState } from "react";
+import { FormProvider } from "./form/FormProvider";
+import { signInSchema } from "~/server/auth/authSchemas";
+
+const initialValues: LoginFormValues = {
+  email: "",
+  password: "",
+};
 
 export const LoginForm = () => {
-  const [error, setError] = useState<string>();
-  const [email, setEMail] = useState<string>();
-  const [password, setPassword] = useState<string>();
-  const form = useForm<z.infer<typeof signInSchema>>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+  const [error, setState] = useState<{ message: string; success: boolean }>();
 
-  async function onSubmit() {
-    if (typeof email === "undefined" || typeof password === "undefined") {
-      setError("eMail and Password must be present!");
+  async function onSubmit(data: LoginFormValues) {
+    const errorMsg = await signIn(data);
+    if (errorMsg) {
+      setState({ message: errorMsg, success: false });
     } else {
-      const error = await signIn({
-        email: email,
-        password,
+      setState({
+        message: "Du wurdest erfolgreich eingeloggt!",
+        success: true,
       });
-      setError(error.toString());
     }
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      {error && <p className="text-destructive">{error}</p>}
-      <div className="form-group">
-        <label className="form-label">eMail</label>
-        <input
-          className="form-control"
-          type="email"
-          name="email"
-          onChange={(e) => setEMail(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Passwort</label>
-        <input
-          className="form-control"
-          type="password"
-          name="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div className="form-group d-flex">
-        <a href="/reset-password" className="form-meta mt-0 ms-auto">
-          Passwort Vergessen?
-        </a>
-      </div>
-      <div className="form-actions">
+    <>
+      <FormProvider
+        schema={signInSchema}
+        initialValues={initialValues}
+        onSubmit={(data) => onSubmit(data)} // Log the data on submit
+      >
+        {error && (
+          <>
+            <div
+              className={`alert ${error.success ? "alert-success" : "alert-danger"}`}
+            >
+              {error.message}
+            </div>
+          </>
+        )}
+        <LoginFormInner />
+      </FormProvider>
+    </>
+  );
+};
+
+function LoginFormInner() {
+  const { handleSubmit } = useFormContext<LoginFormValues>();
+
+  return (
+    <>
+      <form onSubmit={handleSubmit} id="form-login">
+        <TextInput name="email" label="eMail" />
+        <TextInput name="password" label="Passwort" type="password" />
+        <hr />
         <button type="submit" className="btn btn-primary btn-block">
           Einloggen
         </button>
-      </div>
-    </form>
+      </form>
+    </>
   );
-};
+}

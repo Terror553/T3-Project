@@ -19,9 +19,11 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
     },
   });
 
-  if (user == null) return "Unable to log you in";
-  if (user.password == null) return "Unable to log you in";
-  if (user.salt == null) return "Unable to log you in";
+  if (user == null) return "Es wurde kein Benutzer mit dieser eMail gefunden";
+  if (user.password == null)
+    return "Es wurde kein Benutzer mit dieser eMail gefunden";
+  if (user.salt == null)
+    return "Es wurde kein Benutzer mit dieser eMail gefunden";
 
   const isCorrectPassword = await comparePasswords({
     hashedPassword: user.password,
@@ -29,7 +31,8 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
     salt: user.salt,
   });
 
-  if (!isCorrectPassword) return "Unable to log you in";
+  if (!isCorrectPassword)
+    return "Es wurde kein Benutzer mit dieser eMail gefunden";
 
   await createUserSession(user, await cookies());
 }

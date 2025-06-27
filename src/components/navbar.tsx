@@ -146,7 +146,6 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
                       className="nav-link dropdown-toggle no-caret"
                       id="button-alerts"
                       data-bs-toggle="dropdown"
-                      aria-expanded="false"
                     >
                       <div className="nav-link-icon">
                         <i className="fas fa-flag icon"></i>

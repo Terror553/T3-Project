@@ -58,8 +58,8 @@ function isMinecraftColorCode(input: string): boolean {
 export function replaceColor(colorCode: {
   color: string | undefined;
   gradient: number | undefined;
-  start: string | undefined;
-  end: string | undefined;
+  start: string | undefined | null;
+  end: string | undefined | null;
   isBadge: boolean;
 }): {
   background?: string;
