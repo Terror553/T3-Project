@@ -21,7 +21,7 @@ import "~/styles/fonts/css.css";
 import "~/styles/cookies/cookieconsent.min.css";
 import "~/styles/theme/theme.css";
 import "~/styles/theme/theme-dark.css";
-import ToastContainer from "~/components/toastContainer";
+import { ToastContainer } from "~/components/toastContainer";
 
 export default async function RootLayout({
   children,

@@ -1,63 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { type ReactNode } from "react";
+import { useNotification } from "~/client/notification";
 
-// Define Toast Types
-type ToastType = "success" | "error" | "warning" | "info";
+export function ToastContainer() {
+  const { notifications, removeNotification } = useNotification();
 
-type Toast = {
-  id: string;
-  message: string;
-  type: ToastType;
-};
-
-// Toast Component
-export default function ToastContainer() {
-  const [toasts, setToasts] = useState<Toast[]>([]);
-
-  const addToast = (message: string, type: ToastType) => {
-    const id = Date.now().toString();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => removeToast(id), 3000);
-  };
-
-  const removeToast = (id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  };
+  if (notifications.length === 0) {
+    return null;
+  }
 
   return (
-    <div id="toast-container" className="toast-top-right">
-      {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`toast ${
-            toast.type === "success"
-              ? "toast-success"
-              : toast.type === "error"
-                ? "toast toast-danger"
-                : toast.type === "warning"
-                  ? "toast toast-warning"
-                  : "toast toast-info"
-          }`}
-        >
-          <div className="toast-message">{toast.message}</div>
-          <button onClick={() => removeToast(toast.id)}>×</button>
-        </div>
-      ))}
-    </div>
+    <>
+      <div id="toast-container" className="toast-top-right">
+        {notifications.map((notification) => (
+          <>
+            <div
+              key={notification.id}
+              className={`toast toast-${notification.type === "error" ? "danger" : notification.type}`}
+              role="alert"
+              aria-live="assertive"
+              aria-atomic="true"
+            >
+              <button
+                type="button"
+                className="toast-close-button"
+                onClick={() => removeNotification(notification.id)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+              <div className="toast-progress" style={{ width: "50%" }}></div>
+              <div className="toast-message">{notification.message}</div>
+            </div>
+          </>
+        ))}
+      </div>
+    </>
   );
 }
 
-// Hook to trigger toasts
-export const useToast = () => {
-  const [, setToasts] = useState<Toast[]>([]);
-
-  return (message: string, type: ToastType) => {
-    const id = Date.now().toString();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(
-      () => setToasts((prev) => prev.filter((t) => t.id !== id)),
-      3000,
-    );
-  };
+type ToastProps = {
+  children: ReactNode;
+  type: "success" | "error" | "info" | "warning";
+  onClose?: () => void;
 };
+
+export function Toast({ children, type, onClose }: ToastProps) {
+  return (
+    <div id="toast-container" className="toast-top-right">
+      <div
+        className={`toast toast-${type === "error" ? "danger" : type}`}
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        style={{ display: "block" }}
+      >
+        {onClose && (
+          <button
+            type="button"
+            className="toast-close-button"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            ×
+          </button>
+        )}
+        <div className="toast-message">{children}</div>
+      </div>
+    </div>
+  );
+}
