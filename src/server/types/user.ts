@@ -1,54 +1,80 @@
-import type { RoleObj } from "./role";
+/**
+ * User type definitions based on Prisma schema
+ */
+import type { BaseModel, FullTimestampedModel, UuidModel } from "./base";
+import type { Group } from "./role";
 
-export type User = {
-  id: number;
+/**
+ * Type for MC server users
+ */
+export interface User extends BaseModel, UuidModel {
+  clan: string | null;
+  money: number;
+  firstJoined: Date;
+  lastJoined: Date;
+  playtime: bigint;
+  forumId: number | null;
+
+  // Relations
+  forumUser?: ForumUser | null;
+  userPermissions?: UserPermission[];
+}
+
+/**
+ * Type for forum users
+ */
+export interface ForumUser extends FullTimestampedModel {
   username: string;
   email: string;
   password: string;
   salt: string;
   userAuthToken: string | null;
-  avatar_url: string;
-  banner_url: string;
+  avatarUrl: string;
+  bannerUrl: string;
   signature: string;
-  createdAt: Date;
-  updatedAt: Date;
   roleId: number | null;
-  user_id: number | null;
-  groups: RoleObj | null;
-} | null;
+  userId: number | null;
 
-export interface ForumUser {
-  id: number;
-  username: string;
-  email: string;
-  password: string;
-  salt: string;
-  userAuthToken?: string | null;
-  avatar_url: string;
-  banner_url: string;
-  signature: string;
-  createdAt: Date;
-  updatedAt: Date;
-  roleId?: number | null;
-  user_id?: number | null;
+  // Relations
+  group?: Group | null;
+  user?: User | null;
 }
 
+/**
+ * Type for user permissions
+ */
+export interface UserPermission extends BaseModel {
+  uuid: string;
+  userId: number;
+  permission: string;
+  permissionActivated: boolean;
+
+  // Relations
+  user?: User;
+}
+
+/**
+ * Type for forum messages
+ */
 export interface ForumMessages {
   id: number;
   createdAt: Date;
   message: string;
   title: string;
   seen: number;
-  recieverId?: number | null;
+  receiverId?: number | null;
   senderId?: number | null;
 }
 
+/**
+ * Type for forum message replies
+ */
 export interface ForumMessageReplies {
   id: number;
   createdAt: Date;
   message: string;
   seen: number;
-  recieverId?: number | null;
+  receiverId?: number | null;
   senderId?: number | null;
-  messageIdId?: number | null;
+  messageId?: number | null;
 }

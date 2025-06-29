@@ -1,135 +1,249 @@
 /**
- * Type for user groups
+ * Forum-related type definitions based on Prisma schema
  */
-export interface UserGroup {
-  id: number;
-  uuid: string;
-  group_id: number;
-}
+import type { BaseModel, FullTimestampedModel } from "./base";
+import type { RoleObj } from "./role";
+import type { User } from "./user";
 
 /**
- * Type for user roles/groups
+ * Type for forum users
  */
-export interface UserRole {
-  id: number;
-  name: string;
-  color: string;
-  default: number;
-  team: number;
-  high_team: number;
-  priority: number;
-  gradient: number;
-  start?: string;
-  end?: string;
-  user_groups?: UserGroup[];
-}
-
-/**
- * Type for the `forum_user` model
- */
-export interface ForumUser {
-  id: number;
+export interface ForumUser extends FullTimestampedModel {
   username: string;
-  email?: string; // Optional as it may not be exposed in all contexts
-  avatar_url: string;
+  email: string;
+  password: string;
+  salt: string;
+  userAuthToken: string | null;
+  avatarUrl: string;
+  bannerUrl: string;
   signature: string;
-  createdAt: Date;
-  updatedAt: Date;
-  groups: UserRole;
-  password?: string; // Should only be available in specific server contexts
-  salt?: string; // Should only be available in specific server contexts
+  roleId: number | null;
+  userId: number | null;
+
+  // Optional relations
+  group?: RoleObj;
+  user?: User;
+  sentMessageReplies?: ForumMessageReply[];
+  receivedMessageReplies?: ForumMessageReply[];
+  receivedMessages?: ForumMessage[];
+  sentMessages?: ForumMessage[];
+  navigations?: ForumNavigation[];
+  reactionEmojis?: ForumReactionEmoji[];
+  reactions?: ForumReaction[];
+  topicFollows?: ForumTopicFollow[];
+  topicReactions?: ForumTopicReaction[];
+  topicReplies?: ForumTopicReply[];
+  topicReplyReactions?: ForumTopicReplyReaction[];
+  topics?: ForumTopic[];
+  profileWalls?: ProfileWall[];
+  userWalls?: ProfileWall[];
+  profileWallReplies?: ProfileWallReply[];
+  wikiCategories?: WikiCategory[];
+  wikiSubCategories?: WikiSubCategory[];
+}
+
+/**
+ * Type for forum verification
+ */
+export interface ForumVerification extends BaseModel {
+  forumId: number;
+  verifyCode: string;
+}
+
+/**
+ * Type for forum categories
+ */
+export interface ForumCategory extends FullTimestampedModel {
+  name: string;
+
+  // Relations
+  subcategories?: ForumSubcategory[];
+}
+
+/**
+ * Type for forum subcategories
+ */
+export interface ForumSubcategory extends FullTimestampedModel {
+  name: string;
+  description: string;
+  status: number;
+  categoryId: number | null;
+  slug: string;
+
+  // Relations
+  category?: ForumCategory | null;
+  topics?: ForumTopic[];
+
+  // Additional calculated fields
+  count?: number;
+  repliesCount?: number;
+  latestEntry?: ForumTopic | null;
+}
+
+/**
+ * Type for forum topics
+ */
+export interface ForumTopic extends FullTimestampedModel {
+  title: string;
+  content: string;
+  status: number;
+  locked: number;
+  pinned: number;
+  authorId: number | null;
+  subcategoryId: number | null;
+  slug: string | null;
+
+  // Relations
+  author?: ForumUser | null;
+  subcategory?: ForumSubcategory | null;
+  reactions?: ForumReaction[];
+  follows?: ForumTopicFollow[];
+  topicReactions?: ForumTopicReaction[];
+  replies?: ForumTopicReply[];
+
+  // Additional calculated fields
+  count?: number;
+  latestReply?: ForumTopicReply;
+}
+
+/**
+ * Type for forum topic follows
+ */
+export interface ForumTopicFollow extends BaseModel {
+  userId: number | null;
+  topicId: number | null;
+
+  // Relations
+  user?: ForumUser | null;
+  topic?: ForumTopic | null;
+}
+
+/**
+ * Type for forum topic replies
+ */
+export interface ForumTopicReply extends FullTimestampedModel {
+  content: string;
+  authorId: number | null;
+  topicId: number | null;
+
+  // Relations
+  author?: ForumUser | null;
+  topic?: ForumTopic | null;
+  replyReactions?: ForumTopicReplyReaction[];
 }
 
 /**
  * Type for forum reaction emojis
  */
-export interface ForumReactionEmoji {
-  id: number;
-  name: string;
+export interface ForumReactionEmoji extends BaseModel {
+  createdAt: Date;
   emoji: string;
   negative: number;
+  authorId: number | null;
+  name: string;
+
+  // Relations
+  author?: ForumUser | null;
+  reactions?: ForumReaction[];
+  topicReactions?: ForumTopicReaction[];
+  topicReplyReactions?: ForumTopicReplyReaction[];
 }
 
 /**
  * Type for forum reactions
  */
-export interface ForumReaction {
-  id: number;
-  authorId: number;
-  topicId: number;
-  forum_reaction_emojis: ForumReactionEmoji;
-}
-
-/**
- * Type for topic follows
- */
-export interface ForumTopicFollow {
-  id: number;
-  topicId: number;
-  userId: number;
-}
-
-/**
- * Type for the `forum_topic_replies` model
- */
-export interface ForumTopicReply {
-  id: number;
+export interface ForumReaction extends BaseModel {
   createdAt: Date;
-  content: string;
-  updatedAt: Date;
   authorId: number | null;
-  topicIdId: number | null;
-  forum_user: ForumUser;
+  reactionId: number | null;
+  topicId: number | null;
+
+  // Relations
+  author?: ForumUser | null;
+  topic?: ForumTopic | null;
+  emoji?: ForumReactionEmoji | null;
 }
 
 /**
- * Type for the `forum_topics` model
+ * Type for forum topic reactions
  */
-export interface ForumTopic {
-  id: number;
+export interface ForumTopicReaction extends BaseModel {
+  createdAt: Date;
+  authorId: number | null;
+  reactionId: number | null;
+  topicId: number | null;
+
+  // Relations
+  author?: ForumUser | null;
+  topic?: ForumTopic | null;
+  emoji?: ForumReactionEmoji | null;
+}
+
+/**
+ * Type for forum topic reply reactions
+ */
+export interface ForumTopicReplyReaction extends BaseModel {
+  createdAt: Date;
+  authorId: number | null;
+  reactionId: number | null;
+  replyId: number | null;
+
+  // Relations
+  author?: ForumUser | null;
+  reply?: ForumTopicReply | null;
+  emoji?: ForumReactionEmoji | null;
+}
+
+/**
+ * Type for forum messages
+ */
+export interface ForumMessage extends BaseModel {
+  createdAt: Date;
+  message: string;
   title: string;
-  content: string;
-  status: number;
+  seen: number;
+  receiverId: number | null;
+  senderId: number | null;
+
+  // Relations
+  receiver?: ForumUser | null;
+  sender?: ForumUser | null;
+  messageReplies?: ForumMessageReply[];
+}
+
+/**
+ * Type for forum message replies
+ */
+export interface ForumMessageReply extends BaseModel {
   createdAt: Date;
-  updatedAt: Date;
-  locked: number;
-  pinned: number;
+  message: string;
+  seen: number;
+  receiverId: number | null;
+  senderId: number | null;
+  messageId: number | null;
+
+  // Relations
+  receiver?: ForumUser | null;
+  sender?: ForumUser | null;
+  forumMessage?: ForumMessage | null;
+}
+
+/**
+ * Type for forum navigation items
+ */
+export interface ForumNavigation extends FullTimestampedModel {
+  name: string;
+  icon: string;
+  fullLink: string;
   authorId: number | null;
-  subcategoryId: number | null;
-  forum_topic_replies: ForumTopicReply[];
-  forum_user: ForumUser;
-  slug: string;
-  count?: number;
-  latestReply?: ForumTopicReply;
-  forum_topic_follow?: ForumTopicFollow[];
-  forum_reactions?: ForumReaction[];
+  teamLink: number;
+
+  // Relations
+  author?: ForumUser | null;
 }
 
-/**
- * Type for the `forum_subcategory` model
- */
-export interface ForumSubcategory {
-  id: number;
-  name: string;
-  description: string;
-  status: number;
-  createdAt: Date;
-  updatedAt: Date;
-  categoryId: number | null;
-  slug: string;
-  forum_topics: ForumTopic[];
-  count: number;
-  repliesCount: number;
-  latestEntry: ForumTopic | null;
-}
-
-/**
- * Type for the `forum_category` model
- */
-export interface ForumCategory {
-  id: number;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  forum_subcategories: ForumSubcategory[];
-}
+// Forward reference declarations for related types
+export interface ProfileWall extends BaseModel {}
+export interface ProfileWallReply extends BaseModel {}
+export interface WikiCategory extends BaseModel {}
+export interface WikiSubCategory extends BaseModel {}

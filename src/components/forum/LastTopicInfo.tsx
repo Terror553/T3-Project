@@ -10,7 +10,10 @@ type LastTopicInfoProps = {
   compact?: boolean;
 };
 
-export const LastTopicInfo = ({ topic, compact = false }: LastTopicInfoProps) => {
+export const LastTopicInfo = ({
+  topic,
+  compact = false,
+}: LastTopicInfoProps) => {
   if (!topic) {
     return compact ? (
       <span className="text-muted">No posts</span>
@@ -18,25 +21,22 @@ export const LastTopicInfo = ({ topic, compact = false }: LastTopicInfoProps) =>
       <>No posts.</>
     );
   }
-  
+
   if (compact) {
     return (
       <>
-        <Link href={`/forum/topic/${topic.slug}`}>
-          {topic.title}
-        </Link>
-        •
+        <Link href={`/forum/topic/${topic.slug}`}>{topic.title}</Link>•
         <Link
-          href={`/profile/${topic.forum_user.id}/`}
+          href={`/profile/${topic.author?.id}/`}
           style={replaceColor({
-            color: topic.forum_user.groups?.color,
-            gradient: topic.forum_user.groups?.gradient,
-            start: topic.forum_user.groups?.start,
-            end: topic.forum_user.groups?.end,
+            color: topic.author?.group?.color,
+            gradient: topic.author?.group?.gradient,
+            start: topic.author?.group?.start,
+            end: topic.author?.group?.end,
             isBadge: false,
           })}
         >
-          {topic.forum_user.username}
+          {topic.author?.username}
         </Link>
         •
         <span title={formatDate(topic.createdAt, true)}>
@@ -45,35 +45,33 @@ export const LastTopicInfo = ({ topic, compact = false }: LastTopicInfoProps) =>
       </>
     );
   }
-  
+
   return (
     <>
       <div className="forum-node-latest-icon">
-        <Link href={`/profile/${topic.forum_user.id}/`}>
+        <Link href={`/profile/${topic.author?.id}/`}>
           <img
-            src={topic.forum_user.avatar_url}
-            alt={topic.forum_user.username}
+            src={topic.author?.avatarUrl}
+            alt={topic.author?.username || ""}
           />
         </Link>
       </div>
       <div className="forum-node-latest-info">
         <div className="forum-node-latest-title">
-          <Link href={`/forum/topic/${topic.slug}`}>
-            {topic.title}
-          </Link>
+          <Link href={`/forum/topic/${topic.slug}`}>{topic.title}</Link>
         </div>
         <div className="forum-node-latest-meta">
-          <Link href={`/profile/${topic.forum_user.id}/`}>
+          <Link href={`/profile/${topic.author?.id}/`}>
             <span
               style={replaceColor({
-                color: topic.forum_user.groups?.color,
-                gradient: topic.forum_user.groups?.gradient,
-                start: topic.forum_user.groups?.start,
-                end: topic.forum_user.groups?.end,
+                color: topic.author?.group?.color,
+                gradient: topic.author?.group?.gradient,
+                start: topic.author?.group?.start,
+                end: topic.author?.group?.end,
                 isBadge: false,
               })}
             >
-              {topic.forum_user.username}
+              {topic.author?.username}
             </span>
           </Link>
           •

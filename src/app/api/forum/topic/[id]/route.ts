@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { getTopic } from "~/server/forum/forum";
+import type { ForumTopic } from "~/server/types/forum";
 
-export async function GET(request: Request) {
+export async function GET(
+  request: Request,
+): Promise<NextResponse<ForumTopic | { error: string }>> {
   try {
     const url = new URL(request.url);
     const id = url.pathname.split("/").pop();
@@ -17,7 +20,7 @@ export async function GET(request: Request) {
     return NextResponse.json(topic, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { error: "Internal Server Error: " + (error as string) },
+      { error: "Internal Server Error: " + (error as Error).message },
       { status: 500 },
     );
   }

@@ -1,6 +1,9 @@
 "use client";
 
-import { type ForumCategory } from "~/server/types/forum";
+import {
+  type ForumCategory,
+  type ForumSubcategory,
+} from "~/server/types/forum";
 import { ForumSubcategoryItem } from "./ForumSubcategoryItem";
 
 type ForumCategoryItemProps = {
@@ -24,21 +27,16 @@ export const ForumCategoryItem = ({ category }: ForumCategoryItemProps) => {
         </a>
         {category.name}
       </div>
-      <div
-        className="collapse show"
-        id={`collapse-forum-${category.id}`}
-      >
-        {category.forum_subcategories.length > 0 ? (
-          category.forum_subcategories.map((subcategory) => (
-            <ForumSubcategoryItem 
-              key={subcategory.id} 
-              subcategory={subcategory} 
+      <div className="collapse show" id={`collapse-forum-${category.id}`}>
+        {category.subcategories && category.subcategories.length > 0 ? (
+          category.subcategories.map((subcategory: ForumSubcategory) => (
+            <ForumSubcategoryItem
+              key={subcategory.id}
+              subcategory={subcategory}
             />
           ))
         ) : (
-          <p className="m-3">
-            Diese Kategorie hat noch keine Subkategorien!
-          </p>
+          <p className="m-3">Diese Kategorie hat noch keine Subkategorien!</p>
         )}
       </div>
     </div>
