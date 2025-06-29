@@ -1,46 +1,49 @@
 import { cookies } from "next/headers";
 import { getUserFromSession } from "../session";
 import { db } from "~/server/db";
-import type { ForumUser } from "~/server/types/forum";
-import type { Group } from "~/server/types/role";
 
-// Helper function to create a ForumUser object from database results
-const createForumUserFromDb = (dbUser: any): ForumUser | null => {
-  if (!dbUser) return null;
-
-  return {
-    id: dbUser.id,
-    username: dbUser.username,
-    email: dbUser.email,
-    password: dbUser.password,
-    salt: dbUser.salt,
-    userAuthToken: dbUser.userAuthToken,
-    avatarUrl: dbUser.avatar_url,
-    bannerUrl: dbUser.banner_url,
-    signature: dbUser.signature,
-    createdAt: dbUser.createdAt,
-    updatedAt: dbUser.updatedAt,
-    roleId: dbUser.roleId,
-    userId: dbUser.user_id,
-    group: dbUser.groups as Group,
-    // These are optional fields so we don't need to include them
+export type fullUser = {
+  groups: {
+    id: number;
+    default: number;
+    name: string;
+    color: string;
+    team: number;
+    high_team: number;
+    priority: number;
+    gradient: number;
+    start: string | null;
+    end: string | null;
   };
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  salt: string;
+  userAuthToken: string | null;
+  avatar_url: string;
+  banner_url: string;
+  signature: string;
+  createdAt: Date;
+  updatedAt: Date;
+  roleId: number | null;
+  user_id: number | null;
 };
 
-export async function getCurrentUser(): Promise<ForumUser | null> {
+export async function getCurrentUser() {
   const user = await getUserFromSession(await cookies());
 
   if (user == null) {
     return null;
   }
 
-  const dbUser = await getUserFromDb(user.id);
+  const fullUser = await getUserFromDb(user.id);
 
   // This should never happen
-  if (dbUser == null) return null;
-  if (!dbUser.groups) return null;
+  if (fullUser == null) return null;
+  if (!fullUser.groups) return null;
 
-  return createForumUserFromDb(dbUser);
+  return fullUser;
 }
 
 async function getUserFromDb(id: number) {

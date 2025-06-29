@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { getLatestTopic } from "~/server/forum/forum";
-import type { ForumTopic } from "~/server/types/forum";
 
-export async function GET(
-  request: Request,
-): Promise<NextResponse<ForumTopic | null | { error: string }>> {
+export async function GET(request: Request) {
   const url = new URL(request.url);
   const id = url.pathname.split("/").pop();
 

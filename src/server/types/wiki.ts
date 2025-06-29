@@ -1,43 +1,4 @@
-/**
- * Wiki-related type definitions based on Prisma schema
- */
-import type { FullTimestampedModel } from "./base";
-import type { ForumUser } from "./user";
-
-/**
- * Type for wiki categories
- */
-export interface WikiCategory extends FullTimestampedModel {
-  name: string;
-  icon: string;
-  dropdown: number;
-  content: string | null;
-  authorId: number | null;
-
-  // Relations
-  author?: ForumUser | null;
-  subcategories?: WikiSubCategory[];
-}
-
-/**
- * Type for wiki subcategories
- */
-export interface WikiSubCategory extends FullTimestampedModel {
-  name: string;
-  categoryId: number | null;
-  content: string;
-  authorId: number | null;
-  icon: string | null;
-
-  // Relations
-  author?: ForumUser | null;
-  category?: WikiCategory | null;
-}
-
-/**
- * Full wiki category with all related data
- */
-export interface WikiCategoryFull {
+export type WikiCategoryFull = {
   id: number;
   content: string;
   dropdown: number;
@@ -81,4 +42,4 @@ export interface WikiCategoryFull {
       };
     };
   }>;
-}
+};
