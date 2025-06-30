@@ -1,33 +1,38 @@
 "use client";
 import { useState, createContext, useContext } from "react";
-import { ZodSchema } from "zod";
+import type { ZodSchema } from "zod";
 import { sanitizeInput } from "./sanitize";
-import React from "react";
+import type { ReactNode } from "react";
 
-type FormContextType<T extends Record<string, any>> = ReturnType<
-  typeof useFormManager<T>
->;
+export interface FormContextValue<T extends Record<string, any>> {
+  values: T;
+  errors: Partial<Record<keyof T, string>>;
+  handleChange: (field: keyof T) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+  setValues: React.Dispatch<React.SetStateAction<T>>;
+  setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof T, string>>>>;
+}
 
-export const FormContext = React.createContext<
-  FormContextType<any> | undefined
->(undefined); // ✅ THIS is the real FormContext
+export const FormContext = createContext<FormContextValue<any> | undefined>(undefined);
 
 export function useFormContext<T extends Record<string, any>>() {
   const context = useContext(FormContext);
   if (!context)
     throw new Error("useFormContext must be used within a <FormProvider>");
-  return context as FormContextType<T>;
+  return context as FormContextValue<T>;
+}
+
+export interface FormManagerProps<T extends Record<string, any>> {
+  schema: ZodSchema<T>;
+  initialValues: T;
+  onSubmit: (data: T) => void;
 }
 
 export function useFormManager<T extends Record<string, any>>({
   schema,
   initialValues,
   onSubmit,
-}: {
-  schema: ZodSchema<T>;
-  initialValues: T;
-  onSubmit: (data: T) => void;
-}) {
+}: FormManagerProps<T>): FormContextValue<T> {
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
 

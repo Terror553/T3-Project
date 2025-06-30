@@ -1,16 +1,15 @@
 import { db } from "~/server/db";
 
 export async function getUser(id: number) {
-  const fullUser = await db.forum_user.findFirst({
+  const fullUser = await db.forumUser.findFirst({
     where: {
       id: id,
     },
     include: {
-      groups: true,
-      forum_topics: true,
-      profile_wall_replies: true,
-      profile_wall_profile_wall_profileIdIdToforum_user: true,
-      profile_wall_profile_wall_userIdToforum_user: true,
+      group: true,
+      topics: true,
+      profileWallReplies: true,
+      profileWalls: true,
     },
   });
 
@@ -20,7 +19,7 @@ export async function getUser(id: number) {
 
   // This should never happen
   if (fullUser == null) return null;
-  if (!fullUser.groups) return null;
+  if (!fullUser.group) return null;
 
   return fullUser;
 }

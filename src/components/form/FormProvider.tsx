@@ -1,20 +1,25 @@
 "use client";
 import type { ZodSchema } from "zod";
-import { FormContext, useFormManager } from "~/lib/useFormManager";
+import type { ReactNode } from "react";
+import { FormContext, useFormManager, type FormContextValue } from "~/lib/useFormManager";
+
+export interface FormProviderProps<T extends Record<string, any>> {
+  schema: ZodSchema<T>;
+  initialValues: T;
+  onSubmit: (data: T) => void;
+  children: ReactNode;
+}
 
 export function FormProvider<T extends Record<string, any>>({
   schema,
   initialValues,
   onSubmit,
   children,
-}: {
-  schema: ZodSchema<T>;
-  initialValues: T;
-  onSubmit: (data: T) => void;
-  children: React.ReactNode;
-}) {
-  const form = useFormManager({ schema, initialValues, onSubmit }); // This is NOT the context
+}: FormProviderProps<T>) {
+  const form = useFormManager<T>({ schema, initialValues, onSubmit });
   return (
-    <FormContext.Provider value={form as any}>{children}</FormContext.Provider>
+    <FormContext.Provider value={form as FormContextValue<T>}>
+      {children}
+    </FormContext.Provider>
   );
 }

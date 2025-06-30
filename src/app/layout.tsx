@@ -83,7 +83,7 @@ export default async function RootLayout({
               var headerParticlesColor = "#ffffff";
               var portalParticles = false;
               var portalParticlesColor = "#ffffff";
-              var chroma = false;
+              var chroma = true;
               var chromaSaturation = "50%";
               var chromaLightness = "50%";
               var chromaMultiplier = 0.5;
@@ -108,7 +108,10 @@ export default async function RootLayout({
             <div className="wrapper" id="wrapper">
               <Navbar initialUser={sessionUser} />
               <main className="main">
-                <div className="container">{children}</div>
+                <div className="container">
+                  {children}{" "}
+                  <button className="btn btn-primary">Test Button</button>
+                </div>
               </main>
               <Footer />
               <div className="scroll-to-top" id="button-scrollToTop">

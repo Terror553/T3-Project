@@ -4,8 +4,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/client/theme";
 import type { ForumSubcategory, ForumTopic } from "~/server/types/forum";
-import { replaceColor } from "~/server/utils/colorUtils";
 import { formatDate } from "~/server/utils/dateUtils";
+import { replaceColor } from "~/utils/styleUtils";
 
 export default function Subcategory() {
   const [loading, setLoading] = useState(true);

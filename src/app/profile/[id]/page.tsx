@@ -4,8 +4,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/client/theme";
 import { type fullUser } from "~/server/auth/utils/currentUser";
-import { replaceColor } from "~/server/utils/colorUtils";
 import { formatDate } from "~/server/utils/dateUtils";
+import { replaceColor } from "~/utils/styleUtils";
 
 const ProfilePage = () => {
   const params = useParams();
@@ -59,12 +59,12 @@ const ProfilePage = () => {
             <div
               className="profile-header-banner"
               style={{
-                background: `url('${user.banner_url}') no-repeat center center / cover`,
+                background: `url('${user.bannerUrl}') no-repeat center center / cover`,
               }}
             ></div>
             <div className="profile-header-info">
               <div className="profile-header-user-avatar">
-                <img src={user.avatar_url} alt={user.username} />
+                <img src={user.avatarUrl} alt={user.username} />
               </div>
               <div className="profile-header-user-content">
                 <div className="profile-header-user-name">
@@ -221,7 +221,7 @@ const ProfilePage = () => {
                               <div className="message-icon">
                                 <a href={`/profile/${currentUser.id}/`}>
                                   <img
-                                    src={currentUser.avatar_url}
+                                    src={currentUser.avatarUrl}
                                     alt={currentUser.username}
                                   />
                                 </a>

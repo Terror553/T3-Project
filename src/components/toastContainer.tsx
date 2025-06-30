@@ -14,26 +14,24 @@ export function ToastContainer() {
     <>
       <div id="toast-container" className="toast-top-right">
         {notifications.map((notification) => (
-          <>
-            <div
-              key={notification.id}
-              className={`toast toast-${notification.type === "error" ? "danger" : notification.type}`}
-              role="alert"
-              aria-live="assertive"
-              aria-atomic="true"
+          <div
+            key={notification.id}
+            className={`toast toast-${notification.type === "error" ? "danger" : notification.type}`}
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <button
+              type="button"
+              className="toast-close-button"
+              onClick={() => removeNotification(notification.id)}
+              aria-label="Close"
             >
-              <button
-                type="button"
-                className="toast-close-button"
-                onClick={() => removeNotification(notification.id)}
-                aria-label="Close"
-              >
-                ×
-              </button>
-              <div className="toast-progress" style={{ width: "50%" }}></div>
-              <div className="toast-message">{notification.message}</div>
-            </div>
-          </>
+              ×
+            </button>
+            <div className="toast-progress" style={{ width: "50%" }}></div>
+            <div className="toast-message">{notification.message}</div>
+          </div>
         ))}
       </div>
     </>

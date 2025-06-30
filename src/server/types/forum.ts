@@ -31,11 +31,23 @@ export interface ForumUser {
   id: number;
   username: string;
   email?: string; // Optional as it may not be exposed in all contexts
-  avatar_url: string;
+  avatarUrl: string;
+  bannerUrl: string;
   signature: string;
   createdAt: Date;
   updatedAt: Date;
-  groups: UserRole;
+  group: {
+    name: string;
+    default: number;
+    id: number;
+    color: string;
+    team: number;
+    highTeam: number;
+    priority: number;
+    gradient: number;
+    start: string | null;
+    end: string | null;
+  } | null;
   password?: string; // Should only be available in specific server contexts
   salt?: string; // Should only be available in specific server contexts
 }

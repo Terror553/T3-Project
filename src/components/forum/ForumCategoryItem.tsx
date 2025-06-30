@@ -28,8 +28,9 @@ export const ForumCategoryItem = ({ category }: ForumCategoryItemProps) => {
         {category.name}
       </div>
       <div className="collapse show" id={`collapse-forum-${category.id}`}>
-        {category.subcategories && category.subcategories.length > 0 ? (
-          category.subcategories.map((subcategory: ForumSubcategory) => (
+        {category.forum_subcategories &&
+        category.forum_subcategories.length > 0 ? (
+          category.forum_subcategories.map((subcategory: ForumSubcategory) => (
             <ForumSubcategoryItem
               key={subcategory.id}
               subcategory={subcategory}

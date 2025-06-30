@@ -21,13 +21,13 @@ export type fullUser = {
   password: string;
   salt: string;
   userAuthToken: string | null;
-  avatar_url: string;
-  banner_url: string;
+  avatarUrl: string;
+  bannerUrl: string;
   signature: string;
   createdAt: Date;
   updatedAt: Date;
   roleId: number | null;
-  user_id: number | null;
+  userId: number | null;
 };
 
 export async function getCurrentUser() {

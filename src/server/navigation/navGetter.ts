@@ -1,4 +1,5 @@
 import { db } from "../db";
+import type { NavigationProps } from "../types/navigation";
 
 export type nav = {
   id: number;
@@ -6,13 +7,14 @@ export type nav = {
   createdAt: Date;
   updatedAt: Date;
   icon: string;
-  full_link: string;
+  fullLink: string;
   authorId: number | null;
-  team_link: number;
+  teamLink: number;
 }[];
 
 export async function getNavigation() {
-  const navigation = await db.forum_navigation.findMany();
+  const navigation = await db.forumNavigation.findMany();
+  console.log("Navigation fetched:", navigation);
 
   if (!navigation || navigation.length == 0) {
     return [
@@ -22,9 +24,9 @@ export async function getNavigation() {
         updatedAt: new Date(),
         name: "Home",
         icon: "fa-home",
-        full_link: "/",
+        fullLink: "/",
         authorId: null,
-        team_link: 0,
+        teamLink: 0,
       },
     ];
   }

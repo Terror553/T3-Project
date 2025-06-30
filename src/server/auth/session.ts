@@ -48,26 +48,26 @@ export async function getUserFromSession(cookies: Pick<Cookies, "get">) {
 export async function getUserFromSessionForNav(cookies: Pick<Cookies, "get">) {
   const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
   if (sessionId == null) return null;
-  const user = await db.forum_user.findFirst({
+  const user = await db.forumUser.findFirst({
     where: {
       userAuthToken: sessionId,
     },
     select: {
       id: true,
       username: true,
-      avatar_url: true,
-      banner_url: true,
+      avatarUrl: true,
+      bannerUrl: true,
       signature: true,
       createdAt: true,
       updatedAt: true,
-      groups: {
+      group: {
         select: {
           id: true,
           name: true,
           color: true,
           default: true,
           team: true,
-          high_team: true,
+          highTeam: true,
           priority: true,
           gradient: true,
           start: true,
@@ -95,7 +95,7 @@ export async function createUserSession(
   cookies: Pick<Cookies, "set">,
 ) {
   const sessionId = crypto.randomBytes(512).toString("hex").normalize();
-  await db.forum_user.update({
+  await db.forumUser.update({
     where: {
       id: user.id,
     },
@@ -138,7 +138,7 @@ async function setCookie(sessionId: string, cookies: Pick<Cookies, "set">) {
 }
 
 async function getUserSessionById(sessionId: string) {
-  const rawUser = await db.forum_user.findFirst({
+  const rawUser = await db.forumUser.findFirst({
     where: {
       userAuthToken: sessionId,
     },

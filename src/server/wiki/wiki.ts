@@ -1,23 +1,23 @@
 import { db } from "../db";
 
 export async function getWikiCategories() {
-  const categories = await db.wiki_categories.findMany({
+  const categories = await db.wikiCategory.findMany({
     select: {
       id: true,
       content: true,
       dropdown: true,
-      forum_user: {
+      author: {
         select: {
-          avatar_url: true,
+          avatarUrl: true,
           username: true,
-          groups: {
+          group: {
             select: {
               color: true,
               name: true,
               id: true,
               gradient: true,
               team: true,
-              high_team: true,
+              highTeam: true,
               start: true,
               end: true,
             },
@@ -28,7 +28,7 @@ export async function getWikiCategories() {
       icon: true,
       updatedAt: true,
       name: true,
-      wiki_sub_categories: {
+      subcategories: {
         select: {
           content: true,
           id: true,
@@ -36,18 +36,18 @@ export async function getWikiCategories() {
           name: true,
           createdAt: true,
           updatedAt: true,
-          forum_user: {
+          author: {
             select: {
-              avatar_url: true,
+              avatarUrl: true,
               username: true,
-              groups: {
+              group: {
                 select: {
                   color: true,
                   name: true,
                   id: true,
                   gradient: true,
                   team: true,
-                  high_team: true,
+                  highTeam: true,
                   start: true,
                   end: true,
                 },

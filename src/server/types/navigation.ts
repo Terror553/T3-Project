@@ -6,9 +6,9 @@ export interface NavItem {
   updatedAt: Date;
   name: string;
   icon: string;
-  full_link: string;
+  fullLink: string;
   authorId: number | null;
-  team_link: number;
+  teamLink: number;
 }
 
 export interface NavigationProps {

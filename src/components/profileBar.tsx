@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getCurrentUser } from "~/server/auth/utils/currentUser";
-import { replaceColor } from "~/server/utils/colorUtils";
 import { LogOutButton } from "./logOut";
+import { replaceColor } from "~/utils/styleUtils";
 
 export const ProfileBar = async () => {
   const user = await getCurrentUser();

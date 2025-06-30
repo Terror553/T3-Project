@@ -9,8 +9,8 @@ import type {
   ForumTopicFollow,
   ForumUser,
 } from "~/server/types/forum";
-import { replaceColor } from "~/server/utils/colorUtils";
 import { formatDate } from "~/server/utils/dateUtils";
+import { replaceColor } from "~/utils/styleUtils";
 
 export default function Topic() {
   const [loading, setLoading] = useState(true);

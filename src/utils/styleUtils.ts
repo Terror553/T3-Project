@@ -1,10 +1,10 @@
 import type { CSSProperties } from "react";
 
 export interface ColorOptions {
-  color: string;
-  gradient: number;
-  start?: string;
-  end?: string;
+  color: string | null | undefined;
+  gradient: number | null | undefined;
+  start?: string | null | undefined;
+  end?: string | null | undefined;
   isBadge: boolean;
 }
 

@@ -1,18 +1,19 @@
 "use client";
-// /components/TextInput.tsx
 
 import { useFormContext } from "~/lib/useFormManager";
 
-export function TextInput({
+interface TextInputProps<T extends Record<string, any>> {
+  name: keyof T & string;
+  label: string;
+  type?: string;
+}
+
+export function TextInput<T extends Record<string, any>>({
   name,
   label,
   type = "text",
-}: {
-  name: string;
-  label: string;
-  type?: string;
-}) {
-  const { values, errors, handleChange } = useFormContext<any>();
+}: TextInputProps<T>) {
+  const { values, errors, handleChange } = useFormContext<T>();
 
   return (
     <div className="form-group">

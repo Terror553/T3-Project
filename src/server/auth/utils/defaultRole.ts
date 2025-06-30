@@ -1,19 +1,19 @@
 import { db } from "~/server/db";
 
 export async function getDefaultRole() {
-  const role = await db.groups.findFirst({
+  const role = await db.group.findFirst({
     where: {
       default: 1,
     },
   });
   if (!role) {
-    const defaultRole = await db.groups.create({
+    const defaultRole = await db.group.create({
       data: {
         name: "Spieler",
         default: 1,
         color: "&7",
         priority: 999,
-        high_team: 0,
+        highTeam: 0,
         team: 0,
       },
     });

@@ -31,15 +31,15 @@ export function useTheme() {
     }
   }
 
-  function copy(elementSelector: string) {
+  async function copy(elementSelector: string) {
     const element = document.querySelector(elementSelector);
-    const temp = document.createElement("input");
-    document.body.append(temp);
     if (!element?.textContent) return;
-    temp.value = element.textContent;
-    temp.select();
-    document.execCommand("copy");
-    temp.remove();
+    
+    try {
+      await navigator.clipboard.writeText(element.textContent);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
   }
 
   function isDarkMode() {

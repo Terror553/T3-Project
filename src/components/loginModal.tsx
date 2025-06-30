@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
+import { useNotification } from "~/client/notification";
 import { useTheme } from "~/client/theme";
 import { signIn } from "~/server/auth/actions/signIn";
 import type { signInSchema } from "~/server/auth/authSchemas";
@@ -10,6 +11,7 @@ import type { signInSchema } from "~/server/auth/authSchemas";
 export const LoginModal = () => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const { addNotification } = useNotification();
   const theme = useTheme();
   const form = useForm<z.infer<typeof signInSchema>>({
     defaultValues: {
@@ -32,9 +34,13 @@ export const LoginModal = () => {
       return;
     }
 
-    const error = await signIn({ email, password });
-    if (error) {
-      setError(error);
+    const result = await signIn({ email, password });
+    if (result.error) {
+      setError(result.error.message);
+      addNotification(result.error.message, "error");
+    } else {
+      window.location.reload();
+      addNotification("Willkommen zurück!", "success");
     }
 
     const modalElement = document.getElementById("modal-login");

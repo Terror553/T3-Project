@@ -22,7 +22,7 @@ export interface SessionData {
     start?: string | null;
     end?: string | null;
   };
-  user_id?: {
+  userId?: {
     id?: number;
   };
   isLoggedIn: boolean;

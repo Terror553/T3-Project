@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import type { NavItem } from "~/server/types/navigation";
-import { replaceColor } from "~/server/utils/colorUtils";
 // Ensure this ForumUser type matches what getUserFromSession returns, including the 'groups' structure
 import type { ForumUser } from "~/server/types/forum";
 import { LogOutButton } from "./logOut";
 import { LoginModal } from "./loginModal";
+import { replaceColor } from "~/utils/styleUtils";
 
 // 1. Accept initialUser prop
 export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
@@ -173,17 +173,17 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
                       aria-expanded="false"
                     >
                       <div className="nav-link-icon">
-                        {/* Ensure user.avatar_url is available */}
-                        <img src={user.avatar_url} alt={user.username} />
+                        {/* Ensure user.avatarUrl is available */}
+                        <img src={user.avatarUrl} alt={user.username} />
                       </div>
                       <div
                         className="nav-link-text"
-                        // Ensure user.groups is available and has the expected structure
+                        // Ensure user.group is available and has the expected structure
                         style={replaceColor({
-                          color: user.groups?.color ?? "#ffffff", // Add nullish coalescing for safety
-                          gradient: user.groups?.gradient ?? 0,
-                          start: user.groups?.start,
-                          end: user.groups?.end,
+                          color: user.group?.color ?? "#ffffff", // Add nullish coalescing for safety
+                          gradient: user.group?.gradient ?? 0,
+                          start: user.group?.start,
+                          end: user.group?.end,
                           isBadge: false,
                         })}
                       >
@@ -195,10 +195,10 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
                         <span
                           className="dropdown-header"
                           style={replaceColor({
-                            color: user.groups?.color ?? "#ffffff",
-                            gradient: user.groups?.gradient ?? 0,
-                            start: user.groups?.start,
-                            end: user.groups?.end,
+                            color: user.group?.color ?? "#ffffff",
+                            gradient: user.group?.gradient ?? 0,
+                            start: user.group?.start,
+                            end: user.group?.end,
                             isBadge: false,
                           })}
                         >
@@ -255,8 +255,8 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
                 {navigation.map((nav) => (
                   <li key={nav.id} className="nav-item">
                     <Link
-                      className={`nav-link ${isActive(nav.full_link)}`}
-                      href={nav.full_link}
+                      className={`nav-link ${isActive(nav.fullLink)}`}
+                      href={nav.fullLink}
                     >
                       {nav.name}
                     </Link>
@@ -289,9 +289,9 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
               {navigation.map((nav) => (
                 <li className="oc-nav-item" key={nav.id}>
                   <Link
-                    href={nav.full_link}
+                    href={nav.fullLink}
                     target="" // Consider if target should always be empty
-                    className={`oc-nav-link ${isActive(nav.full_link)}`}
+                    className={`oc-nav-link ${isActive(nav.fullLink)}`}
                     // Removed duplicate key={nav.id}
                   >
                     {nav.name}

@@ -7,7 +7,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model clans {
+model Clan {
     id        Int      @id @default(autoincrement())
     uuid      String   @db.Text
     name      String   @db.Text
@@ -16,471 +16,528 @@ model clans {
     updatedAt DateTime @default(now()) @db.DateTime(6)
 
     @@unique([uuid(length: 255), name(length: 255), tag(length: 255)])
+    @@map("clans")
 }
 
-model console_log {
+model ConsoleLog {
     id      Int    @id @default(autoincrement())
     message String @db.Text
+
+    @@map("console_log")
 }
 
-model cooldowns {
+model Cooldown {
     id            Int    @id @default(autoincrement())
     uuid          String @db.Text
     cooldown_name String @db.Text
     expiry_time   BigInt
+
+    @@map("cooldowns")
 }
 
-model enderchests {
+model EnderChest {
     id    Int    @id @default(autoincrement())
     uuid  String @db.Text
     level Int    @default(1)
 
     @@unique([uuid(length: 255)])
+    @@map("enderchests")
 }
 
-model forum_category {
-    id                Int                 @id @default(autoincrement())
-    name              String              @db.Text
-    createdAt         DateTime            @default(now()) @db.DateTime(6)
-    updatedAt         DateTime            @default(now()) @db.DateTime(6)
-    forum_subcategory forum_subcategory[]
+model ForumCategory {
+    id            Int                @id @default(autoincrement())
+    name          String             @db.Text
+    createdAt     DateTime           @default(now()) @db.DateTime(6)
+    updatedAt     DateTime           @default(now()) @db.DateTime(6)
+    subcategories ForumSubcategory[]
+
+    @@map("forum_category")
 }
 
-model forum_message_replies {
-    id                                                      Int             @id @default(autoincrement())
-    createdAt                                               DateTime        @default(now()) @db.DateTime(6)
-    message                                                 String          @db.LongText
-    seen                                                    Int             @default(0) @db.TinyInt
-    recieverId                                              Int?
-    senderId                                                Int?
-    messageIdId                                             Int?
-    forum_user_forum_message_replies_senderIdToforum_user   forum_user?     @relation("forum_message_replies_senderIdToforum_user", fields: [senderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_556685f3d09d857a83fd5ec78a6")
-    forum_messages                                          forum_messages? @relation(fields: [messageIdId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_adfe13459283a2557815dd324ed")
-    forum_user_forum_message_replies_recieverIdToforum_user forum_user?     @relation("forum_message_replies_recieverIdToforum_user", fields: [recieverId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_d666a9fde168dc3dbed5e31bf8f")
+model ForumMessageReply {
+    id           Int           @id @default(autoincrement())
+    createdAt    DateTime      @default(now()) @db.DateTime(6)
+    message      String        @db.LongText
+    seen         Int           @default(0) @db.TinyInt
+    receiverId   Int?
+    senderId     Int?
+    messageId    Int?
+    sender       ForumUser?    @relation("forum_message_replies_senderIdToforum_user", fields: [senderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_556685f3d09d857a83fd5ec78a6")
+    forumMessage ForumMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_adfe13459283a2557815dd324ed")
+    receiver     ForumUser?    @relation("forum_message_replies_recieverIdToforum_user", fields: [receiverId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_d666a9fde168dc3dbed5e31bf8f")
 
     @@index([senderId], map: "FK_556685f3d09d857a83fd5ec78a6")
-    @@index([messageIdId], map: "FK_adfe13459283a2557815dd324ed")
-    @@index([recieverId], map: "FK_d666a9fde168dc3dbed5e31bf8f")
+    @@index([messageId], map: "FK_adfe13459283a2557815dd324ed")
+    @@index([receiverId], map: "FK_d666a9fde168dc3dbed5e31bf8f")
+    @@map("forum_message_replies")
 }
 
-model forum_messages {
-    id                                               Int                     @id @default(autoincrement())
-    createdAt                                        DateTime                @default(now()) @db.DateTime(6)
-    message                                          String                  @db.LongText
-    title                                            String                  @db.LongText
-    seen                                             Int                     @default(0) @db.TinyInt
-    recieverId                                       Int?
-    senderId                                         Int?
-    forum_message_replies                            forum_message_replies[]
-    forum_user_forum_messages_recieverIdToforum_user forum_user?             @relation("forum_messages_recieverIdToforum_user", fields: [recieverId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_3bcdc4c5bac35457101c5c8c210")
-    forum_user_forum_messages_senderIdToforum_user   forum_user?             @relation("forum_messages_senderIdToforum_user", fields: [senderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_e916d67a4faa28da95a756fef06")
+model ForumMessage {
+    id             Int                 @id @default(autoincrement())
+    createdAt      DateTime            @default(now()) @db.DateTime(6)
+    message        String              @db.LongText
+    title          String              @db.LongText
+    seen           Int                 @default(0) @db.TinyInt
+    receiverId     Int?
+    senderId       Int?
+    messageReplies ForumMessageReply[]
+    receiver       ForumUser?          @relation("forum_messages_recieverIdToforum_user", fields: [receiverId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_3bcdc4c5bac35457101c5c8c210")
+    sender         ForumUser?          @relation("forum_messages_senderIdToforum_user", fields: [senderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_e916d67a4faa28da95a756fef06")
 
-    @@index([recieverId], map: "FK_3bcdc4c5bac35457101c5c8c210")
+    @@index([receiverId], map: "FK_3bcdc4c5bac35457101c5c8c210")
     @@index([senderId], map: "FK_e916d67a4faa28da95a756fef06")
+    @@map("forum_messages")
 }
 
-model forum_navigation {
-    id         Int         @id @default(autoincrement())
-    name       String      @db.Text
-    icon       String      @default("fa fa-home") @db.Text
-    createdAt  DateTime    @default(now()) @db.DateTime(6)
-    updatedAt  DateTime    @default(now()) @db.DateTime(6)
-    full_link  String      @db.LongText
-    authorId   Int?
-    team_link  Int         @default(0) @db.TinyInt
-    forum_user forum_user? @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_40619500e2c99b828307e482ef1")
+model ForumNavigation {
+    id        Int        @id @default(autoincrement())
+    name      String     @db.Text
+    icon      String     @default("fa fa-home") @db.Text
+    createdAt DateTime   @default(now()) @db.DateTime(6)
+    updatedAt DateTime   @default(now()) @db.DateTime(6)
+    fullLink  String     @db.LongText
+    authorId  Int?
+    teamLink  Int        @default(0) @db.TinyInt
+    author    ForumUser? @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_40619500e2c99b828307e482ef1")
 
     @@index([authorId], map: "FK_40619500e2c99b828307e482ef1")
+    @@map("forum_navigation")
 }
 
-model forum_reaction_emojis {
-    id                          Int                           @id @default(autoincrement())
-    createdAt                   DateTime                      @default(now()) @db.DateTime(6)
-    emoji                       String                        @db.LongText
-    negative                    Int                           @default(0) @db.TinyInt
-    authorId                    Int?
-    name                        String                        @db.LongText
-    forum_user                  forum_user?                   @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_fba5fa9ac48b9af3581b51cfd2c")
-    forum_reactions             forum_reactions[]
-    forum_topic_reactions       forum_topic_reactions[]
-    forum_topic_reply_reactions forum_topic_reply_reactions[]
+model ForumReactionEmoji {
+    id                  Int                       @id @default(autoincrement())
+    createdAt           DateTime                  @default(now()) @db.DateTime(6)
+    emoji               String                    @db.LongText
+    negative            Int                       @default(0) @db.TinyInt
+    authorId            Int?
+    name                String                    @db.LongText
+    author              ForumUser?                @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_fba5fa9ac48b9af3581b51cfd2c")
+    reactions           ForumReaction[]
+    topicReactions      ForumTopicReaction[]
+    topicReplyReactions ForumTopicReplyReaction[]
 
     @@unique([emoji(length: 255), name(length: 255)])
     @@index([authorId], map: "FK_fba5fa9ac48b9af3581b51cfd2c")
+    @@map("forum_reaction_emojis")
 }
 
-model forum_reactions {
-    id                    Int                    @id @default(autoincrement())
-    createdAt             DateTime               @default(now()) @db.DateTime(6)
-    authorId              Int?
-    reactionId            Int?
-    topicId               Int?
-    forum_user            forum_user?            @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_12687a89e830cc09169f5a8b269")
-    forum_topics          forum_topics?          @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_19c88f09f86beb68f1667f5dd47")
-    forum_reaction_emojis forum_reaction_emojis? @relation(fields: [reactionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_877f91924b98cb6704281237d37")
+model ForumReaction {
+    id         Int                 @id @default(autoincrement())
+    createdAt  DateTime            @default(now()) @db.DateTime(6)
+    authorId   Int?
+    reactionId Int?
+    topicId    Int?
+    author     ForumUser?          @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_12687a89e830cc09169f5a8b269")
+    topic      ForumTopic?         @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_19c88f09f86beb68f1667f5dd47")
+    emoji      ForumReactionEmoji? @relation(fields: [reactionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_877f91924b98cb6704281237d37")
 
     @@index([authorId], map: "FK_12687a89e830cc09169f5a8b269")
     @@index([topicId], map: "FK_19c88f09f86beb68f1667f5dd47")
     @@index([reactionId], map: "FK_877f91924b98cb6704281237d37")
+    @@map("forum_reactions")
 }
 
-model forum_subcategory {
-    id             Int             @id @default(autoincrement())
-    name           String          @db.Text
-    description    String          @db.LongText
-    status         Int             @default(0)
-    createdAt      DateTime        @default(now()) @db.DateTime(6)
-    updatedAt      DateTime        @default(now()) @db.DateTime(6)
-    categoryId     Int?
-    slug           String          @db.Text
-    forum_category forum_category? @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_30b2b73b600b347e6fbfba27231")
-    forum_topics   forum_topics[]
+model ForumSubcategory {
+    id          Int            @id @default(autoincrement())
+    name        String         @db.Text
+    description String         @db.LongText
+    status      Int            @default(0)
+    createdAt   DateTime       @default(now()) @db.DateTime(6)
+    updatedAt   DateTime       @default(now()) @db.DateTime(6)
+    categoryId  Int?
+    slug        String         @db.Text
+    category    ForumCategory? @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_30b2b73b600b347e6fbfba27231")
+    topics      ForumTopic[]
 
     @@unique([slug(length: 255), name(length: 255)])
     @@index([categoryId], map: "FK_30b2b73b600b347e6fbfba27231")
+    @@map("forum_subcategory")
 }
 
-model forum_topic_follow {
-    id           Int           @id @default(autoincrement())
-    userId       Int?
-    topicId      Int?
-    forum_topics forum_topics? @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_35b47425b0c71009e3346d1b997")
-    forum_user   forum_user?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_c1b00610ad7ce8678c2b55799b9")
+model ForumTopicFollow {
+    id      Int         @id @default(autoincrement())
+    userId  Int?
+    topicId Int?
+    topic   ForumTopic? @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_35b47425b0c71009e3346d1b997")
+    user    ForumUser?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_c1b00610ad7ce8678c2b55799b9")
 
     @@index([topicId], map: "FK_35b47425b0c71009e3346d1b997")
     @@index([userId], map: "FK_c1b00610ad7ce8678c2b55799b9")
+    @@map("forum_topic_follow")
 }
 
-model forum_topic_reactions {
-    id                    Int                    @id @default(autoincrement())
-    createdAt             DateTime               @default(now()) @db.DateTime(6)
-    authorId              Int?
-    reactionId            Int?
-    topicId               Int?
-    forum_user            forum_user?            @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_2ad71e531f2f0fc3f10b2f739cb")
-    forum_topics          forum_topics?          @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_2d49ae3a7c256ffbd388f418347")
-    forum_reaction_emojis forum_reaction_emojis? @relation(fields: [reactionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_efd1dc571c08fb277e60c9a31c4")
+model ForumTopicReaction {
+    id         Int                 @id @default(autoincrement())
+    createdAt  DateTime            @default(now()) @db.DateTime(6)
+    authorId   Int?
+    reactionId Int?
+    topicId    Int?
+    author     ForumUser?          @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_2ad71e531f2f0fc3f10b2f739cb")
+    topic      ForumTopic?         @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_2d49ae3a7c256ffbd388f418347")
+    emoji      ForumReactionEmoji? @relation(fields: [reactionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_efd1dc571c08fb277e60c9a31c4")
 
     @@index([authorId], map: "FK_2ad71e531f2f0fc3f10b2f739cb")
     @@index([topicId], map: "FK_2d49ae3a7c256ffbd388f418347")
     @@index([reactionId], map: "FK_efd1dc571c08fb277e60c9a31c4")
+    @@map("forum_topic_reactions")
 }
 
-model forum_topic_replies {
-    id                          Int                           @id @default(autoincrement())
-    createdAt                   DateTime                      @default(now()) @db.DateTime(6)
-    content                     String                        @db.LongText
-    updatedAt                   DateTime                      @default(now()) @db.DateTime(6)
-    authorId                    Int?
-    topicIdId                   Int?
-    forum_user                  forum_user?                   @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_3487d2b211836d6fff2cb39eeb0")
-    forum_topics                forum_topics?                 @relation(fields: [topicIdId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_9a56eaee984340cdc2ff1b383df")
-    forum_topic_reply_reactions forum_topic_reply_reactions[]
+model ForumTopicReply {
+    id             Int                       @id @default(autoincrement())
+    createdAt      DateTime                  @default(now()) @db.DateTime(6)
+    content        String                    @db.LongText
+    updatedAt      DateTime                  @default(now()) @db.DateTime(6)
+    authorId       Int?
+    topicId        Int?
+    author         ForumUser?                @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_3487d2b211836d6fff2cb39eeb0")
+    topic          ForumTopic?               @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_9a56eaee984340cdc2ff1b383df")
+    replyReactions ForumTopicReplyReaction[]
 
     @@index([authorId], map: "FK_3487d2b211836d6fff2cb39eeb0")
-    @@index([topicIdId], map: "FK_9a56eaee984340cdc2ff1b383df")
+    @@index([topicId], map: "FK_9a56eaee984340cdc2ff1b383df")
+    @@map("forum_topic_replies")
 }
 
-model forum_topic_reply_reactions {
-    id                    Int                    @id @default(autoincrement())
-    createdAt             DateTime               @default(now()) @db.DateTime(6)
-    authorId              Int?
-    reactionId            Int?
-    replyId               Int?
-    forum_reaction_emojis forum_reaction_emojis? @relation(fields: [reactionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_218ed32b068b337d176790a5dbe")
-    forum_user            forum_user?            @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_4541e008cc2caa5987e41b65f8d")
-    forum_topic_replies   forum_topic_replies?   @relation(fields: [replyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_b9b57ef3a1ab2f303b5b5883cb0")
+model ForumTopicReplyReaction {
+    id         Int                 @id @default(autoincrement())
+    createdAt  DateTime            @default(now()) @db.DateTime(6)
+    authorId   Int?
+    reactionId Int?
+    replyId    Int?
+    emoji      ForumReactionEmoji? @relation(fields: [reactionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_218ed32b068b337d176790a5dbe")
+    author     ForumUser?          @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_4541e008cc2caa5987e41b65f8d")
+    reply      ForumTopicReply?    @relation(fields: [replyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_b9b57ef3a1ab2f303b5b5883cb0")
 
     @@index([reactionId], map: "FK_218ed32b068b337d176790a5dbe")
     @@index([authorId], map: "FK_4541e008cc2caa5987e41b65f8d")
     @@index([replyId], map: "FK_b9b57ef3a1ab2f303b5b5883cb0")
+    @@map("forum_topic_reply_reactions")
 }
 
-model forum_topics {
-    id                    Int                     @id @default(autoincrement())
-    title                 String                  @db.Text
-    content               String                  @db.LongText
-    status                Int                     @default(0)
-    createdAt             DateTime                @default(now()) @db.DateTime(6)
-    updatedAt             DateTime                @default(now()) @db.DateTime(6)
-    locked                Int                     @default(0) @db.TinyInt
-    pinned                Int                     @default(0) @db.TinyInt
-    authorId              Int?
-    subcategoryId         Int?
-    slug                  String?                 @db.Text
-    forum_reactions       forum_reactions[]
-    forum_topic_follow    forum_topic_follow[]
-    forum_topic_reactions forum_topic_reactions[]
-    forum_topic_replies   forum_topic_replies[]
-    forum_subcategory     forum_subcategory?      @relation(fields: [subcategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_01d2ff4b1bbf5c9eee83310498a")
-    forum_user            forum_user?             @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c228733246cf2aee0240663b354")
+model ForumTopic {
+    id             Int                  @id @default(autoincrement())
+    title          String               @db.Text
+    content        String               @db.LongText
+    status         Int                  @default(0)
+    createdAt      DateTime             @default(now()) @db.DateTime(6)
+    updatedAt      DateTime             @default(now()) @db.DateTime(6)
+    locked         Int                  @default(0) @db.TinyInt
+    pinned         Int                  @default(0) @db.TinyInt
+    authorId       Int?
+    subcategoryId  Int?
+    slug           String?              @db.Text
+    reactions      ForumReaction[]
+    follows        ForumTopicFollow[]
+    topicReactions ForumTopicReaction[]
+    replies        ForumTopicReply[]
+    subcategory    ForumSubcategory?    @relation(fields: [subcategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_01d2ff4b1bbf5c9eee83310498a")
+    author         ForumUser?           @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c228733246cf2aee0240663b354")
 
     @@index([subcategoryId], map: "FK_01d2ff4b1bbf5c9eee83310498a")
     @@index([authorId], map: "FK_c228733246cf2aee0240663b354")
+    @@map("forum_topics")
 }
 
-model profile_banners {
+model ProfileBanner {
     id   Int    @id @default(autoincrement())
     name String @unique(map: "name") @db.VarChar(255)
     url  String @unique(map: "url") @db.VarChar(255)
+
+    @@map("profile_banners")
 }
 
-model forum_user {
-    id                                                                 Int                           @id @default(autoincrement())
-    username                                                           String                        @db.Text
-    email                                                              String                        @db.Text
-    password                                                           String                        @db.LongText
-    salt                                                               String                        @db.LongText
-    userAuthToken                                                      String?                       @db.LongText
-    avatar_url                                                         String                        @default("default.png") @db.LongText
-    banner_url                                                         String                        @default("default.png") @db.LongText
-    signature                                                          String                        @default("") @db.LongText
-    createdAt                                                          DateTime                      @default(now()) @db.DateTime(6)
-    updatedAt                                                          DateTime                      @default(now()) @db.DateTime(6)
-    roleId                                                             Int?
-    user_id                                                            Int?                          @unique(map: "REL_e01d18e1c4884655561785cca8")
-    forum_message_replies_forum_message_replies_senderIdToforum_user   forum_message_replies[]       @relation("forum_message_replies_senderIdToforum_user")
-    forum_message_replies_forum_message_replies_recieverIdToforum_user forum_message_replies[]       @relation("forum_message_replies_recieverIdToforum_user")
-    forum_messages_forum_messages_recieverIdToforum_user               forum_messages[]              @relation("forum_messages_recieverIdToforum_user")
-    forum_messages_forum_messages_senderIdToforum_user                 forum_messages[]              @relation("forum_messages_senderIdToforum_user")
-    forum_navigation                                                   forum_navigation[]
-    forum_reaction_emojis                                              forum_reaction_emojis[]
-    forum_reactions                                                    forum_reactions[]
-    forum_topic_follow                                                 forum_topic_follow[]
-    forum_topic_reactions                                              forum_topic_reactions[]
-    forum_topic_replies                                                forum_topic_replies[]
-    forum_topic_reply_reactions                                        forum_topic_reply_reactions[]
-    forum_topics                                                       forum_topics[]
-    groups                                                             groups?                       @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0fd7d07d475155bfb73b59a0b64")
-    user                                                               user?                         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_e01d18e1c4884655561785cca80")
-    profile_wall_profile_wall_profileIdIdToforum_user                  profile_wall[]                @relation("profile_wall_profileIdIdToforum_user")
-    profile_wall_profile_wall_userIdToforum_user                       profile_wall[]                @relation("profile_wall_userIdToforum_user")
-    profile_wall_replies                                               profile_wall_replies[]
-    wiki_categories                                                    wiki_categories[]
-    wiki_sub_categories                                                wiki_sub_categories[]
+model ForumUser {
+    id                     Int                       @id @default(autoincrement())
+    username               String                    @db.Text
+    email                  String                    @db.Text
+    password               String                    @db.LongText
+    salt                   String                    @db.LongText
+    userAuthToken          String?                   @db.LongText
+    avatarUrl              String                    @default("default.png") @db.LongText
+    bannerUrl              String                    @default("default.png") @db.LongText
+    signature              String                    @default("") @db.LongText
+    createdAt              DateTime                  @default(now()) @db.DateTime(6)
+    updatedAt              DateTime                  @default(now()) @db.DateTime(6)
+    roleId                 Int?
+    userId                 Int?                      @unique(map: "REL_e01d18e1c4884655561785cca8")
+    sentMessageReplies     ForumMessageReply[]       @relation("forum_message_replies_senderIdToforum_user")
+    receivedMessageReplies ForumMessageReply[]       @relation("forum_message_replies_recieverIdToforum_user")
+    receivedMessages       ForumMessage[]            @relation("forum_messages_recieverIdToforum_user")
+    sentMessages           ForumMessage[]            @relation("forum_messages_senderIdToforum_user")
+    navigations            ForumNavigation[]
+    reactionEmojis         ForumReactionEmoji[]
+    reactions              ForumReaction[]
+    topicFollows           ForumTopicFollow[]
+    topicReactions         ForumTopicReaction[]
+    topicReplies           ForumTopicReply[]
+    topicReplyReactions    ForumTopicReplyReaction[]
+    topics                 ForumTopic[]
+    group                  Group?                    @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0fd7d07d475155bfb73b59a0b64")
+    user                   User?                     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_e01d18e1c4884655561785cca80")
+    profileWalls           ProfileWall[]             @relation("profile_wall_profileIdIdToforum_user")
+    userWalls              ProfileWall[]             @relation("profile_wall_userIdToforum_user")
+    profileWallReplies     ProfileWallReply[]
+    wikiCategories         WikiCategory[]
+    wikiSubCategories      WikiSubCategory[]
 
     @@unique([username(length: 255), password(length: 255), salt(length: 255), email(length: 255), userAuthToken(length: 255)])
     @@index([roleId], map: "FK_0fd7d07d475155bfb73b59a0b64")
+    @@map("forum_user")
 }
 
-model forum_verify {
-    id          Int    @id @default(autoincrement())
-    forum_id    Int    @unique(map: "IDX_8fc517f51e047d7a32214e04be")
-    verify_code String @db.Text
+model ForumVerification {
+    id         Int    @id @default(autoincrement())
+    forumId    Int    @unique(map: "IDX_8fc517f51e047d7a32214e04be")
+    verifyCode String @db.Text
 
-    @@unique([verify_code(length: 255)])
+    @@unique([verifyCode(length: 255)])
+    @@map("forum_verify")
 }
 
-model groups {
-    id          Int           @id @default(autoincrement())
-    name        String        @db.Text
-    color       String        @db.Text
-    default     Int           @default(0) @db.TinyInt
-    team        Int           @default(0) @db.TinyInt
-    high_team   Int           @default(0) @db.TinyInt
-    priority    Int
-    gradient    Int           @default(0) @db.TinyInt
-    start       String?       @db.LongText
-    end         String?       @db.LongText
-    forum_user  forum_user[]
-    user_groups user_groups[]
+model Group {
+    id         Int         @id @default(autoincrement())
+    name       String      @db.Text
+    color      String      @db.Text
+    default    Int         @default(0) @db.TinyInt
+    team       Int         @default(0) @db.TinyInt
+    highTeam   Int         @default(0) @db.TinyInt
+    priority   Int
+    gradient   Int         @default(0) @db.TinyInt
+    start      String?     @db.LongText
+    end        String?     @db.LongText
+    forumUsers ForumUser[]
+    userGroups UserGroup[]
 
     @@unique([name(length: 255)])
+    @@map("groups")
 }
 
-model jobs {
-    id          Int         @id @default(autoincrement())
-    name        String?     @db.LongText
-    description String?     @db.LongText
-    user_jobs   user_jobs[]
+model Job {
+    id          Int       @id @default(autoincrement())
+    name        String?   @db.LongText
+    description String?   @db.LongText
+    userJobs    UserJob[]
 
     @@unique([name(length: 255)])
+    @@map("jobs")
 }
 
-model kits {
+model Kit {
     id         Int     @id @default(autoincrement())
     name       String? @unique(map: "name") @db.VarChar(36)
     permission String? @db.VarChar(255)
     cooldown   BigInt?
+
+    @@map("kits")
 }
 
-model lucky_block_location {
+model LuckyBlockLocation {
     id       Int    @id @default(autoincrement())
     location String @db.LongText
+
+    @@map("lucky_block_location")
 }
 
-model lucky_block_rewards {
+model LuckyBlockReward {
     id     Int      @id @default(autoincrement())
     uuid   String?  @unique(map: "uuid") @db.VarChar(36)
     reward String?  @db.LongText
     effect Boolean?
+
+    @@map("lucky_block_rewards")
 }
 
-model mc_server_settings {
+model McServerSetting {
     id         Int    @id @default(autoincrement())
     motdLine1  String @db.Text
     motdLine2  String @db.Text
     maxPlayers Int
+
+    @@map("mc_server_settings")
 }
 
-model name_colors {
+model NameColor {
     id     Int     @id @default(autoincrement())
     colour String? @db.LongText
 
     @@unique([colour(length: 255)])
+    @@map("name_colors")
 }
 
-model permissions {
-    id                   Int    @id @default(autoincrement())
-    permission           String @db.Text
-    permission_activated Int    @default(0) @db.TinyInt
+model Permission {
+    id                  Int    @id @default(autoincrement())
+    permission          String @db.Text
+    permissionActivated Int    @default(0) @db.TinyInt
+
+    @@map("permissions")
 }
 
-model profile_wall {
-    id                                              Int                    @id @default(autoincrement())
-    content                                         String                 @db.LongText
-    createdAt                                       DateTime               @default(now()) @db.DateTime(6)
-    updatedAt                                       DateTime               @default(now()) @db.DateTime(6)
-    userId                                          Int?
-    profileIdId                                     Int?
-    forum_user_profile_wall_profileIdIdToforum_user forum_user?            @relation("profile_wall_profileIdIdToforum_user", fields: [profileIdId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_2dafd95532ee5d6dac6a7c590f6")
-    forum_user_profile_wall_userIdToforum_user      forum_user?            @relation("profile_wall_userIdToforum_user", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_92452c9a6824ad27b970ef184bc")
-    profile_wall_replies                            profile_wall_replies[]
+model ProfileWall {
+    id        Int                @id @default(autoincrement())
+    content   String             @db.LongText
+    createdAt DateTime           @default(now()) @db.DateTime(6)
+    updatedAt DateTime           @default(now()) @db.DateTime(6)
+    userId    Int?
+    profileId Int?
+    profile   ForumUser?         @relation("profile_wall_profileIdIdToforum_user", fields: [profileId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_2dafd95532ee5d6dac6a7c590f6")
+    user      ForumUser?         @relation("profile_wall_userIdToforum_user", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_92452c9a6824ad27b970ef184bc")
+    replies   ProfileWallReply[]
 
-    @@index([profileIdId], map: "FK_2dafd95532ee5d6dac6a7c590f6")
+    @@index([profileId], map: "FK_2dafd95532ee5d6dac6a7c590f6")
     @@index([userId], map: "FK_92452c9a6824ad27b970ef184bc")
+    @@map("profile_wall")
 }
 
-model profile_wall_replies {
-    id           Int           @id @default(autoincrement())
-    content      String        @db.LongText
-    createdAt    DateTime      @default(now()) @db.DateTime(6)
-    updatedAt    DateTime      @default(now()) @db.DateTime(6)
-    userId       Int?
-    postIdId     Int?
-    forum_user   forum_user?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_1ae72664e954a265529cba6443a")
-    profile_wall profile_wall? @relation(fields: [postIdId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_5303ba06dd6bb7b476d29d08e08")
+model ProfileWallReply {
+    id          Int          @id @default(autoincrement())
+    content     String       @db.LongText
+    createdAt   DateTime     @default(now()) @db.DateTime(6)
+    updatedAt   DateTime     @default(now()) @db.DateTime(6)
+    userId      Int?
+    postId      Int?
+    user        ForumUser?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_1ae72664e954a265529cba6443a")
+    profileWall ProfileWall? @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_5303ba06dd6bb7b476d29d08e08")
 
     @@index([userId], map: "FK_1ae72664e954a265529cba6443a")
-    @@index([postIdId], map: "FK_5303ba06dd6bb7b476d29d08e08")
+    @@index([postId], map: "FK_5303ba06dd6bb7b476d29d08e08")
+    @@map("profile_wall_replies")
 }
 
-model tags {
+model Tag {
     id  Int    @id @default(autoincrement())
     tag String @db.LongText
 
     @@unique([tag(length: 255)])
+    @@map("tags")
 }
 
-model user {
-    id               Int                @id @default(autoincrement())
-    uuid             String             @db.Text
-    clan             String?            @db.Text
-    money            Float              @default(0)
-    first_joined     DateTime           @default(now()) @db.Timestamp(6)
-    last_joined      DateTime           @default(now()) @db.Timestamp(6)
-    playtime         BigInt             @default(0)
-    forum_id         Int?               @unique(map: "IDX_7528958a5a4f9879864f44a108")
-    forum_user       forum_user?
-    user_permissions user_permissions[]
+model User {
+    id              Int              @id @default(autoincrement())
+    uuid            String           @db.Text
+    clan            String?          @db.Text
+    money           Float            @default(0)
+    firstJoined     DateTime         @default(now()) @db.Timestamp(6)
+    lastJoined      DateTime         @default(now()) @db.Timestamp(6)
+    playtime        BigInt           @default(0)
+    forumId         Int?             @unique(map: "IDX_7528958a5a4f9879864f44a108")
+    forumUser       ForumUser?
+    userPermissions UserPermission[]
+
+    @@map("user")
 }
 
-model user_bans {
+model UserBan {
     id         Int    @id @default(autoincrement())
     bannerUUID String @db.LongText
     bannedUUID String @db.LongText
     reason     String @db.LongText
+
+    @@map("user_bans")
 }
 
-model user_groups {
-    id       Int    @id @default(autoincrement())
-    uuid     String @db.Text
-    group_id Int    @default(0)
-    groups   groups @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_groups_ibfk_1")
+model UserGroup {
+    id      Int    @id @default(autoincrement())
+    uuid    String @db.Text
+    groupId Int    @default(0)
+    group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_groups_ibfk_1")
 
-    @@index([group_id], map: "group_id")
+    @@index([groupId], map: "group_id")
+    @@map("user_groups")
 }
 
-model user_jobs {
-    id     Int     @id @default(autoincrement())
-    uuid   String? @unique(map: "uuid") @db.VarChar(36)
-    job_id Int?
-    jobs   jobs?   @relation(fields: [job_id], references: [id], onDelete: Cascade, map: "user_jobs_ibfk_1")
+model UserJob {
+    id    Int     @id @default(autoincrement())
+    uuid  String? @unique(map: "uuid") @db.VarChar(36)
+    jobId Int?
+    job   Job?    @relation(fields: [jobId], references: [id], onDelete: Cascade, map: "user_jobs_ibfk_1")
 
-    @@index([job_id], map: "job_id")
+    @@index([jobId], map: "job_id")
+    @@map("user_jobs")
 }
 
-model user_name_color {
+model UserNameColor {
     id     Int     @id @default(autoincrement())
     uuid   String? @unique(map: "uuid") @db.VarChar(36)
     colour String? @db.LongText
+
+    @@map("user_name_color")
 }
 
-model user_permissions {
-    id                   Int     @id @default(autoincrement())
-    uuid                 String  @db.LongText
-    user_id              Int
-    permission           String  @db.LongText
-    permission_activated Boolean @default(true)
-    user                 user    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_permissions_ibfk_1")
+model UserPermission {
+    id                  Int     @id @default(autoincrement())
+    uuid                String  @db.LongText
+    userId              Int
+    permission          String  @db.LongText
+    permissionActivated Boolean @default(true)
+    user                User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_permissions_ibfk_1")
 
-    @@index([user_id], map: "user_id")
+    @@index([userId], map: "user_id")
+    @@map("user_permissions")
 }
 
-model user_tags {
-    id     Int     @id @default(autoincrement())
-    uuid   String? @unique(map: "uuid") @db.VarChar(36)
-    tag_id Int?
+model UserTag {
+    id    Int     @id @default(autoincrement())
+    uuid  String? @unique(map: "uuid") @db.VarChar(36)
+    tagId Int?
+
+    @@map("user_tags")
 }
 
-model users_table {
+model UserTable {
     id    Int    @id @default(autoincrement())
     name  String @db.VarChar(255)
     age   Int
     email String @unique(map: "users_table_email_unique") @db.VarChar(255)
+
+    @@map("users_table")
 }
 
-model vanish {
+model Vanish {
     id   Int    @id @default(autoincrement())
     uuid String @db.Text
 
     @@unique([uuid(length: 255)])
+    @@map("vanish")
 }
 
-model warps {
+model Warp {
     id       Int     @id @default(autoincrement())
     uuid     String? @db.VarChar(36)
     location String? @db.VarChar(255)
     name     String? @unique(map: "name") @db.VarChar(255)
+
+    @@map("warps")
 }
 
-model wiki_categories {
-    id                  Int                   @id @default(autoincrement())
-    name                String                @db.Text
-    createdAt           DateTime              @default(now()) @db.DateTime(6)
-    updatedAt           DateTime              @default(now()) @db.DateTime(6)
-    icon                String                @default("fa fa-home") @db.Text
-    dropdown            Int                   @default(0) @db.TinyInt
-    content             String?               @default("") @db.LongText
-    authorId            Int?
-    forum_user          forum_user?           @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_06c5494731becb0094773249b09")
-    wiki_sub_categories wiki_sub_categories[]
+model WikiCategory {
+    id            Int               @id @default(autoincrement())
+    name          String            @db.Text
+    createdAt     DateTime          @default(now()) @db.DateTime(6)
+    updatedAt     DateTime          @default(now()) @db.DateTime(6)
+    icon          String            @default("fa fa-home") @db.Text
+    dropdown      Int               @default(0) @db.TinyInt
+    content       String?           @default("") @db.LongText
+    authorId      Int?
+    author        ForumUser?        @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_06c5494731becb0094773249b09")
+    subcategories WikiSubCategory[]
 
     @@index([authorId], map: "FK_06c5494731becb0094773249b09")
+    @@map("wiki_categories")
 }
 
-model wiki_sub_categories {
-    id              Int              @id @default(autoincrement())
-    name            String           @db.Text
-    createdAt       DateTime         @default(now()) @db.DateTime(6)
-    updatedAt       DateTime         @default(now()) @db.DateTime(6)
-    categoryId      Int?
-    content         String           @db.LongText
-    authorId        Int?
-    icon            String?          @default("fa fa-home") @db.Text
-    forum_user      forum_user?      @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_729a85de35fdf19104b5a0b5757")
-    wiki_categories wiki_categories? @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c1f0c927778f69cfdaf253e78c2")
+model WikiSubCategory {
+    id         Int           @id @default(autoincrement())
+    name       String        @db.Text
+    createdAt  DateTime      @default(now()) @db.DateTime(6)
+    updatedAt  DateTime      @default(now()) @db.DateTime(6)
+    categoryId Int?
+    content    String        @db.LongText
+    authorId   Int?
+    icon       String?       @default("fa fa-home") @db.Text
+    author     ForumUser?    @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_729a85de35fdf19104b5a0b5757")
+    category   WikiCategory? @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c1f0c927778f69cfdaf253e78c2")
 
     @@index([authorId], map: "FK_729a85de35fdf19104b5a0b5757")
     @@index([categoryId], map: "FK_c1f0c927778f69cfdaf253e78c2")
+    @@map("wiki_sub_categories")
 }

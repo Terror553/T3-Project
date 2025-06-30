@@ -3,11 +3,15 @@ import type {
   ForumCategory,
   ForumSubcategory,
   ForumTopic,
+  ForumTopicReply,
+  ForumUser,
+  ForumReaction,
+  ForumReactionEmoji,
 } from "../types/forum";
 import { generateWhereClause } from "../utils/dbUtils";
 
 export async function getCategories() {
-  const forum = await db.forum_category.findMany();
+  const forum = await db.forumCategory.findMany();
   if (!forum) {
     throw new Error("Forum categories not found");
   }
@@ -16,12 +20,9 @@ export async function getCategories() {
     forum.map(async (category) => {
       const subcategories = await getSubCategories(category.id);
 
-      // Ensure `forum_subcategories` is always an array
       return {
         ...category,
-        forum_subcategories: Array.isArray(subcategories)
-          ? subcategories
-          : Object.values(subcategories), // Convert object to array
+        forum_subcategories: subcategories,
       } as ForumCategory;
     }),
   );
@@ -30,7 +31,7 @@ export async function getCategories() {
 export async function getCategory(id: number | string) {
   const where = generateWhereClause(id);
 
-  const category = await db.forum_category.findFirst({
+  const category = await db.forumCategory.findFirst({
     where,
   });
   if (!category) {
@@ -45,78 +46,90 @@ export async function getCategory(id: number | string) {
 export async function getSubCategories(id: number | string) {
   const where = generateWhereClause(id);
 
-  const subcategories = await db.forum_subcategory.findMany({
-    where: { forum_category: where },
+  const subcategories = await db.forumSubcategory.findMany({
+    where: { category: where },
     include: {
-      forum_topics: {
+      topics: {
         include: {
-          forum_topic_replies: true,
-          forum_user: {
-            omit: {
-              password: true,
-              email: true,
-              banner_url: true,
-              salt: true,
-              userAuthToken: true,
-              user_id: true,
-              roleId: true,
-            },
+          replies: {
             include: {
-              groups: true,
+              author: {
+                include: {
+                  group: true,
+                },
+              },
+            },
+          },
+          author: {
+            include: {
+              group: true,
             },
           },
         },
       },
     },
   });
+
   if (!subcategories) {
     throw new Error(`Subcategory with id ${id} not found`);
   }
 
-  // Map subcategories to include only the necessary fields
-  const finalSubcategories = await Promise.all(
+  return Promise.all(
     subcategories.map(async (subcategory) => {
-      // Calculate counts specific to THIS subcategory in the loop
-      const topicsCount = subcategory.forum_topics.length;
-      const repliesCount = subcategory.forum_topics.reduce(
-        (acc, topic) => acc + topic.forum_topic_replies.length,
+      const topics = await Promise.all(
+        subcategory.topics.map(async (topic) => {
+          const replies = topic.replies.map((reply) => ({
+            ...reply,
+            topicIdId: topic.id,
+            forum_user: reply.author as ForumUser,
+          })) as ForumTopicReply[];
+
+          return {
+            ...topic,
+            forum_topic_replies: replies,
+            forum_user: topic.author as ForumUser,
+          } as ForumTopic;
+        }),
+      );
+
+      const topicsCount = topics.length;
+      const repliesCount = topics.reduce(
+        (acc: number, topic) => acc + topic.forum_topic_replies.length,
         0,
       );
       const latestEntry = await getLatestTopic(subcategory.id);
 
       return {
         ...subcategory,
-        count: topicsCount, // Correctly count topics for *this* subcategory
-        repliesCount: repliesCount, // Add replies count for *this* subcategory
-        latestEntry: latestEntry,
-      };
+        forum_topics: topics,
+        count: topicsCount,
+        repliesCount,
+        latestEntry,
+      } as ForumSubcategory;
     }),
   );
-
-  return finalSubcategories as ForumSubcategory[];
 }
 
 export async function getSubCategory(id: number | string) {
   const where = generateWhereClause(id);
 
-  const subcategory = await db.forum_subcategory.findFirst({
+  const subcategory = await db.forumSubcategory.findFirst({
     where,
     include: {
-      forum_topics: {
+      topics: {
         include: {
-          forum_topic_replies: { select: { id: true } },
-          forum_user: {
-            omit: {
-              password: true,
-              email: true,
-              banner_url: true,
-              salt: true,
-              userAuthToken: true,
-              user_id: true,
-              roleId: true,
-            },
+          replies: {
             include: {
-              groups: true,
+              author: {
+                include: {
+                  group: true,
+                },
+              },
+            },
+          },
+          author: {
+            include: {
+              group: true,
             },
           },
         },
@@ -128,17 +141,30 @@ export async function getSubCategory(id: number | string) {
     throw new Error(`Subcategory with id ${id} not found`);
   }
 
-  const totalTopicsLength = subcategory.forum_topics.length;
+  const topics = await Promise.all(
+    subcategory.topics.map(async (topic) => {
+      const replies = topic.replies.map((reply) => ({
+        ...reply,
+        topicIdId: topic.id,
+        forum_user: reply.author as ForumUser,
+      })) as ForumTopicReply[];
 
-  const repliesCount = subcategory.forum_topics.reduce(
-    (acc, topic) => acc + topic.forum_topic_replies.length,
-    0,
+      return {
+        ...topic,
+        forum_topic_replies: replies,
+        forum_user: topic.author as ForumUser,
+      } as ForumTopic;
+    }),
   );
 
   return {
     ...subcategory,
-    count: totalTopicsLength,
-    repliesCount,
+    forum_topics: topics,
+    count: topics.length,
+    repliesCount: topics.reduce(
+      (acc: number, topic) => acc + topic.forum_topic_replies.length,
+      0,
+    ),
     latestEntry: await getLatestTopic(subcategory.id),
   } as ForumSubcategory;
 }
@@ -146,133 +172,87 @@ export async function getSubCategory(id: number | string) {
 export async function getTopic(id: number | string) {
   const where = generateWhereClause(id);
 
-  const topic = await db.forum_topics.findFirst({
+  const topic = await db.forumTopic.findFirst({
     where,
     include: {
-      forum_topic_replies: {
-        select: {
-          id: true,
-          createdAt: true,
-          updatedAt: true,
-          content: true,
-          authorId: true,
-          topicIdId: true,
-          forum_user: {
-            select: {
-              id: true,
-              username: true,
-              avatar_url: true,
-              signature: true,
-              createdAt: true,
-              updatedAt: true,
-              groups: true,
+      replies: {
+        include: {
+          author: {
+            include: {
+              group: true,
             },
           },
         },
       },
-      forum_reactions: {
-        select: {
-          id: true,
-          authorId: true,
-          topicId: true,
-          forum_reaction_emojis: {
-            select: { id: true, name: true, emoji: true, negative: true },
-          },
+      reactions: {
+        include: {
+          emoji: true,
+          author: true,
         },
       },
-      forum_topic_follow: { select: { id: true, topicId: true, userId: true } },
-      forum_user: {
-        omit: {
-          password: true,
-          email: true,
-          banner_url: true,
-          salt: true,
-          userAuthToken: true,
-          user_id: true,
-          roleId: true,
-        },
+      follows: true,
+      author: {
         include: {
-          groups: true,
+          group: true,
         },
       },
     },
   });
+
   if (!topic) {
     throw new Error(`Topic with id ${id} not found`);
   }
 
-  const repliesCount = topic.forum_topic_replies.reduce((acc) => acc + 1, 0);
+  const replies = topic.replies.map((reply) => ({
+    ...reply,
+    topicIdId: topic.id,
+    forum_user: reply.author as ForumUser,
+  })) as ForumTopicReply[];
+
+  const reactions = topic.reactions.map((reaction) => ({
+    ...reaction,
+    forum_reaction_emojis: reaction.emoji as ForumReactionEmoji,
+  })) as ForumReaction[];
 
   return {
     ...topic,
-    count: repliesCount,
-    latestReply:
-      topic.forum_topic_replies[topic.forum_topic_replies.length - 1],
+    forum_topic_replies: replies,
+    forum_reactions: reactions,
+    forum_topic_follow: topic.follows,
+    forum_user: topic.author as ForumUser,
+    count: replies.length,
+    latestReply: replies[replies.length - 1],
   } as ForumTopic;
 }
 
 export async function getLatestTopic(id: number | string) {
   const where = generateWhereClause(id);
 
-  const latestTopic = await db.forum_topics.findMany({
+  const topics = await db.forumTopic.findMany({
     where: {
-      forum_subcategory: where,
+      subcategory: where,
     },
-    select: {
-      forum_topic_follow: { select: { id: true, topicId: true, userId: true } },
-      forum_reactions: {
-        select: {
-          id: true,
-          authorId: true,
-          topicId: true,
-          forum_reaction_emojis: {
-            select: { id: true, name: true, emoji: true, negative: true },
-          },
-        },
-      },
-      forum_topic_replies: {
-        select: {
-          id: true,
-          createdAt: true,
-          updatedAt: true,
-          content: true,
-          authorId: true,
-          topicIdId: true,
-          forum_user: {
-            select: {
-              id: true,
-              username: true,
-              avatar_url: true,
-              signature: true,
-              createdAt: true,
-              updatedAt: true,
-              groups: true,
+    include: {
+      replies: {
+        include: {
+          author: {
+            include: {
+              group: true,
             },
           },
         },
       },
-      forum_user: {
-        select: {
-          id: true,
-          username: true,
-          avatar_url: true,
-          signature: true,
-          createdAt: true,
-          updatedAt: true,
-          groups: true,
+      reactions: {
+        include: {
+          emoji: true,
+          author: true,
         },
       },
-      id: true,
-      title: true,
-      content: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      locked: true,
-      pinned: true,
-      authorId: true,
-      subcategoryId: true,
-      slug: true,
+      author: {
+        include: {
+          group: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
@@ -280,16 +260,29 @@ export async function getLatestTopic(id: number | string) {
     take: 1,
   });
 
-  if (!latestTopic[0]) {
+  if (!topics.length) {
     return null;
   }
 
+  const firstTopic = topics[0]!; // Assert that we have a topic since we checked length
+
+  const replies = firstTopic.replies.map((reply) => ({
+    ...reply,
+    topicIdId: firstTopic.id,
+    forum_user: reply.author as ForumUser,
+  })) as ForumTopicReply[];
+
+  const reactions = firstTopic.reactions.map((reaction) => ({
+    ...reaction,
+    forum_reaction_emojis: reaction.emoji as ForumReactionEmoji,
+  })) as ForumReaction[];
+
   return {
-    ...latestTopic[0],
-    count: latestTopic[0].forum_topic_replies.length,
-    latestReply:
-      latestTopic[0].forum_topic_replies[
-        latestTopic[0].forum_topic_replies.length - 1
-      ],
+    ...firstTopic,
+    forum_topic_replies: replies,
+    forum_reactions: reactions,
+    forum_user: firstTopic.author as ForumUser,
+    count: replies.length,
+    latestReply: replies[replies.length - 1],
   } as ForumTopic;
 }

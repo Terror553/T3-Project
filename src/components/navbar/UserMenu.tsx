@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { type ForumUser } from "~/server/types/forum";
-import { replaceColor } from "~/server/utils/colorUtils";
 import { LogOutButton } from "../logOut";
+import { replaceColor } from "~/utils/styleUtils";
 
 type UserMenuProps = {
   user: ForumUser;
@@ -37,7 +37,7 @@ export const UserMenu = ({ user }: UserMenuProps) => {
           </div>
         </ul>
       </li>
-      
+
       {/* Alerts Dropdown */}
       <li className="nav-item dropdown dropdown-hover">
         <Link
@@ -62,7 +62,7 @@ export const UserMenu = ({ user }: UserMenuProps) => {
           </div>
         </ul>
       </li>
-      
+
       {/* Account Dropdown */}
       <li className="nav-item dropdown dropdown-hover">
         <Link
@@ -73,15 +73,15 @@ export const UserMenu = ({ user }: UserMenuProps) => {
           aria-expanded="false"
         >
           <div className="nav-link-icon">
-            <img src={user.avatar_url} alt={user.username} />
+            <img src={user.avatarUrl} alt={user.username} />
           </div>
           <div
             className="nav-link-text"
             style={replaceColor({
-              color: user.groups?.color ?? "#ffffff",
-              gradient: user.groups?.gradient ?? 0,
-              start: user.groups?.start,
-              end: user.groups?.end,
+              color: user.group?.color ?? "#ffffff",
+              gradient: user.group?.gradient ?? 0,
+              start: user.group?.start,
+              end: user.group?.end,
               isBadge: false,
             })}
           >
@@ -93,10 +93,10 @@ export const UserMenu = ({ user }: UserMenuProps) => {
             <span
               className="dropdown-header"
               style={replaceColor({
-                color: user.groups?.color ?? "#ffffff",
-                gradient: user.groups?.gradient ?? 0,
-                start: user.groups?.start,
-                end: user.groups?.end,
+                color: user.group?.color ?? "#ffffff",
+                gradient: user.group?.gradient ?? 0,
+                start: user.group?.start,
+                end: user.group?.end,
                 isBadge: false,
               })}
             >
@@ -105,18 +105,12 @@ export const UserMenu = ({ user }: UserMenuProps) => {
           </li>
           <div id="list-account">
             <li>
-              <Link
-                href={`/profile/${user.id}`}
-                className="dropdown-item"
-              >
+              <Link href={`/profile/${user.id}`} className="dropdown-item">
                 Profile
               </Link>
             </li>
             <li>
-              <Link
-                href="/profile/settings/overview"
-                className="dropdown-item"
-              >
+              <Link href="/profile/settings/overview" className="dropdown-item">
                 Einstellungen
               </Link>
             </li>

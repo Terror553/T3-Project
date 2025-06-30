@@ -1,18 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useFormContext } from "../lib/useFormManager";
 import { TextInput } from "./form/TextInput";
-import { loginSchema, type LoginFormValues } from "../lib/schemas/loginSchema";
+import { signInSchema } from "~/server/auth/authSchemas";
+import type { z } from "zod";
 import { signIn } from "~/server/auth/actions/signIn";
 import { FormProvider } from "./form/FormProvider";
-import { signInSchema } from "~/server/auth/authSchemas";
 import { useUser } from "~/client/user";
 import { useNotification } from "~/client/notification";
 import { Button } from "~/components/ui";
 
-const initialValues: LoginFormValues = {
+type SignInFormValues = z.infer<typeof signInSchema>;
+
+const initialValues: SignInFormValues = {
   email: "",
   password: "",
 };
@@ -21,34 +22,33 @@ export const LoginForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { refreshUser } = useUser();
   const { addNotification } = useNotification();
-  const router = useRouter();
 
-  async function onSubmit(data: LoginFormValues) {
+  async function onSubmit(data: SignInFormValues) {
     try {
       setIsSubmitting(true);
-      
+
       const result = await signIn(data);
-      
+
       if (result && !result.success) {
         addNotification(result.error?.message || "Login failed", "error");
         return;
       }
-      
+
       // Success - refresh user data and redirect
       await refreshUser();
       addNotification("Login successful", "success");
-      
+
       // Close modal if it's in a modal
       const modalElement = document.getElementById("modal-login");
       if (modalElement) {
-        const bootstrapModal = (window as any).bootstrap?.Modal?.getInstance(modalElement);
+        const bootstrapModal = (window as any).bootstrap?.Modal?.getInstance(
+          modalElement,
+        );
         if (bootstrapModal) {
           bootstrapModal.hide();
         }
       }
-      
-      // Redirect to home page
-      router.push("/");
+      window.location.reload();
     } catch (error) {
       console.error("Login error:", error);
       addNotification("An unexpected error occurred", "error");
@@ -69,7 +69,7 @@ export const LoginForm = () => {
 };
 
 function LoginFormInner({ isSubmitting }: { isSubmitting: boolean }) {
-  const { handleSubmit } = useFormContext<LoginFormValues>();
+  const { handleSubmit } = useFormContext<SignInFormValues>();
 
   return (
     <form onSubmit={handleSubmit} id="form-login">
