@@ -14,7 +14,6 @@ export type nav = {
 
 export async function getNavigation() {
   const navigation = await db.forumNavigation.findMany();
-  console.log("Navigation fetched:", navigation);
 
   if (!navigation || navigation.length == 0) {
     return [

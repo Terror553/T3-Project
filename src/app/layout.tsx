@@ -108,10 +108,7 @@ export default async function RootLayout({
             <div className="wrapper" id="wrapper">
               <Navbar initialUser={sessionUser} />
               <main className="main">
-                <div className="container">
-                  {children}{" "}
-                  <button className="btn btn-primary">Test Button</button>
-                </div>
+                <div className="container">{children}</div>
               </main>
               <Footer />
               <div className="scroll-to-top" id="button-scrollToTop">

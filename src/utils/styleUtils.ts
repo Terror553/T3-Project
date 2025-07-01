@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { minecraftColorToRGB } from "~/server/utils/colorUtils";
 
 export interface ColorOptions {
   color: string | null | undefined;
@@ -26,6 +27,8 @@ export function replaceColor({
   const baseStyles: CSSProperties = {
     color: color,
   };
+
+  baseStyles.color = minecraftColorToRGB(color);
 
   // Add gradient if applicable
   if (gradient === 1 && start && end) {

@@ -7,7 +7,6 @@ export async function GET() {
     if (!nav) {
       return NextResponse.json([]);
     }
-    console.log("got nav");
     return NextResponse.json(nav);
   } catch (error) {
     console.error("Error fetching nav:", error);

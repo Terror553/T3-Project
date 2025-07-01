@@ -43,7 +43,7 @@ export default function RegisterPage() {
         passwordConfirm,
       });
       console.log(error);
-      setError(error.toString());
+      setError(error.error?.message || "An unknown error occurred");
     }
   }
 

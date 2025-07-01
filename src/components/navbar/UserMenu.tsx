@@ -78,7 +78,7 @@ export const UserMenu = ({ user }: UserMenuProps) => {
           <div
             className="nav-link-text"
             style={replaceColor({
-              color: user.group?.color ?? "#ffffff",
+              color: user.group?.color ?? "&7",
               gradient: user.group?.gradient ?? 0,
               start: user.group?.start,
               end: user.group?.end,
