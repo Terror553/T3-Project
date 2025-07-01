@@ -1,3 +1,4 @@
+import type { ForumUser } from "@prisma/client";
 import { db } from "~/server/db";
 
 export async function getUser(id: number) {
@@ -21,5 +22,5 @@ export async function getUser(id: number) {
   if (fullUser == null) return null;
   if (!fullUser.group) return null;
 
-  return fullUser;
+  return fullUser as ForumUser;
 }

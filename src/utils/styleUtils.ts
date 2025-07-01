@@ -34,10 +34,9 @@ export function replaceColor({
   if (gradient === 1 && start && end) {
     if (isBadge) {
       return {
-        ...baseStyles,
-        background: `linear-gradient(to right, ${start}, ${end})`,
         WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
+
+        background: `linear-gradient(to right, ${start}, ${end})`,
       };
     } else {
       return {

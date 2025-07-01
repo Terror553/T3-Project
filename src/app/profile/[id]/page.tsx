@@ -3,14 +3,14 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/client/theme";
-import { type fullUser } from "~/server/auth/utils/currentUser";
+import type { ForumUser } from "~/server/types/forum";
 import { formatDate } from "~/server/utils/dateUtils";
 import { replaceColor } from "~/utils/styleUtils";
 
 const ProfilePage = () => {
   const params = useParams();
-  const [user, setUser] = useState<fullUser | null>(null);
-  const [currentUser, setCurrentUser] = useState<fullUser | null>(null);
+  const [user, setUser] = useState<ForumUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<ForumUser | null>(null);
   const [loading, setLoading] = useState(true);
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const [selected, setSelected] = useState<number | null>(null);
@@ -25,12 +25,12 @@ const ProfilePage = () => {
 
         const [userRes] = await Promise.all([fetch("/api/auth/user/" + id)]);
         if (!userRes.ok) throw new Error(`User API Error ${userRes.status}`);
-        const userData = (await userRes.json()) as fullUser;
+        const userData = (await userRes.json()) as ForumUser;
 
         const [currentUserRes] = await Promise.all([fetch("/api/auth/user/")]);
         if (!currentUserRes.ok)
           throw new Error(`User API Error ${currentUserRes.status}`);
-        const currentUserData = (await currentUserRes.json()) as fullUser;
+        const currentUserData = (await currentUserRes.json()) as ForumUser;
 
         setUser(userData);
         setCurrentUser(currentUserData);
@@ -74,14 +74,14 @@ const ProfilePage = () => {
                   <span
                     className="badge"
                     style={replaceColor({
-                      color: user.groups?.color ?? "#ffffff", // Add nullish coalescing for safety
-                      gradient: user.groups?.gradient ?? 0,
-                      start: user.groups?.start,
-                      end: user.groups?.end,
+                      color: user.group?.color ?? "#ffffff", // Add nullish coalescing for safety
+                      gradient: user.group?.gradient ?? 0,
+                      start: user.group?.start,
+                      end: user.group?.end,
                       isBadge: true,
                     })}
                   >
-                    {user.groups.name}
+                    {user.group?.name ?? "No Group"}
                   </span>
                 </div>
               </div>
@@ -130,8 +130,8 @@ const ProfilePage = () => {
                         Message
                       </a>
                     </li>
-                    {currentUser?.groups.high_team ||
-                    currentUser?.groups.team ? (
+                    {currentUser?.group?.highTeam ||
+                    currentUser?.group?.team ? (
                       <>
                         <a
                           href="#"
