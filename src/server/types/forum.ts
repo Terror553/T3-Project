@@ -1,3 +1,5 @@
+import type { ProfileWall, ProfileWallReply } from "./profile";
+
 /**
  * Type for user groups
  */
@@ -36,6 +38,8 @@ export interface ForumUser {
   signature: string;
   createdAt: Date;
   updatedAt: Date;
+  topics?: ForumTopic[] | null;
+  profileWalls?: ProfileWall[] | null;
   group: {
     name: string;
     default: number;

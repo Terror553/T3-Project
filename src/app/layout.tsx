@@ -69,7 +69,6 @@ export default async function RootLayout({
               var fullSiteURL = "https://melonenmc.de/";
               var page = "index";
               var route = "/";
-              var avatarSource = "https://mc-heads.net/avatar/{identifier}/{size}";
               var csrfToken = "84ac47220c003e91862f8d84831352fd";
               var debugging = false;
               var cookieNotice = false;

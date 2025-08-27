@@ -8,7 +8,13 @@ export default function TestForm() {
     <div className="max-w-md mx-auto mt-10">
       <button
         className="btn btn-primary"
-        onClick={() => addNotification("Operation successful", "success")}
+        onClick={() =>
+          addNotification(
+            "Operation successful",
+            "success",
+            Math.random() * 10000,
+          )
+        }
       >
         Submit
       </button>

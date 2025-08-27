@@ -88,10 +88,10 @@ export default function Topic() {
                   <Link
                     href={`/profile/${topic.forum_user.id}/`}
                     style={replaceColor({
-                      color: topic.forum_user.groups.color,
-                      gradient: topic.forum_user.groups.gradient,
-                      start: topic.forum_user.groups.start,
-                      end: topic.forum_user.groups.end,
+                      color: topic.forum_user.group?.color,
+                      gradient: topic.forum_user.group?.gradient,
+                      start: topic.forum_user.group?.start,
+                      end: topic.forum_user.group?.end,
                       isBadge: false,
                     })}
                   >
@@ -151,103 +151,102 @@ export default function Topic() {
                           </ul>
                         </div>
 
-                        {user &&
-                          (user.groups.team || user.groups.high_team) && (
-                            <div className="dropdown">
-                              <Link
-                                href={"#"}
-                                className="btn btn-secondary btn-sm dropdown-toggle"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                              >
-                                Moderation
-                              </Link>
-                              <ul className="dropdown-menu dropdown-menu-end">
-                                <li>
-                                  <Link className="dropdown-header" href={"#"}>
-                                    Moderation
-                                  </Link>
-                                </li>
-                                <li>
-                                  <form
-                                    action="?/lockTopic"
-                                    method="post"
-                                    className="d-block"
-                                  >
-                                    <input hidden id="topicId" name="topicId" />
+                        {user && (user.group?.team || user.group?.highTeam) && (
+                          <div className="dropdown">
+                            <Link
+                              href={"#"}
+                              className="btn btn-secondary btn-sm dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              Moderation
+                            </Link>
+                            <ul className="dropdown-menu dropdown-menu-end">
+                              <li>
+                                <Link className="dropdown-header" href={"#"}>
+                                  Moderation
+                                </Link>
+                              </li>
+                              <li>
+                                <form
+                                  action="?/lockTopic"
+                                  method="post"
+                                  className="d-block"
+                                >
+                                  <input hidden id="topicId" name="topicId" />
 
-                                    {topic.locked ? (
-                                      <button
-                                        type="submit"
-                                        className="dropdown-item"
-                                      >
-                                        Thema Öffnen
-                                      </button>
-                                    ) : (
-                                      <button
-                                        type="submit"
-                                        className="dropdown-item"
-                                      >
-                                        Thema Schließen
-                                      </button>
-                                    )}
-                                  </form>
-                                </li>
-                                <li>
-                                  <form
-                                    action="?/stickTopic"
-                                    method="post"
-                                    className="d-block"
-                                  >
-                                    <input hidden id="topicId" name="topicId" />
+                                  {topic.locked ? (
+                                    <button
+                                      type="submit"
+                                      className="dropdown-item"
+                                    >
+                                      Thema Öffnen
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="submit"
+                                      className="dropdown-item"
+                                    >
+                                      Thema Schließen
+                                    </button>
+                                  )}
+                                </form>
+                              </li>
+                              <li>
+                                <form
+                                  action="?/stickTopic"
+                                  method="post"
+                                  className="d-block"
+                                >
+                                  <input hidden id="topicId" name="topicId" />
 
-                                    {topic.pinned ? (
-                                      <button
-                                        type="submit"
-                                        className="dropdown-item"
-                                      >
-                                        Thema Abheften
-                                      </button>
-                                    ) : (
-                                      <button
-                                        type="submit"
-                                        className="dropdown-item"
-                                      >
-                                        Thema Anheften
-                                      </button>
-                                    )}
-                                  </form>
-                                </li>
-                                <li>
-                                  <Link
-                                    href={`/forum/topic/move/${topic.id}`}
-                                    className="dropdown-item"
-                                    data-request-modal="move"
-                                  >
-                                    Thema Verschieben
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    href={`/forum/topic/merge/${topic.id}`}
-                                    className="dropdown-item"
-                                    data-request-modal="merge"
-                                  >
-                                    Thema Zusammenfassen
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    href="#modal-forumTopicDelete"
-                                    className="dropdown-item"
-                                    data-bs-toggle="modal"
-                                  >
-                                    Thema Löschen
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-                          )}
+                                  {topic.pinned ? (
+                                    <button
+                                      type="submit"
+                                      className="dropdown-item"
+                                    >
+                                      Thema Abheften
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="submit"
+                                      className="dropdown-item"
+                                    >
+                                      Thema Anheften
+                                    </button>
+                                  )}
+                                </form>
+                              </li>
+                              <li>
+                                <Link
+                                  href={`/forum/topic/move/${topic.id}`}
+                                  className="dropdown-item"
+                                  data-request-modal="move"
+                                >
+                                  Thema Verschieben
+                                </Link>
+                              </li>
+                              <li>
+                                <Link
+                                  href={`/forum/topic/merge/${topic.id}`}
+                                  className="dropdown-item"
+                                  data-request-modal="merge"
+                                >
+                                  Thema Zusammenfassen
+                                </Link>
+                              </li>
+                              <li>
+                                <Link
+                                  href="#modal-forumTopicDelete"
+                                  className="dropdown-item"
+                                  data-bs-toggle="modal"
+                                >
+                                  Thema Löschen
+                                </Link>
+                              </li>
+                            </ul>
+                          </div>
+                        )}
 
                         <form action="?/followTopic" method="post">
                           <input
@@ -295,7 +294,7 @@ export default function Topic() {
                               <div className="forum-post-sidebar">
                                 <div className="forum-post-user-avatar">
                                   <img
-                                    src={topic.forum_user.avatar_url}
+                                    src={topic.forum_user.avatarUrl}
                                     alt={topic.forum_user.username}
                                   />
                                 </div>
@@ -304,11 +303,11 @@ export default function Topic() {
                                     <Link
                                       href={`/profile/${topic.forum_user.id}/?`}
                                       style={replaceColor({
-                                        color: topic.forum_user.groups.color,
+                                        color: topic.forum_user.group?.color,
                                         gradient:
-                                          topic.forum_user.groups.gradient,
-                                        start: topic.forum_user.groups.start,
-                                        end: topic.forum_user.groups.end,
+                                          topic.forum_user.group?.gradient,
+                                        start: topic.forum_user.group?.start,
+                                        end: topic.forum_user.group?.end,
                                         isBadge: false,
                                       })}
                                     >
@@ -319,15 +318,15 @@ export default function Topic() {
                                     <span
                                       className="badge"
                                       style={replaceColor({
-                                        color: topic.forum_user.groups.color,
+                                        color: topic.forum_user.group?.color,
                                         gradient:
-                                          topic.forum_user.groups.gradient,
-                                        start: topic.forum_user.groups.start,
-                                        end: topic.forum_user.groups.end,
+                                          topic.forum_user.group?.gradient,
+                                        start: topic.forum_user.group?.start,
+                                        end: topic.forum_user.group?.end,
                                         isBadge: true,
                                       })}
                                     >
-                                      {topic.forum_user.groups.name}
+                                      {topic.forum_user.group?.name}
                                     </span>
                                   </div>
                                 </div>
@@ -498,7 +497,7 @@ export default function Topic() {
                                         <div className="forum-post-sidebar">
                                           <div className="forum-post-user-avatar">
                                             <img
-                                              src={reply.forum_user.avatar_url}
+                                              src={reply.forum_user.avatarUrl}
                                               alt={reply.forum_user.username}
                                             />
                                           </div>
@@ -508,16 +507,16 @@ export default function Topic() {
                                                 href={`/profile/${reply.forum_user.id}/`}
                                                 style={replaceColor({
                                                   color:
-                                                    reply.forum_user.groups
-                                                      .color,
+                                                    reply.forum_user.group
+                                                      ?.color,
                                                   gradient:
-                                                    reply.forum_user.groups
-                                                      .gradient,
+                                                    reply.forum_user.group
+                                                      ?.gradient,
                                                   start:
-                                                    reply.forum_user.groups
-                                                      .start,
-                                                  end: reply.forum_user.groups
-                                                    .end,
+                                                    reply.forum_user.group
+                                                      ?.start,
+                                                  end: reply.forum_user.group
+                                                    ?.end,
                                                   isBadge: false,
                                                 })}
                                               >
@@ -529,20 +528,20 @@ export default function Topic() {
                                                 className="badge"
                                                 style={replaceColor({
                                                   color:
-                                                    reply.forum_user.groups
-                                                      .color,
+                                                    reply.forum_user.group
+                                                      ?.color,
                                                   gradient:
-                                                    reply.forum_user.groups
-                                                      .gradient,
+                                                    reply.forum_user.group
+                                                      ?.gradient,
                                                   start:
-                                                    reply.forum_user.groups
-                                                      .start,
-                                                  end: reply.forum_user.groups
-                                                    .end,
+                                                    reply.forum_user.group
+                                                      ?.start,
+                                                  end: reply.forum_user.group
+                                                    ?.end,
                                                   isBadge: true,
                                                 })}
                                               >
-                                                {reply.forum_user.groups.name}
+                                                {reply.forum_user.group?.name}
                                               </span>
                                             </div>
                                           </div>

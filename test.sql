@@ -128,100 +128,98 @@ VALUES
     (
         'Welcome to the Server!',
         'Welcome to our Minecraft server!',
-        1,
-        1,
+        32,
+        16,
         'welcome-to-server'
     ),
     (
         'Server Rules',
         'Please read our server rules',
-        1,
-        1,
+        33,
+        17,
         'server-rules'
     ),
     (
         'How to Get Started',
         'Guide for new players',
-        2,
-        3,
+        34,
+        18,
         'how-to-get-started'
     ),
     (
         'Known Issues',
         'List of known issues',
-        3,
-        5,
+        35,
+        18,
         'known-issues'
     ),
     (
         'Introduce Yourself',
         'New player introductions',
-        4,
-        3,
+        36,
+        19,
         'introduce-yourself'
     ),
     (
         'Suggestions',
         'Share your suggestions',
-        5,
-        2,
+        37,
+        20,
         'suggestions'
     ),
     (
         'Bug Report Template',
         'How to report bugs',
-        1,
-        5,
+        34,
+        17,
         'bug-report-template'
     ),
     (
         'Event Calendar',
         'Upcoming server events',
-        2,
-        1,
+        35,
+        20,
         'event-calendar'
     ),
     (
         'Staff Applications',
         'Apply for staff position',
-        1,
-        1,
+        42,
+        16,
         'staff-applications'
     ),
     (
         'Server Updates Log',
         'History of updates',
-        1,
-        2,
+        42,
+        17,
         'server-updates-log'
     );
 
 -- Create topic replies
 INSERT INTO
-    `forum_topic_replies` (`content`, `authorId`, `topicIdId`)
+    `forum_topic_replies` (`content`, `authorId`, `topicId`)
 VALUES
-    ('Great post!', 2, 1),
-    ('Thanks for sharing', 3, 1),
-    ('I agree with this', 4, 2),
-    ('Very helpful information', 5, 3),
-    ('Looking forward to more updates', 6, 4),
-    ('This helped me a lot', 7, 5),
-    ('Good to know', 8, 6),
-    ('Thanks for explaining', 9, 7),
-    ('I will try this out', 10, 8),
-    ('Keep up the good work', 2, 9),
-    ('Excellent guide', 3, 10),
-    ('This is useful', 4, 1),
-    ('I have a question about this', 5, 2),
-    ('Could you clarify something?', 6, 3),
-    ('Great initiative', 7, 4),
-    ('I found a similar issue', 8, 5),
-    ('Let me know if you need help', 9, 6),
-    ('I support this idea', 10, 7),
-    ('Looking forward to participating', 2, 8),
-    ('Count me in', 3, 9);
-
--- Create reaction emojis
+    ('Great post!', 32, 11),
+    ('Thanks for sharing', 33, 12),
+    ('I agree with this', 34, 13),
+    ('Very helpful information', 35, 14),
+    ('Looking forward to more updates', 36, 15),
+    ('This helped me a lot', 37, 16),
+    ('Good to know', 38, 17),
+    ('Thanks for explaining', 39, 18),
+    ('I will try this out', 42, 19),
+    ('Keep up the good work', 32, 20),
+    ('Excellent guide', 33, 11),
+    ('This is useful', 34, 12),
+    ('I have a question about this', 35, 13),
+    ('Could you clarify something?', 36, 14),
+    ('Great initiative', 37, 15),
+    ('I like this idea', 38, 16),
+    ('This is a good start', 39, 17),
+    ('I have some suggestions', 42, 18),
+    ('Thanks for the update', 42, 19)
+    -- Create reaction emojis
 INSERT INTO
     `forum_reaction_emojis` (`emoji`, `name`, `negative`, `authorId`)
 VALUES
@@ -238,25 +236,25 @@ VALUES
         'Getting Started',
         'Welcome to the server wiki',
         'fa fa-book',
-        1
+        42
     ),
     (
         'Game Mechanics',
         'Learn about our custom features',
         'fa fa-cogs',
-        1
+        42
     ),
     (
         'Rules and Guidelines',
         'Server rules and guidelines',
         'fa fa-gavel',
-        1
+        42
     ),
     (
         'FAQ',
         'Frequently asked questions',
         'fa fa-question-circle',
-        1
+        42
     );
 
 -- Create wiki subcategories
@@ -272,121 +270,126 @@ VALUES
     (
         'New Player Guide',
         'Guide for new players',
-        1,
-        1,
+        6,
+        42,
         'fa fa-star'
     ),
     (
         'Basic Commands',
         'List of basic commands',
-        1,
-        1,
+        7,
+        42,
         'fa fa-terminal'
     ),
     (
         'Custom Items',
         'Guide to custom items',
-        2,
-        1,
+        8,
+        32,
         'fa fa-diamond'
     ),
     (
         'Economy System',
         'How the economy works',
-        2,
-        1,
+        9,
+        34,
         'fa fa-money'
     ),
     (
         'Server Rules',
         'Detailed server rules',
-        3,
-        1,
+        6,
+        36,
         'fa fa-list'
     ),
     (
         'Building Rules',
         'Rules for building',
-        3,
-        1,
+        7,
+        35,
         'fa fa-building'
     ),
     (
         'Common Questions',
         'Most asked questions',
-        4,
-        1,
+        8,
+        42,
         'fa fa-info-circle'
     ),
     (
         'Technical Issues',
         'Common technical problems',
-        4,
-        1,
+        7,
+        42,
         'fa fa-wrench'
     );
 
 -- Create forum messages
 INSERT INTO
-    `forum_messages` (`title`, `message`, `senderId`, `recieverId`)
+    `forum_messages` (`title`, `message`, `senderId`, `receiverId`)
 VALUES
-    ('Welcome Message', 'Welcome to the server!', 1, 2),
+    (
+        'Welcome Message',
+        'Welcome to the server!',
+        34,
+        32
+    ),
     (
         'Question about rules',
         'Can you explain rule #3?',
-        2,
-        1
+        32,
+        42
     ),
     (
         'Event participation',
         'Are you joining the event?',
-        3,
-        4
+        36,
+        42
     ),
     (
         'Build team application',
         'I would like to join the build team',
-        4,
-        1
+        37,
+        42
     ),
     (
         'Server suggestion',
         'I have an idea for the server',
-        5,
-        1
+        34,
+        42
     ),
-    ('Help request', 'Need help with a plugin', 6, 1),
+    ('Help request', 'Need help with a plugin', 36, 42),
     (
         'Collaboration request',
         'Want to work on a project?',
-        7,
-        8
+        35,
+        42
     ),
-    ('Bug report', 'Found a bug in the shop', 8, 1),
+    ('Bug report', 'Found a bug in the shop', 34, 42),
     (
         'Staff application',
         'Interested in becoming staff',
-        9,
-        1
+        39,
+        42
     ),
     (
         'Thank you message',
         'Thanks for your help!',
-        10,
-        1
+        34,
+        42
     );
 
 -- Create profile wall posts
 INSERT INTO
-    `profile_wall` (`content`, `userId`, `profileIdId`)
+    `profile_wall` (`content`, `userId`, `profileId`)
 VALUES
-    ('Great player to team with!', 2, 1),
-    ('Thanks for the help yesterday', 3, 2),
-    ('Nice base you built!', 4, 3),
-    ('Thanks for trading', 5, 4),
-    ('Good game yesterday', 6, 5),
-    ('Welcome to the server', 7, 6),
-    ('Thanks for the tour', 8, 7),
-    ('Great shop prices', 9, 8),
-    ('Nice meeting you', 10, 9),
-    ('Looking forward to more events', 1, 10);
+    ('Great player to team with!', 42, 34),
+    ('Thanks for the help yesterday', 42, 34),
+    ('Nice base you built!', 42, 32),
+    ('Thanks for trading', 32, 42),
+    ('Good game yesterday', 34, 42),
+    ('Welcome to the server', 36, 42),
+    ('Thanks for the tour', 35, 42),
+    ('Great shop prices', 37, 42),
+    ('Nice meeting you', 38, 37),
+    ('Looking forward to more events', 39, 42);

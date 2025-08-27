@@ -78,7 +78,9 @@ export async function signIn(
 
     await createUserSession(sessionUser, await cookies());
 
-    return createSuccessResult(null);
+    return createSuccessResult({
+      username: user.username,
+    });
   } catch (error) {
     console.error("Error during sign in:", error);
     return createErrorResult(

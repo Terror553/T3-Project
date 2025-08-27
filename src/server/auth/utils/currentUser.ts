@@ -1,37 +1,10 @@
 import { cookies } from "next/headers";
-import { getUserFromSession } from "../session";
+import { getUserFromSession, getUserFromSessionForNav } from "../session";
 import { db } from "~/server/db";
-
-export type fullUser = {
-  groups: {
-    id: number;
-    default: number;
-    name: string;
-    color: string;
-    team: number;
-    high_team: number;
-    priority: number;
-    gradient: number;
-    start: string | null;
-    end: string | null;
-  };
-  id: number;
-  username: string;
-  email: string;
-  password: string;
-  salt: string;
-  userAuthToken: string | null;
-  avatarUrl: string;
-  bannerUrl: string;
-  signature: string;
-  createdAt: Date;
-  updatedAt: Date;
-  roleId: number | null;
-  userId: number | null;
-};
+import type { ForumUser } from "~/server/types/forum";
 
 export async function getCurrentUser() {
-  const user = await getUserFromSession(await cookies());
+  const user = (await getUserFromSessionForNav(await cookies())) as ForumUser;
 
   if (user == null) {
     return null;
@@ -41,18 +14,18 @@ export async function getCurrentUser() {
 
   // This should never happen
   if (fullUser == null) return null;
-  if (!fullUser.groups) return null;
+  if (!fullUser.group) return null;
 
   return fullUser;
 }
 
 async function getUserFromDb(id: number) {
-  return await db.forum_user.findUnique({
+  return await db.forumUser.findUnique({
     where: {
       id,
     },
     include: {
-      groups: true,
+      group: true,
     },
   });
 }

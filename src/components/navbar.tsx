@@ -316,10 +316,7 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
         {/* ... header-logo and header-status links ... */}
         <div className="header-logo animated">
           <Link href="/">
-            <img
-              src="https://mc-heads.net/avatar/ccbe40c30430423cbcc13a4167b06a79/128"
-              alt="MelonenMC"
-            />
+            <img src="/default.png" alt="MelonenMC" />
           </Link>
         </div>
         <Link

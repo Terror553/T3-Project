@@ -555,16 +555,10 @@ if (minecraftServerStatus) {
       if (minecraftQueryCache) {
         data = JSON.parse(minecraftQueryCache);
       } else {
-        const rawData = await fetch(
-          `https://mcapi.us/server/status?ip=griefergames.net&port=25565`,
-        );
-        data = await rawData.json();
-        sessionStorage.setItem("minecraftQuery", JSON.stringify(data));
+        sessionStorage.setItem("minecraftQuery", 12);
       }
 
-      minecraftServerPlayersCount.innerHTML = data.online
-        ? data.players.now
-        : 1000;
+      minecraftServerPlayersCount.innerHTML = 13;
     })();
   }
 }

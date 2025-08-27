@@ -14,11 +14,16 @@ interface Notification {
   id: string;
   message: string;
   type: NotificationType;
+  duration: number;
 }
 
 interface NotificationContextType {
   notifications: Notification[];
-  addNotification: (message: string, type: NotificationType) => void;
+  addNotification: (
+    message: string,
+    type: NotificationType,
+    duration: number,
+  ) => void;
   removeNotification: (id: string) => void;
 }
 
@@ -36,15 +41,15 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const addNotification = useCallback(
-    (message: string, type: NotificationType) => {
+    (message: string, type: NotificationType, duration = 3000) => {
       const id = Date.now().toString();
 
-      setNotifications((prev) => [...prev, { id, message, type }]);
+      setNotifications((prev) => [...prev, { id, message, type, duration }]);
 
-      // Auto-remove after 5 seconds
+      // Auto-remove after `duration`
       setTimeout(() => {
         removeNotification(id);
-      }, 5000);
+      }, duration);
     },
     [],
   );

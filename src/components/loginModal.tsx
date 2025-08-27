@@ -37,10 +37,9 @@ export const LoginModal = () => {
     const result = await signIn({ email, password });
     if (result.error) {
       setError(result.error.message);
-      addNotification(result.error.message, "error");
+      addNotification(result.error.message, "error", 5000);
     } else {
-      window.location.reload();
-      addNotification("Willkommen zurück!", "success");
+      addNotification("Willkommen zurück!", "success", 5000);
     }
 
     const modalElement = document.getElementById("modal-login");

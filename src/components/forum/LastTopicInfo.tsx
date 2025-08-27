@@ -29,10 +29,10 @@ export const LastTopicInfo = ({
         <Link
           href={`/profile/${topic.forum_user?.id}/`}
           style={replaceColor({
-            color: topic.forum_user.groups.color,
-            gradient: topic.forum_user.groups.gradient,
-            start: topic.forum_user.groups.start,
-            end: topic.forum_user.groups.end,
+            color: topic.forum_user.group?.color,
+            gradient: topic.forum_user.group?.gradient,
+            start: topic.forum_user.group?.start,
+            end: topic.forum_user.group?.end,
             isBadge: false,
           })}
         >
@@ -51,7 +51,7 @@ export const LastTopicInfo = ({
       <div className="forum-node-latest-icon">
         <Link href={`/profile/${topic.forum_user.id}/`}>
           <img
-            src={topic.forum_user.avatar_url}
+            src={topic.forum_user.avatarUrl}
             alt={topic.forum_user.username || ""}
           />
         </Link>
@@ -64,10 +64,10 @@ export const LastTopicInfo = ({
           <Link href={`/profile/${topic.forum_user.id}/`}>
             <span
               style={replaceColor({
-                color: topic.forum_user.groups.color,
-                gradient: topic.forum_user.groups.gradient,
-                start: topic.forum_user.groups.start,
-                end: topic.forum_user.groups.end,
+                color: topic.forum_user.group?.color,
+                gradient: topic.forum_user.group?.gradient,
+                start: topic.forum_user.group?.start,
+                end: topic.forum_user.group?.end,
                 isBadge: false,
               })}
             >

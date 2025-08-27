@@ -11,9 +11,9 @@ export interface AuthError {
  * Create a standardized auth error
  */
 export function createAuthError(
-  message: string, 
-  code: string, 
-  field?: string
+  message: string,
+  code: string,
+  field?: string,
 ): AuthError {
   return { message, code, field };
 }
@@ -23,14 +23,18 @@ export function createAuthError(
  */
 export interface AuthResult<T> {
   success: boolean;
-  data?: T;
+  data?: {
+    username: string;
+  };
   error?: AuthError;
 }
 
 /**
  * Create a successful auth result
  */
-export function createSuccessResult<T>(data: T): AuthResult<T> {
+export function createSuccessResult<T>(data: {
+  username: string;
+}): AuthResult<typeof data> {
   return { success: true, data };
 }
 
@@ -38,13 +42,13 @@ export function createSuccessResult<T>(data: T): AuthResult<T> {
  * Create a failed auth result
  */
 export function createErrorResult<T>(
-  message: string, 
-  code: string, 
-  field?: string
+  message: string,
+  code: string,
+  field?: string,
 ): AuthResult<T> {
-  return { 
-    success: false, 
-    error: createAuthError(message, code, field) 
+  return {
+    success: false,
+    error: createAuthError(message, code, field),
   };
 }
 

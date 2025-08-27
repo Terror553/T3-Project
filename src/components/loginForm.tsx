@@ -30,13 +30,17 @@ export const LoginForm = () => {
       const result = await signIn(data);
 
       if (result && !result.success) {
-        addNotification(result.error?.message || "Login failed", "error");
+        addNotification("Login failed!", "error", 5000);
         return;
       }
 
       // Success - refresh user data and redirect
       await refreshUser();
-      addNotification("Login successful", "success");
+      addNotification(
+        `Login successful, Welcome ${result.data?.username}!`,
+        "success",
+        5000,
+      );
 
       // Close modal if it's in a modal
       const modalElement = document.getElementById("modal-login");
@@ -48,10 +52,13 @@ export const LoginForm = () => {
           bootstrapModal.hide();
         }
       }
-      window.location.reload();
     } catch (error) {
       console.error("Login error:", error);
-      addNotification("An unexpected error occurred", "error");
+      addNotification(
+        "Unexpected error occurred",
+        "error",
+        Math.random() * 10000,
+      );
     } finally {
       setIsSubmitting(false);
     }

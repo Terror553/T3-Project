@@ -175,9 +175,22 @@ button.toast-close-button {
   height: 4px;
   background-color: #000;
   opacity: 0.4;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
-  filter: alpha(opacity=40);
+
+  width: 100%;
+  transform-origin: left;
+
+  animation: shrink var(--toast-duration, 3s) linear forwards;
 }
+
+@keyframes shrink {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
 @media all and (max-width: 240px) {
   #toast-container > div {
     padding: 8px 8px 8px 50px;

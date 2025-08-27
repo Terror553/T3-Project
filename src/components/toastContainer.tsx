@@ -29,7 +29,17 @@ export function ToastContainer() {
             >
               ×
             </button>
-            <div className="toast-progress" style={{ width: "50%" }}></div>
+
+            {/* Progress bar duration is dynamic */}
+            <div
+              className="toast-progress"
+              style={
+                {
+                  "--toast-duration": `${notification.duration}ms`,
+                } as React.CSSProperties
+              }
+            />
+
             <div className="toast-message">{notification.message}</div>
           </div>
         ))}
@@ -43,29 +53,3 @@ type ToastProps = {
   type: "success" | "error" | "info" | "warning";
   onClose?: () => void;
 };
-
-export function Toast({ children, type, onClose }: ToastProps) {
-  return (
-    <div id="toast-container" className="toast-top-right">
-      <div
-        className={`toast toast-${type === "error" ? "danger" : type}`}
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        style={{ display: "block" }}
-      >
-        {onClose && (
-          <button
-            type="button"
-            className="toast-close-button"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            ×
-          </button>
-        )}
-        <div className="toast-message">{children}</div>
-      </div>
-    </div>
-  );
-}

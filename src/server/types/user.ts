@@ -7,13 +7,13 @@ export type User = {
   password: string;
   salt: string;
   userAuthToken: string | null;
-  avatar_url: string;
-  banner_url: string;
+  avatarUrl: string;
+  bannerUrl: string;
   signature: string;
   createdAt: Date;
   updatedAt: Date;
   roleId: number | null;
-  user_id: number | null;
+  userId: number | null;
   groups: RoleObj | null;
 } | null;
 
@@ -24,13 +24,13 @@ export interface ForumUser {
   password: string;
   salt: string;
   userAuthToken?: string | null;
-  avatar_url: string;
-  banner_url: string;
+  avatarUrl: string;
+  bannerUrl: string;
   signature: string;
   createdAt: Date;
   updatedAt: Date;
   roleId?: number | null;
-  user_id?: number | null;
+  userId?: number | null;
 }
 
 export interface ForumMessages {
@@ -39,7 +39,7 @@ export interface ForumMessages {
   message: string;
   title: string;
   seen: number;
-  recieverId?: number | null;
+  receiverId?: number | null;
   senderId?: number | null;
 }
 
@@ -48,7 +48,7 @@ export interface ForumMessageReplies {
   createdAt: Date;
   message: string;
   seen: number;
-  recieverId?: number | null;
+  receiverId?: number | null;
   senderId?: number | null;
-  messageIdId?: number | null;
+  messageId?: number | null;
 }

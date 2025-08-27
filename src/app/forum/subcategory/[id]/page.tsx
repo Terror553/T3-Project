@@ -118,15 +118,19 @@ export default function Subcategory() {
                       <div className="forum-thread-info">
                         <div className="forum-thread-title">
                           <span className="float-end">
-                            {topic.pinned && (
+                            {topic.pinned ? (
                               <span title="Gepinnt">
                                 <i className="fas fa-thumbtack fa-fw"></i>
                               </span>
+                            ) : (
+                              <></>
                             )}
-                            {topic.locked && (
+                            {topic.locked ? (
                               <span title="Gesperrt">
                                 <i className="fas fa-lock fa-fw"></i>
                               </span>
+                            ) : (
+                              <></>
                             )}
                           </span>
                           <a href={`/forum/topic/${topic.slug}/`}>
@@ -138,10 +142,10 @@ export default function Subcategory() {
                             <a
                               href={`/profile/${topic.forum_user.id}/`}
                               style={replaceColor({
-                                color: topic.forum_user.groups?.color,
-                                gradient: topic.forum_user.groups?.gradient,
-                                start: topic.forum_user.groups?.start,
-                                end: topic.forum_user.groups?.end,
+                                color: topic.forum_user.group?.color,
+                                gradient: topic.forum_user.group?.gradient,
+                                start: topic.forum_user.group?.start,
+                                end: topic.forum_user.group?.end,
                                 isBadge: false,
                               })}
                             >
@@ -184,7 +188,7 @@ export default function Subcategory() {
                         <div className="forum-thread-latest-icon">
                           <a href={`/profile/${topic.forum_user.id}/`}>
                             <img
-                              src={topic.forum_user.avatar_url}
+                              src={topic.forum_user.avatarUrl}
                               alt={topic.forum_user.username}
                             />
                           </a>
@@ -195,10 +199,10 @@ export default function Subcategory() {
                               <a
                                 href={`/profile/${topic.latestReply.forum_user.id}/`}
                                 style={replaceColor({
-                                  color: topic.forum_user.groups.color,
-                                  gradient: topic.forum_user.groups.gradient,
-                                  start: topic.forum_user.groups.start,
-                                  end: topic.forum_user.groups.end,
+                                  color: topic.forum_user.group?.color,
+                                  gradient: topic.forum_user.group?.gradient,
+                                  start: topic.forum_user.group?.start,
+                                  end: topic.forum_user.group?.end,
                                   isBadge: false,
                                 })}
                               >
@@ -223,10 +227,10 @@ export default function Subcategory() {
                                 <a
                                   href={`/profile/${topic.forum_user.id}/`}
                                   style={replaceColor({
-                                    color: topic.forum_user.groups.color,
-                                    gradient: topic.forum_user.groups.gradient,
-                                    start: topic.forum_user.groups.start,
-                                    end: topic.forum_user.groups.end,
+                                    color: topic.forum_user.group?.color,
+                                    gradient: topic.forum_user.group?.gradient,
+                                    start: topic.forum_user.group?.start,
+                                    end: topic.forum_user.group?.end,
                                     isBadge: false,
                                   })}
                                 >

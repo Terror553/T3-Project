@@ -1,3 +1,27 @@
+export interface WikiCategory {
+  id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  icon: string;
+  dropdown: number;
+  content: string | null;
+  authorId: number | null;
+  subcategories?: WikiSubCategory[];
+}
+
+export interface WikiSubCategory {
+  id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  categoryId: number | null;
+  content: string;
+  authorId: number | null;
+  icon: string | null;
+  category?: WikiCategory | null;
+}
+
 export type WikiCategoryFull = {
   id: number;
   content: string;
