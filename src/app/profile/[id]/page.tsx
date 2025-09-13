@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/client/theme";
@@ -46,7 +47,7 @@ const ProfilePage = () => {
     }
 
     void fetchData();
-  }, [id]);
+  }, [id, hideLoadingBar, showLoadingBar]);
 
   return (
     <>
@@ -90,32 +91,32 @@ const ProfilePage = () => {
                 {user.id === currentUser?.id ? (
                   <>
                     <li>
-                      <a
+                      <Link
                         href="/user/settings/"
                         className="btn btn-primary btn-sm"
                       >
                         Account Settings
-                      </a>
+                      </Link>
                     </li>
                     <li className="profile-header-actions-more">
                       <div className="dropdown">
-                        <a
+                        <Link
                           href="#"
                           className="btn btn-secondary btn-sm btn-sq dropdown-toggle no-caret"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
                           <i className="fas fa-ellipsis-v"></i>
-                        </a>
+                        </Link>
                         <ul className="dropdown-menu dropdown-menu-end">
                           <li>
-                            <a
+                            <Link
                               href="#modal-profileBanner"
                               className="dropdown-item"
                               data-bs-toggle="modal"
                             >
                               Banner ändern
-                            </a>
+                            </Link>
                           </li>
                         </ul>
                       </div>
@@ -124,24 +125,24 @@ const ProfilePage = () => {
                 ) : (
                   <>
                     <li>
-                      <a
+                      <Link
                         href={`/user/messaging/new/${user.id}`}
                         className="btn btn-primary btn-sm"
                       >
                         Message
-                      </a>
+                      </Link>
                     </li>
                     {currentUser?.group?.highTeam ||
                     currentUser?.group?.team ? (
                       <>
-                        <a
+                        <Link
                           href="#"
                           className="btn btn-secondary btn-sm btn-sq dropdown-toggle no-caret"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
                           <i className="fas fa-ellipsis-v"></i>
-                        </a>
+                        </Link>
                         <ul className="dropdown-menu dropdown-menu-end">
                           <li>
                             <form
@@ -149,22 +150,22 @@ const ProfilePage = () => {
                               method="POST"
                               className="d-block"
                             >
-                              <a
+                              <Link
                                 href="#button-formSubmit"
                                 className="dropdown-item"
                               >
                                 Profilbanner zurücksetzen
-                              </a>
+                              </Link>
                             </form>
                           </li>
                           <li>
-                            <a
+                            <Link
                               href="#modal-profileBlock"
                               className="dropdown-item"
                               data-bs-toggle="modal"
                             >
                               Benutzer blockieren
-                            </a>
+                            </Link>
                           </li>
                         </ul>
                       </>
@@ -184,31 +185,31 @@ const ProfilePage = () => {
 
                 <ul className="nav nav-tabs">
                   <li className="nav-item">
-                    <a
+                    <Link
                       href="#tab-feed"
                       className="nav-link active"
                       data-bs-toggle="tab"
                     >
                       Pinnwand
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a
+                    <Link
                       href="#tab-about"
                       className="nav-link"
                       data-bs-toggle="tab"
                     >
                       Über Mich
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a
+                    <Link
                       href="#tab-forum"
                       className="nav-link"
                       data-bs-toggle="tab"
                     >
                       Forum
-                    </a>
+                    </Link>
                   </li>
                 </ul>
 
@@ -220,12 +221,12 @@ const ProfilePage = () => {
                           <div className="card-body">
                             <div className="message" id="post-">
                               <div className="message-icon">
-                                <a href={`/profile/${currentUser.id}/`}>
+                                <Link href={`/profile/${currentUser.id}/`}>
                                   <img
                                     src={currentUser.avatarUrl}
                                     alt={currentUser.username}
                                   />
-                                </a>
+                                </Link>
                               </div>
                               <div className="message-content">
                                 <div className="message-post">
@@ -265,22 +266,22 @@ const ProfilePage = () => {
                                 <>
                                   <div className="message" id="profilePost-1">
                                     <div className="message-icon">
-                                      <a href="/profile/Terror/">
+                                      <Link href="/profile/Terror/">
                                         <img
                                           src="https://crafatar.com/renders/head/cac1b575710e4b5fbe537e3e612227c4?size=500&amp;overlay"
                                           alt="Terror"
                                         />
-                                      </a>
+                                      </Link>
                                     </div>
                                     <div className="message-content">
                                       <div className="message-title">
-                                        <a
+                                        <Link
                                           href="/profile/Terror/"
                                           style={{ color: "#ff0000" }}
                                           data-poload="/queries/user/?id=1"
                                         >
                                           Terror
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="message-post">
                                         Du himf
@@ -291,25 +292,25 @@ const ProfilePage = () => {
                                         </span>
                                         <ul className="message-actions">
                                           <li>
-                                            <a>Like</a>
+                                            <p>Like</p>
                                             <span>(0)</span>
                                           </li>
                                           <li>
-                                            <a
+                                            <Link
                                               href="#collapse-profilePostReply-1"
                                               data-bs-toggle="collapse"
                                             >
                                               Antworten
-                                            </a>
+                                            </Link>
                                             <span>(0)</span>
                                           </li>
                                           <li>
-                                            <a
+                                            <Link
                                               href="#modal-profilePostEdit-1"
                                               data-bs-toggle="modal"
                                             >
                                               Bearbeiten
-                                            </a>
+                                            </Link>
                                           </li>
                                           <li>
                                             <form action="" method="post">
@@ -345,12 +346,12 @@ const ProfilePage = () => {
                                         >
                                           <div className="message message-reply">
                                             <div className="message-icon">
-                                              <a href="/profile/Terror/">
+                                              <Link href="/profile/Terror/">
                                                 <img
                                                   src="https://api.dicebear.com/5.x/initials/png?seed=Terror&amp;size=128"
                                                   alt="Terror"
                                                 />
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="message-content">
                                               <div className="message-post">
@@ -396,22 +397,22 @@ const ProfilePage = () => {
                                   </div>
                                   <div className="message" id="profilePost-1">
                                     <div className="message-icon">
-                                      <a href="/profile/Terror/">
+                                      <Link href="/profile/Terror/">
                                         <img
                                           src="https://crafatar.com/renders/head/cac1b575710e4b5fbe537e3e612227c4?size=500&amp;overlay"
                                           alt="Terror"
                                         />
-                                      </a>
+                                      </Link>
                                     </div>
                                     <div className="message-content">
                                       <div className="message-title">
-                                        <a
+                                        <Link
                                           href="/profile/Terror/"
                                           style={{ color: "#ff0000" }}
                                           data-poload="/queries/user/?id=1"
                                         >
                                           Terror
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="message-post">
                                         Du himf
@@ -422,16 +423,16 @@ const ProfilePage = () => {
                                         </span>
                                         <ul className="message-actions">
                                           <li>
-                                            <a>Like</a>
+                                            <Link href="#">Like</Link>
                                             <span>(0)</span>
                                           </li>
                                           <li>
-                                            <a
+                                            <Link
                                               href="#collapse-profilePostReply-2"
                                               data-bs-toggle="collapse"
                                             >
                                               Antworten
-                                            </a>
+                                            </Link>
                                             <span>(0)</span>
                                           </li>
                                         </ul>
@@ -443,12 +444,12 @@ const ProfilePage = () => {
                                         >
                                           <div className="message message-reply">
                                             <div className="message-icon">
-                                              <a href="/profile/Terror/">
+                                              <Link href="/profile/Terror/">
                                                 <img
                                                   src="https://api.dicebear.com/5.x/initials/png?seed=Terror&amp;size=128"
                                                   alt="Terror"
                                                 />
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="message-content">
                                               <div className="message-post">
@@ -524,18 +525,18 @@ const ProfilePage = () => {
                               <>
                                 <div className="message">
                                   <div className="message-icon">
-                                    <a href={`/profile/${user.id}`}>
+                                    <Link href={`/profile/${user.id}`}>
                                       <img
                                         src={user.avatarUrl}
                                         alt={user.username}
                                       />
-                                    </a>
+                                    </Link>
                                   </div>
                                   <div className="message-content">
                                     <div className="message-title">
-                                      <a href={`/forum/topic/${topic.id}`}>
+                                      <Link href={`/forum/topic/${topic.id}`}>
                                         {topic.title}
-                                      </a>
+                                      </Link>
                                     </div>
                                     <div className="message-post">
                                       <div className="post">
@@ -573,13 +574,17 @@ const ProfilePage = () => {
                     <div className="modal-content">
                       <div className="modal-header">
                         <div className="modal-title">Banner ändern</div>
-                        <a href="#" className="close" data-bs-dismiss="modal">
+                        <Link
+                          href="#"
+                          className="close"
+                          data-bs-dismiss="modal"
+                        >
                           <i className="fas fa-times"></i>
-                        </a>
+                        </Link>
                       </div>
                       <div className="modal-body">
                         <form action="" method="post" id="form-profileBanner">
-                          <ul className="thumbnails image_picker_selector">
+                          <ul className="thumbnails img_picker_selector">
                             {[4, 3, 2, 1].map((value) => (
                               <li key={value}>
                                 <div
@@ -589,8 +594,9 @@ const ProfilePage = () => {
                                   onClick={() => setSelected(value)}
                                 >
                                   <img
-                                    className="image_picker_image"
+                                    className="img_picker_img"
                                     src="/default.png"
+                                    alt="Default Banner"
                                   />
                                 </div>
                               </li>
@@ -643,19 +649,19 @@ const ProfilePage = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <div className="modal-title">Bearbeiten</div>
-                  <a href="#" className="close" data-bs-dismiss="modal">
+                  <Link href="#" className="close" data-bs-dismiss="modal">
                     <i className="fas fa-times"></i>
-                  </a>
+                  </Link>
                 </div>
                 <div className="modal-body">
                   <div className="message">
                     <div className="message-icon">
-                      <a href="/profile/Terror/">
+                      <Link href="/profile/Terror/">
                         <img
                           src="https://crafatar.com/renders/head/cac1b575710e4b5fbe537e3e612227c4?size=500&amp;overlay"
                           alt="Terror"
                         />
-                      </a>
+                      </Link>
                     </div>
                     <div className="message-content">
                       <div className="message-post">

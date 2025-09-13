@@ -11,19 +11,19 @@ const Navigation: React.FC<NavigationProps> = ({ navigation, user }) => {
     <ul className="navbar-nav">
       {navigation.map((nav) => (
         <li key={nav.id} className="nav-item">
-          {nav.team_link &&
+          {nav.teamLink &&
           user &&
           (user.groups?.high_team || user.groups?.team) ? (
             <Link
-              className={`nav-link ${isActive(nav.full_link)}`}
-              href={nav.full_link}
+              className={`nav-link ${isActive(nav.fullLink)}`}
+              href={nav.fullLink}
             >
               {nav.name}
             </Link>
           ) : (
             <Link
-              className={`nav-link ${isActive(nav.full_link)}`}
-              href={nav.full_link}
+              className={`nav-link ${isActive(nav.fullLink)}`}
+              href={nav.fullLink}
             >
               {nav.name}
             </Link>

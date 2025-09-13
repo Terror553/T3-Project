@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { type ForumTopic } from "~/server/types/forum";
 import { formatDate } from "~/server/utils/dateUtils";

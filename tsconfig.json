@@ -33,13 +33,10 @@
     }
   },
   "include": [
-    "**/*.cjs",
-    "**/*.js",
-    "**/*.ts",
-    "**/*.tsx",
     ".next/types/**/*.ts",
-    "Server/build/types/**/*.ts",
     "next-env.d.ts",
+    "src/**/*",
+    "src/client/theme.tsx",
     "build/types/**/*.ts"
   ],
   "exclude": ["node_modules", "Server/build", "public", "build"]

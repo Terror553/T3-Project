@@ -4,6 +4,7 @@ import Link from "next/link";
 import { type ForumUser } from "~/server/types/forum";
 import { LogOutButton } from "../logOut";
 import { replaceColor } from "~/utils/styleUtils";
+import Image from "next/image";
 
 type UserMenuProps = {
   user: ForumUser;

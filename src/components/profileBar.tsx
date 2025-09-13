@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "~/server/auth/utils/currentUser";
 import { LogOutButton } from "./logOut";
 import { replaceColor } from "~/utils/styleUtils";
+import Image from "next/image";
 
 export const ProfileBar = async () => {
   const user = await getCurrentUser();
@@ -117,15 +118,15 @@ export const ProfileBar = async () => {
                       aria-expanded="false"
                     >
                       <div className="nav-link-icon">
-                        <img src={user.avatar_url} alt={user.username} />
+                        <img src={user.avatarUrl} alt={user.username} />
                       </div>
                       <div
                         className="nav-link-text"
                         style={replaceColor({
-                          color: user.groups?.color,
-                          gradient: user.groups?.gradient,
-                          start: user.groups?.start || undefined,
-                          end: user.groups?.end || undefined,
+                          color: user.group?.color,
+                          gradient: user.group?.gradient,
+                          start: user.group?.start || undefined,
+                          end: user.group?.end || undefined,
                           isBadge: false,
                         })}
                       >
@@ -137,10 +138,10 @@ export const ProfileBar = async () => {
                         <span
                           className="dropdown-header"
                           style={replaceColor({
-                            color: user.groups?.color,
-                            gradient: user.groups?.gradient,
-                            start: user.groups?.start || undefined,
-                            end: user.groups?.end || undefined,
+                            color: user.group?.color,
+                            gradient: user.group?.gradient,
+                            start: user.group?.start || undefined,
+                            end: user.group?.end || undefined,
                             isBadge: false,
                           })}
                         >

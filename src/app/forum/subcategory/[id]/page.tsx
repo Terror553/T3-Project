@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -66,7 +67,7 @@ export default function Subcategory() {
     }
 
     void fetchData();
-  }, [id]);
+  }, [hideLoadingBar, showLoadingBar, id]);
 
   return (
     <>

@@ -9,6 +9,7 @@ import type { ForumUser } from "~/server/types/forum";
 import { LogOutButton } from "./logOut";
 import { LoginModal } from "./loginModal";
 import { replaceColor } from "~/utils/styleUtils";
+import Image from "next/image";
 
 // 1. Accept initialUser prop
 export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {

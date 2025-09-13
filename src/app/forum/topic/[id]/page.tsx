@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
@@ -53,7 +54,7 @@ export default function Topic() {
     }
 
     void fetchData();
-  }, []);
+  }, [hideLoadingBar, showLoadingBar, id]);
 
   return (
     <>

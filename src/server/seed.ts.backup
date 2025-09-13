@@ -5,24 +5,24 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Create test groups
-  const defaultGroup = await prisma.groups.create({
+  const defaultGroup = await prisma.group.create({
     data: {
       name: "Default",
       color: "#808080",
       default: 1,
       team: 0,
-      high_team: 0,
+      highTeam: 0,
       priority: 1,
     },
   });
 
-  const adminGroup = await prisma.groups.create({
+  const adminGroup = await prisma.group.create({
     data: {
       name: "Admin",
       color: "#FF0000",
       default: 0,
       team: 1,
-      high_team: 1,
+      highTeam: 1,
       priority: 10,
     },
   });
@@ -34,8 +34,8 @@ async function main() {
       data: {
         uuid: `test-uuid-${i}`,
         money: Math.random() * 1000,
-        first_joined: new Date(),
-        last_joined: new Date(),
+        firstJoined: new Date(),
+        lastJoined: new Date(),
         playtime: BigInt(Math.floor(Math.random() * 1000000)),
       },
     });
@@ -45,7 +45,7 @@ async function main() {
   // Create forum users
   const forumUsers = [];
   for (let i = 1; i <= 10; i++) {
-    const forumUser = await prisma.forum_user.create({
+    const forumUser = await prisma.forumUser.create({
       data: {
         username: `user${i}`,
         email: `user${i}@example.com`,
@@ -53,7 +53,7 @@ async function main() {
         salt: "salt123",
         signature: `This is user ${i}'s signature`,
         roleId: i === 1 ? adminGroup.id : defaultGroup.id,
-        user_id:
+        userId:
           users[i - 1]?.id ??
           (() => {
             throw new Error(`User at index ${i - 1} is undefined`);
@@ -72,7 +72,7 @@ async function main() {
     "Off-Topic",
   ];
   for (const name of categoryNames) {
-    const category = await prisma.forum_category.create({
+    const category = await prisma.forumCategory.create({
       data: {
         name,
       },
@@ -127,7 +127,7 @@ async function main() {
   ];
 
   for (const data of subcategoryData) {
-    const subcategory = await prisma.forum_subcategory.create({
+    const subcategory = await prisma.forumSubcategory.create({
       data: {
         ...data,
         slug: data.name.toLowerCase().replace(/ /g, "-"),
@@ -140,7 +140,7 @@ async function main() {
   // Create forum topics
   const topics = [];
   for (let i = 1; i <= 10; i++) {
-    const topic = await prisma.forum_topics.create({
+    const topic = await prisma.forumTopic.create({
       data: {
         title: `Test Topic ${i}`,
         content: `This is test topic ${i} content`,
@@ -162,7 +162,7 @@ async function main() {
 
   // Create forum topic replies
   for (let i = 1; i <= 20; i++) {
-    await prisma.forum_topic_replies.create({
+    await prisma.forumTopicReply.create({
       data: {
         content: `This is reply ${i} to a topic`,
         authorId:
@@ -170,7 +170,7 @@ async function main() {
           (() => {
             throw new Error("Forum user is undefined");
           })(),
-        topicIdId:
+        topicId:
           topics[Math.floor(Math.random() * topics.length)]?.id ??
           (() => {
             throw new Error("Topic is undefined");
@@ -189,7 +189,7 @@ async function main() {
 
   const reactionEmojis = [];
   for (const emoji of emojis) {
-    const reactionEmoji = await prisma.forum_reaction_emojis.create({
+    const reactionEmoji = await prisma.forumReactionEmoji.create({
       data: {
         ...emoji,
         authorId:
@@ -211,7 +211,7 @@ async function main() {
     "FAQ",
   ];
   for (const name of wikiCategoryNames) {
-    const wikiCategory = await prisma.wiki_categories.create({
+    const wikiCategory = await prisma.wikiCategory.create({
       data: {
         name,
         content: `Main content for ${name}`,
@@ -228,7 +228,7 @@ async function main() {
   // Create wiki subcategories
   for (const wikiCategory of wikiCategories) {
     for (let i = 1; i <= 2; i++) {
-      await prisma.wiki_sub_categories.create({
+      await prisma.wikiSubCategory.create({
         data: {
           name: `${wikiCategory.name} Subcategory ${i}`,
           content: `Content for ${wikiCategory.name} subcategory ${i}`,
@@ -249,12 +249,12 @@ async function main() {
     const receiver = forumUsers[Math.floor(Math.random() * forumUsers.length)];
     if (!sender || !receiver || sender.id === receiver.id) continue;
 
-    await prisma.forum_messages.create({
+    await prisma.forumMessage.create({
       data: {
         title: `Test Message ${i}`,
         message: `This is test message ${i} content`,
         senderId: sender.id,
-        recieverId: receiver.id,
+        receiverId: receiver.id,
       },
     });
   }
@@ -266,11 +266,11 @@ async function main() {
       forumUsers[Math.floor(Math.random() * forumUsers.length)];
     if (!user || !profileUser || user.id === profileUser.id) continue;
 
-    await prisma.profile_wall.create({
+    await prisma.profileWall.create({
       data: {
         content: `Wall post ${i} content`,
         userId: user.id,
-        profileIdId: profileUser.id,
+        profileId: profileUser.id,
       },
     });
   }

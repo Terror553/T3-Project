@@ -11,6 +11,7 @@ import { UserMenu } from "./UserMenu";
 import { MainNavigation } from "./MainNavigation";
 import { MobileNavigation } from "./MobileNavigation";
 import { HeaderStatus } from "./HeaderStatus";
+import Image from "next/image";
 
 type NavbarProps = {
   initialUser: ForumUser | null;

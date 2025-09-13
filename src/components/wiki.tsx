@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { WikiCategoryFull } from "~/server/types/wiki";
 
 export default function WikiPage({ wiki }: { wiki: WikiCategoryFull[] }) {
   // Helper to get the first tab key
-  const getFirstTabKey = () => {
+
+  const getFirstTabKey = useCallback(() => {
     if (!wiki || wiki.length === 0) return "";
     const firstCategory = wiki[0];
     if (
@@ -14,13 +15,13 @@ export default function WikiPage({ wiki }: { wiki: WikiCategoryFull[] }) {
       return `subCategory-${firstCategory.wiki_sub_categories?.[0]?.id ?? ""}`;
     }
     return `category-${firstCategory?.id ?? ""}`;
-  };
+  }, [wiki]);
 
   const [activeTab, setActiveTab] = useState<string>(getFirstTabKey());
 
   useEffect(() => {
     setActiveTab(getFirstTabKey());
-  }, [wiki]);
+  }, [wiki, getFirstTabKey]);
 
   const handleTabClick = (tabKey: string, event: React.MouseEvent) => {
     event.preventDefault();

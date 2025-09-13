@@ -40,6 +40,12 @@ interface NotificationProviderProps {
 export function NotificationProvider({ children }: NotificationProviderProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
+  const removeNotification = useCallback((id: string) => {
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id),
+    );
+  }, []);
+
   const addNotification = useCallback(
     (message: string, type: NotificationType, duration = 3000) => {
       const id = Date.now().toString();
@@ -51,14 +57,8 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
         removeNotification(id);
       }, duration);
     },
-    [],
+    [removeNotification],
   );
-
-  const removeNotification = useCallback((id: string) => {
-    setNotifications((prev) =>
-      prev.filter((notification) => notification.id !== id),
-    );
-  }, []);
 
   return (
     <NotificationContext.Provider
