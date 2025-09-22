@@ -6,16 +6,20 @@
 2. [Architecture](#architecture)
 3. [Directory Structure](#directory-structure)
 4. [Key Components](#key-components)
-   - [Context Providers](#context-providers)
-   - [UI Components](#ui-components)
-   - [Pages](#pages)
-   - [API Routes](#api-routes)
 5. [Authentication](#authentication)
 6. [State Management](#state-management)
 7. [Utilities](#utilities)
 8. [Data Models](#data-models)
-9. [Styling](#styling)
-10. [Development Guidelines](#development-guidelines)
+9. [API Reference](#api-reference)
+10. [Styling](#styling)
+11. [Setup & Deployment](#setup--deployment)
+12. [Testing & CI/CD](#testing--cicd)
+13. [Troubleshooting & FAQ](#troubleshooting--faq)
+14. [Contribution Guidelines](#contribution-guidelines)
+15. [Agent & Automation Details](#agent--automation-details)
+16. [Development Guidelines](#development-guidelines)
+
+---
 
 ## Project Overview
 
@@ -37,7 +41,7 @@ The application follows a modern React architecture with:
 ```
 /src
 ├── app/                 # Next.js App Router pages and API routes
-│   ├── api/             # API endpoints 
+│   ├── api/             # API endpoints
 │   ├── forum/           # Forum-related pages
 │   ├── profile/         # User profile pages
 │   ├── login/           # Authentication pages
@@ -69,17 +73,17 @@ The application follows a modern React architecture with:
 Provides user authentication state throughout the application.
 
 ```typescript
-// Key features:
 interface UserContextType {
-  user: ForumUser | null;       // The current user
-  isLoading: boolean;           // Loading state
-  error: string | null;         // Error message if any
-  refreshUser: () => Promise<void>;  // Refresh user data from API
-  updateUser: (user: ForumUser | null) => void;  // Update user state
+  user: ForumUser | null; // The current user
+  isLoading: boolean; // Loading state
+  error: string | null; // Error message if any
+  refreshUser: () => Promise<void>; // Refresh user data from API
+  updateUser: (user: ForumUser | null) => void; // Update user state
 }
 ```
 
 Usage:
+
 ```tsx
 const { user, refreshUser } = useUser();
 ```
@@ -89,7 +93,6 @@ const { user, refreshUser } = useUser();
 Manages theme state (light/dark mode) and loading indicators.
 
 ```typescript
-// Key features:
 interface ThemeContextType {
   isDarkMode: boolean;
   toggleTheme: () => void;
@@ -99,6 +102,7 @@ interface ThemeContextType {
 ```
 
 Usage:
+
 ```tsx
 const { isDarkMode, toggleTheme, showLoadingBar } = useTheme();
 ```
@@ -108,7 +112,6 @@ const { isDarkMode, toggleTheme, showLoadingBar } = useTheme();
 Manages toast notifications throughout the application.
 
 ```typescript
-// Key features:
 interface NotificationContextType {
   notifications: Notification[];
   addNotification: (message: string, type: NotificationType) => void;
@@ -117,6 +120,7 @@ interface NotificationContextType {
 ```
 
 Usage:
+
 ```tsx
 const { addNotification } = useNotification();
 addNotification("Operation successful", "success");
@@ -186,6 +190,8 @@ The main navigation component that renders different menus based on authenticati
 - `GET /api/forum/topic/[id]`: Returns a specific topic with its replies
 - `GET /api/forum/latest-topic/[id]`: Returns the latest topic in a subcategory
 
+---
+
 ## Authentication
 
 Authentication is handled using server-side sessions with iron-session.
@@ -205,6 +211,8 @@ Authentication is handled using server-side sessions with iron-session.
 3. User context is updated with the authenticated user
 4. Protected routes check for valid session
 
+---
+
 ## State Management
 
 State is managed using React Context API with custom hooks for specific functionality.
@@ -220,6 +228,8 @@ State is managed using React Context API with custom hooks for specific function
 - **Form State**: Form values, validation, submission
 - **UI State**: Loading states, error messages, modal visibility
 
+---
+
 ## Utilities
 
 ### API Utilities
@@ -227,19 +237,16 @@ State is managed using React Context API with custom hooks for specific function
 - `apiHandler` (`src/utils/apiHandler.ts`): Standardized API response handling
 
 ```typescript
-export async function apiHandler<T>({ 
-  handler, 
-  errorMessage = "Internal Server Error" 
+export async function apiHandler<T>({
+  handler,
+  errorMessage = "Internal Server Error",
 }: ApiHandlerOptions<T>) {
   try {
     const data = await handler();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error(`API Error: ${errorMessage}`, error);
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 ```
@@ -254,13 +261,13 @@ export function createSuccessResult<T>(data: T): AuthResult<T> {
 }
 
 export function createErrorResult<T>(
-  message: string, 
-  code: string, 
-  field?: string
+  message: string,
+  code: string,
+  field?: string,
 ): AuthResult<T> {
-  return { 
-    success: false, 
-    error: createAuthError(message, code, field) 
+  return {
+    success: false,
+    error: createAuthError(message, code, field),
   };
 }
 ```
@@ -295,31 +302,307 @@ export function replaceColor({
 }
 ```
 
-## Data Models
+---
 
-### Forum Models
+# 📦 Data Models
 
-- **ForumCategory**: Top-level forum organization
-- **ForumSubcategory**: Groups of related topics within a category
-- **ForumTopic**: Individual discussion threads
-- **ForumTopicReply**: Responses within a topic
+## ForumUser
 
-### User Models
+```prisma
+model ForumUser {
+  id           Int      @id @default(autoincrement())
+  username     String   @db.Text
+  email        String   @db.Text
+  password     String   @db.LongText
+  salt         String   @db.LongText
+  userAuthToken String? @db.LongText
+  avatarUrl    String   @default("default.png") @db.LongText
+  bannerUrl    String   @default("default.png") @db.LongText
+  signature    String   @default("") @db.LongText
+  createdAt    DateTime @default(now()) @db.DateTime(6)
+  updatedAt    DateTime @default(now()) @db.DateTime(6)
+  roleId       Int?
+  userId       Int?     @unique(map: "REL_e01d18e1c4884655561785cca8")
+  // ...relations omitted for brevity
+  @@unique([username(length: 255), password(length: 255), salt(length: 255), email(length: 255), userAuthToken(length: 255)])
+  @@index([roleId], map: "FK_0fd7d07d475155bfb73b59a0b64")
+  @@map("forum_user")
+}
+```
 
-- **ForumUser**: User account information
-- **UserRole**: User permission groups
-- **UserGroup**: Mapping between users and roles
+**Fields:**
 
-## Styling
+- `id`: Primary key, auto-incremented.
+- `username`: User's display name.
+- `email`: User's email address.
+- `password`: Hashed password.
+- `salt`: Password salt.
+- `userAuthToken`: Optional, for session management.
+- `avatarUrl`: Path to avatar image.
+- `bannerUrl`: Path to banner image.
+- `signature`: User's forum signature.
+- `createdAt`, `updatedAt`: Timestamps.
+- `roleId`: Foreign key to Group.
+- `userId`: Foreign key to User.
 
-The application uses a combination of:
+**Example:**
 
-- **Bootstrap**: For layout and components
-- **Custom CSS**: For theme-specific styling
-- **CSS Variables**: For theming support
-- **Dynamic Styling**: For user group colors and gradients
+```json
+{
+  "id": 1,
+  "username": "Steve",
+  "email": "steve@example.com",
+  "avatarUrl": "default.png",
+  "createdAt": "2025-09-22T12:00:00.000Z"
+}
+```
 
-## Development Guidelines
+## ForumCategory
+
+```prisma
+model ForumCategory {
+  id            Int                @id @default(autoincrement())
+  name          String             @db.Text
+  createdAt     DateTime           @default(now()) @db.DateTime(6)
+  updatedAt     DateTime           @default(now()) @db.DateTime(6)
+  subcategories ForumSubcategory[]
+  @@map("forum_category")
+}
+```
+
+**Fields:**
+
+- `id`: Primary key.
+- `name`: Category name.
+- `createdAt`, `updatedAt`: Timestamps.
+- `subcategories`: List of ForumSubcategory.
+
+**Example:**
+
+```json
+{
+  "id": 1,
+  "name": "General Discussion",
+  "createdAt": "2025-09-22T12:00:00.000Z"
+}
+```
+
+## ForumTopic
+
+```prisma
+model ForumTopic {
+  id             Int                  @id @default(autoincrement())
+  title          String               @db.Text
+  content        String               @db.LongText
+  status         Int                  @default(0)
+  createdAt      DateTime             @default(now()) @db.DateTime(6)
+  updatedAt      DateTime             @default(now()) @db.DateTime(6)
+  locked         Int                  @default(0) @db.TinyInt
+  pinned         Int                  @default(0) @db.TinyInt
+  authorId       Int?
+  subcategoryId  Int?
+  slug           String?              @db.Text
+  // ...relations omitted for brevity
+  @@index([subcategoryId], map: "FK_01d2ff4b1bbf5c9eee83310498a")
+  @@index([authorId], map: "FK_c228733246cf2aee0240663b354")
+  @@map("forum_topics")
+}
+```
+
+**Fields:**
+
+- `id`: Primary key.
+- `title`: Topic title.
+- `content`: Topic content.
+- `status`: Status code (e.g., open/closed).
+- `locked`: 1 if locked, 0 otherwise.
+- `pinned`: 1 if pinned, 0 otherwise.
+- `authorId`: Foreign key to ForumUser.
+- `subcategoryId`: Foreign key to ForumSubcategory.
+
+**Example:**
+
+```json
+{
+  "id": 42,
+  "title": "Welcome to the Forum!",
+  "content": "Introduce yourself here.",
+  "status": 0,
+  "locked": 0,
+  "pinned": 1,
+  "authorId": 1,
+  "subcategoryId": 2
+}
+```
+
+---
+
+# 🛠️ API Endpoint Reference
+
+## Authentication
+
+### Get Current User
+
+- **GET** `/api/auth/user`
+- **Description:** Returns the current authenticated user.
+- **Response:**
+  ```json
+  {
+    "id": 1,
+    "username": "Steve",
+    "email": "steve@example.com"
+  }
+  ```
+- **Errors:**
+  - 401 Unauthorized: Not logged in.
+
+### Get User by ID
+
+- **GET** `/api/auth/user/[id]`
+- **Description:** Returns a user by their ID.
+- **Response:** Same as above.
+
+### Get Navigation Items
+
+- **GET** `/api/auth/navigation`
+- **Description:** Returns navigation items based on user roles.
+- **Response:**
+  ```json
+  [
+    { "name": "Home", "link": "/" },
+    { "name": "Forum", "link": "/forum" }
+  ]
+  ```
+
+## Forum
+
+### Get All Forum Categories
+
+- **GET** `/api/forum`
+- **Description:** Returns all forum categories with subcategories.
+- **Response:**
+  ```json
+  [
+    {
+      "id": 1,
+      "name": "General Discussion",
+      "subcategories": [{ "id": 2, "name": "Introductions" }]
+    }
+  ]
+  ```
+
+### Get Forum Category
+
+- **GET** `/api/forum/category`
+- **Description:** Returns forum categories.
+- **Response:** Same as above.
+
+### Get Subcategory by ID
+
+- **GET** `/api/forum/subcategory/[id]`
+- **Description:** Returns a specific subcategory with its topics.
+- **Response:**
+  ```json
+  {
+    "id": 2,
+    "name": "Introductions",
+    "topics": [{ "id": 42, "title": "Welcome to the Forum!" }]
+  }
+  ```
+
+### Get Topic by ID
+
+- **GET** `/api/forum/topic/[id]`
+- **Description:** Returns a specific topic with its replies.
+- **Response:**
+  ```json
+  {
+    "id": 42,
+    "title": "Welcome to the Forum!",
+    "replies": [{ "id": 100, "content": "Hello everyone!" }]
+  }
+  ```
+
+---
+
+# 🚀 Setup & Deployment
+
+## Prerequisites
+
+- Node.js >= 18.x
+- npm >= 9.x
+- MySQL server
+
+## Setup Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd T3-Project
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Configure environment variables:**
+   - Copy `.env.example` to `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - Edit `.env` and set your `DATABASE_URL` and any other required secrets.
+4. **Run database migrations:**
+   ```bash
+   npm run db:migrate
+   ```
+5. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+6. **Access the app:**
+   - Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Deployment
+
+- See official T3 Stack deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify), and [Docker](https://create.t3.gg/en/deployment/docker).
+- Set all required environment variables in your deployment platform.
+
+---
+
+# 🧪 Testing & CI/CD
+
+- Run all checks: `npm run check`
+- Lint: `npm run lint`
+- Typecheck: `npm run typecheck`
+- Format: `npm run format:check`
+- Build: `npm run build`
+- (Add test instructions if/when tests are present.)
+
+---
+
+# 🛠️ Troubleshooting & FAQ
+
+- **Database connection error:** Check `DATABASE_URL` in `.env`.
+- **Migration issues:** Run `npm run db:generate` or `npm run db:migrate`.
+- **Build fails:** Ensure all dependencies are installed and TypeScript passes.
+
+---
+
+# 🤝 Contribution Guidelines
+
+- Fork and branch from `main`.
+- Follow code style in AGENTS.md.
+- Run `npm run check` before PR.
+- Write clear commit messages.
+
+---
+
+# 🤖 Agent & Automation Details
+
+- (Describe any agents, bots, or automation scripts if used.)
+
+---
+
+# 📝 Development Guidelines
 
 ### Code Style
 
