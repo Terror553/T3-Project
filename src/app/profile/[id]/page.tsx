@@ -666,9 +666,10 @@ const ProfilePage = () => {
                     <div className="message-content">
                       <div className="message-post">
                         <div className="form-group">
-                          <textarea name="content" className="form-control">
-                            Du himf
-                          </textarea>
+                          <textarea
+                            name="content"
+                            className="form-control"
+                          ></textarea>
                         </div>
                       </div>
                     </div>
