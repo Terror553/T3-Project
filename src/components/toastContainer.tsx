@@ -40,7 +40,7 @@ export function ToastContainer() {
               }
             />
 
-            <div className="toast-message">{notification.message}</div>
+            <div className="toast-message" dangerouslySetInnerHTML={{ __html: notification.message }} />
           </div>
         ))}
       </div>

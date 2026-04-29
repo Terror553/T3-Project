@@ -32,7 +32,7 @@ export const signUpSchema = z
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
         {
           message:
-            "Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.",
+            "Confirmed Password must be the same as the password and meet the same requirements.",
         },
       ),
   })

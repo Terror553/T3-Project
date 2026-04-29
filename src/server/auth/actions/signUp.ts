@@ -20,8 +20,9 @@ export async function signUp(
   const validationResult = signUpSchema.safeParse(unsafeData);
 
   if (!validationResult.success) {
+    
     return createErrorResult(
-      "Invalid input data",
+      `${validationResult.error.errors.map((e) => e.message).join("<br>")}`,
       AuthErrorCode.VALIDATION_ERROR,
     );
   }

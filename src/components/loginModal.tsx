@@ -37,14 +37,14 @@ export const LoginModal = () => {
     const result = await signIn({ email, password });
     if (result.error) {
       setError(result.error.message);
-      addNotification(result.error.message, "error", 5000);
+      addNotification(result.error.message, "error", 5000); 
     } else {
-      addNotification("Willkommen zurück!", "success", 5000);
+      addNotification(`Willkommen zurück, <b><n>${result.data?.username}</n></b>!`, "success", 5000);
     }
 
     const modalElement = document.getElementById("modal-login");
     if (modalElement && (window as any).bootstrap?.Modal) {
-      const modalInstance =
+      const modalInstance = 
         (window as any).bootstrap.Modal.getInstance(modalElement) ??
         new (window as any).bootstrap.Modal(modalElement);
       modalInstance.hide();

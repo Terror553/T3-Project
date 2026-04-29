@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
+import { useNotification } from "~/client/notification";
 import { signUp } from "~/server/auth/actions/signUp";
 import type { signUpSchema } from "~/server/auth/authSchemas";
 
@@ -12,6 +13,7 @@ export default function RegisterPage() {
   const [email, setEMail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [passwordConfirm, setPasswordConfirm] = useState<string>();
+  const { addNotification } = useNotification();
   const form = useForm<z.infer<typeof signUpSchema>>({
     defaultValues: {
       username: "",
@@ -43,6 +45,11 @@ export default function RegisterPage() {
         passwordConfirm,
       });
       console.log(error);
+      if(!error.success) {
+        addNotification("Registration successful! Please log in.", "success", 5000);
+        window.location.href = `/`;
+        return;
+      }
       setError(error.error?.message || "An unknown error occurred");
     }
   }
@@ -50,7 +57,7 @@ export default function RegisterPage() {
   return (
     <div className="content">
       <h2>Sign Up</h2>
-      {error && <p className="alert alert-danger">{error}</p>}
+      {error && <p className="alert alert-danger" dangerouslySetInnerHTML={{ __html: `<b>Please fix the following errors:</b><br />${error}` }}></p>}
       <div className="card">
         <div className="card-body">
           <div className="row justify-content-center">

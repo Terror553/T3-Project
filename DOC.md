@@ -283,11 +283,16 @@ This mapping is intentional and should remain consistent.
 
 ### 9.1 Auth Building Blocks
 
-- Schemas: `src/server/auth/authSchemas.ts`
-- Actions: `src/server/auth/actions/signIn.ts`, `signUp.ts`, `logOut.ts`
-- Session logic: `src/server/auth/session.ts`
-- Current user utility: `src/server/auth/utils/currentUser.ts`
-- Standard auth response helpers: `src/utils/authUtils.ts`
+This project uses a server-action-based authentication flow with cookie-based sessions. For a detailed walkthrough of the entire authentication flow, see section `16A.10 Authentication Flow`.
+
+The main components of the authentication system are:
+- **Server Actions**: `src/server/auth/actions/signIn.ts`, `src/server/auth/actions/signUp.ts`, and `src/server/auth/actions/logOut.ts` handle the core logic for user authentication, account creation, and logging out.
+- **Session Management**: `src/server/auth/session.ts` manages the user's session, including creating, updating, and removing the session cookie.
+- **Password Hashing**: `src/server/auth/utils/passwordHasher.ts` provides functions for hashing and comparing passwords.
+- **Authentication Schemas**: `src/server/auth/authSchemas.ts` defines the Zod schemas for validating authentication-related data.
+- **Client-side Components**: `src/components/loginForm.tsx` and `src/app/login/page.tsx` provide the user interface for logging in.
+- **User Context**: `src/client/user.tsx` provides a React context for accessing the current user's data on the client.
+- **Notification System**: `src/client/notification.tsx` is used to display success and error messages to the user.
 
 ### 9.2 Current Session Model
 
@@ -998,6 +1003,54 @@ This is the preferred pattern used by existing pages and forms.
 showLoadingBar("saveProfile");
 try {
   const result = await doServerAction();
+
+### 16A.10 Authentication Flow
+
+This section provides a detailed walkthrough of the authentication flow, from the user's interaction with the UI to the server-side logic and back.
+
+#### 1. User Interface (Login Page)
+
+The authentication process begins at the login page, located at `src/app/login/page.tsx`. This page renders the `LoginForm` component.
+
+#### 2. Login Form (`src/components/loginForm.tsx`)
+
+The `LoginForm` component is responsible for handling the user's input and submitting it to the server. It uses the `useFormManager` hook for form state management and validation, and the `signInSchema` from `src/server/auth/authSchemas.ts` to define the validation rules.
+
+When the user submits the form, the `onSubmit` function is called. This function calls the `signIn` server action, located at `src/server/auth/actions/signIn.ts`.
+
+#### 3. Sign-In Server Action (`src/server/auth/actions/signIn.ts`)
+
+The `signIn` server action is the core of the authentication logic. It performs the following steps:
+
+1.  **Validates the input data** using the `signInSchema`.
+2.  **Finds the user** in the database by their email address.
+3.  **Verifies the password** using the `comparePasswords` function from `src/server/auth/utils/passwordHasher.ts`.
+4.  **Creates a user session** by calling the `createUserSession` function from `src/server/auth/session.ts`. This function creates a session cookie containing the user's data.
+5.  **Returns a success or error result** to the client.
+
+#### 4. Sign-Up Server Action (`src/server/auth/actions/signUp.ts`)
+
+The `signUp` server action is similar to the `signIn` action, but it creates a new user account instead of logging in an existing user. It performs the following steps:
+
+1.  **Validates the input data** using the `signUpSchema`.
+2.  **Checks if a user with the same email or username already exists**.
+3.  **Hashes the password** using the `hashPassword` function from `src/server/auth/utils/passwordHasher.ts`.
+4.  **Creates a new user** in the database.
+5.  **Creates a user session** for the new user.
+6.  **Returns a success or error result** to the client.
+
+#### 5. Session Management (`src/server/auth/session.ts`)
+
+The `session.ts` file contains the logic for managing user sessions. It uses the `iron-session` library to create and manage encrypted session cookies.
+
+#### 6. User Context (`src/client/user.tsx`)
+
+The `useUser` hook provides access to the current user's data on the client. It also provides a `refreshUser` function that can be used to update the user's data after a login or logout.
+
+#### 7. Notifications (`src/client/notification.tsx`)
+
+The `useNotification` hook is used to display success and error messages to the user. The `LoginForm` component uses this hook to display a "Login failed!" message if the login is unsuccessful, or a "Login successful" message if the login is successful.
+
   if (!result.success) {
     addNotification("Save failed", "error", 5000);
     return;
