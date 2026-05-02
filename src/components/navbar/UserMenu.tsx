@@ -74,7 +74,7 @@ export const UserMenu = ({ user }: UserMenuProps) => {
           aria-expanded="false"
         >
           <div className="nav-link-icon">
-            <img src={user.avatarUrl} alt={user.username} />
+            <Image src={user.avatarUrl} alt={user.username} width={128} height={128} />
           </div>
           <div
             className="nav-link-text"

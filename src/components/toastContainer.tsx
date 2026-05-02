@@ -1,6 +1,5 @@
 "use client";
 
-import { type ReactNode } from "react";
 import { useNotification } from "~/client/notification";
 
 export function ToastContainer() {
@@ -47,9 +46,3 @@ export function ToastContainer() {
     </>
   );
 }
-
-type ToastProps = {
-  children: ReactNode;
-  type: "success" | "error" | "info" | "warning";
-  onClose?: () => void;
-};

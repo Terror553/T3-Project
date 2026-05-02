@@ -2,9 +2,8 @@
 import { useState, createContext, useContext } from "react";
 import type { ZodSchema } from "zod";
 import { sanitizeInput } from "./sanitize";
-import type { ReactNode } from "react";
 
-export interface FormContextValue<T extends Record<string, any>> {
+export interface FormContextValue<T extends Record<string, unknown>> {
   values: T;
   errors: Partial<Record<keyof T, string>>;
   handleChange: (field: keyof T) => (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -13,22 +12,24 @@ export interface FormContextValue<T extends Record<string, any>> {
   setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof T, string>>>>;
 }
 
-export const FormContext = createContext<FormContextValue<any> | undefined>(undefined);
+export const FormContext = createContext<
+  FormContextValue<Record<string, unknown>> | undefined
+>(undefined);
 
-export function useFormContext<T extends Record<string, any>>() {
+export function useFormContext<T extends Record<string, unknown>>() {
   const context = useContext(FormContext);
   if (!context)
     throw new Error("useFormContext must be used within a <FormProvider>");
   return context as FormContextValue<T>;
 }
 
-export interface FormManagerProps<T extends Record<string, any>> {
+export interface FormManagerProps<T extends Record<string, unknown>> {
   schema: ZodSchema<T>;
   initialValues: T;
   onSubmit: (data: T) => void;
 }
 
-export function useFormManager<T extends Record<string, any>>({
+export function useFormManager<T extends Record<string, unknown>>({
   schema,
   initialValues,
   onSubmit,

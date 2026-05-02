@@ -3,14 +3,14 @@ import type { ZodSchema } from "zod";
 import type { ReactNode } from "react";
 import { FormContext, useFormManager, type FormContextValue } from "~/lib/useFormManager";
 
-export interface FormProviderProps<T extends Record<string, any>> {
+export interface FormProviderProps<T extends Record<string, unknown>> {
   schema: ZodSchema<T>;
   initialValues: T;
   onSubmit: (data: T) => void;
   children: ReactNode;
 }
 
-export function FormProvider<T extends Record<string, any>>({
+export function FormProvider<T extends Record<string, unknown>>({
   schema,
   initialValues,
   onSubmit,
@@ -18,7 +18,7 @@ export function FormProvider<T extends Record<string, any>>({
 }: FormProviderProps<T>) {
   const form = useFormManager<T>({ schema, initialValues, onSubmit });
   return (
-    <FormContext.Provider value={form as FormContextValue<T>}>
+    <FormContext.Provider value={form as unknown as FormContextValue<Record<string, unknown>>}>
       {children}
     </FormContext.Provider>
   );

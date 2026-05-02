@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { getUserFromSession, getUserFromSessionForNav } from "../session";
+import { getUserFromSessionForNav } from "../session";
 import { db } from "~/server/db";
 import type { ForumUser } from "~/server/types/forum";
 

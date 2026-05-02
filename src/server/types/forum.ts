@@ -1,4 +1,4 @@
-import type { ProfileWall, ProfileWallReply } from "./profile";
+import type { ProfileWall } from "./profile";
 
 /**
  * Type for user groups

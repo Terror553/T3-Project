@@ -45,6 +45,7 @@ export const LoginForm = () => {
       // Close modal if it's in a modal
       const modalElement = document.getElementById("modal-login");
       if (modalElement) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const bootstrapModal = (window as any).bootstrap?.Modal?.getInstance(
           modalElement,
         );

@@ -11,7 +11,7 @@ import { replaceColor } from "~/utils/styleUtils";
 export default function Subcategory() {
   const [loading, setLoading] = useState(true);
   const [subCategory, setSubCategory] = useState<ForumSubcategory>(); // Updated to ForumCategory[]
-  const [latestEntry, setLatestEntry] = useState<ForumTopic>(); // Updated to ForumCategory[]
+  const [, setLatestEntry] = useState<ForumTopic>(); // Updated to ForumCategory[]
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const { id } = useParams<{ id: string }>();
 
@@ -188,9 +188,11 @@ export default function Subcategory() {
                       <div className="forum-thread-latest">
                         <div className="forum-thread-latest-icon">
                           <a href={`/profile/${topic.forum_user.id}/`}>
-                            <img
+                            <Image
                               src={topic.forum_user.avatarUrl}
                               alt={topic.forum_user.username}
+                              width={128}
+                              height={128}
                             />
                           </a>
                         </div>

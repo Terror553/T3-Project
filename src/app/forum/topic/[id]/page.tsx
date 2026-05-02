@@ -294,9 +294,11 @@ export default function Topic() {
                             <div className="col-lg-3 col-xl-2">
                               <div className="forum-post-sidebar">
                                 <div className="forum-post-user-avatar">
-                                  <img
+                                  <Image
                                     src={topic.forum_user.avatarUrl}
                                     alt={topic.forum_user.username}
+                                    width={128}
+                                    height={128}
                                   />
                                 </div>
                                 <div className="forum-post-user-info">
@@ -497,9 +499,11 @@ export default function Topic() {
                                       <div className="col-lg-3 col-xl-2">
                                         <div className="forum-post-sidebar">
                                           <div className="forum-post-user-avatar">
-                                            <img
+                                            <Image
                                               src={reply.forum_user.avatarUrl}
                                               alt={reply.forum_user.username}
+                                              width={128}
+                                              height={128}
                                             />
                                           </div>
                                           <div className="forum-post-user-info">
@@ -766,7 +770,7 @@ export default function Topic() {
                                   <div className="list-item align-items-center">
                                     <div className="list-icon">
                                       <Link href="/profile/TerrorV2/">
-                                        <img
+                                        <Image
                                           src="https://mc-heads.net/avatar/ccbe40c30430423cbcc13a4167b06a79/128"
                                           alt="TerrorV2"
                                         />

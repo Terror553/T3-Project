@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useTheme } from "~/client/theme";
 import WikiPage from "~/components/wiki";

@@ -27,6 +27,7 @@ export function minecraftColorToRGB(minecraftColor: string): string {
 /**
  * Check if a string is a valid Minecraft color code
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function isMinecraftColorCode(input: string): boolean {
   const regex = /^&[0-9a-fA-F]$/;
   return regex.test(input);

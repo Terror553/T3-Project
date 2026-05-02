@@ -2,13 +2,13 @@
 
 import { useFormContext } from "~/lib/useFormManager";
 
-interface TextInputProps<T extends Record<string, any>> {
+interface TextInputProps<T extends Record<string, string>> {
   name: keyof T & string;
   label: string;
   type?: string;
 }
 
-export function TextInput<T extends Record<string, any>>({
+export function TextInput<T extends Record<string, string>>({
   name,
   label,
   type = "text",

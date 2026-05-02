@@ -126,9 +126,11 @@ export const Navbar = ({ initialUser }: NavbarProps) => {
       <div className="container">
         <div className="header-logo animated">
           <Link href="/">
-            <img
+            <Image
               src="https://mc-heads.net/avatar/ccbe40c30430423cbcc13a4167b06a79/128"
               alt="MelonenMC"
+              width={128}
+              height={128}
             />
           </Link>
         </div>

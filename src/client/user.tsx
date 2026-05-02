@@ -4,7 +4,6 @@ import {
   createContext, 
   useContext, 
   useState, 
-  useEffect, 
   type ReactNode 
 } from "react";
 import type { ForumUser } from "~/server/types/forum";

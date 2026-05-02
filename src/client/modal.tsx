@@ -45,6 +45,7 @@ export function useModal(initialOptions?: ModalOptions): UseModalResult {
   const onShowRef = useRef<(() => void) | undefined>(initialOptions?.onShow);
   const onHideRef = useRef<(() => void) | undefined>(initialOptions?.onHide);
   const modalRef = useRef<HTMLDivElement>(null); // Ref for the modal DOM element
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modalInstanceRef = useRef<any>(null); // Ref for the Bootstrap Modal instance
 
   // Generate a unique ID for accessibility and targeting
@@ -53,9 +54,11 @@ export function useModal(initialOptions?: ModalOptions): UseModalResult {
 
   // Effect to initialize and manage the Bootstrap Modal instance and events
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (modalRef.current && (window as any).bootstrap?.Modal) {
       // Initialize Bootstrap Modal instance if it doesn't exist
       if (!modalInstanceRef.current) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         modalInstanceRef.current = new (window as any).bootstrap.Modal(
           modalRef.current,
           {
@@ -125,8 +128,10 @@ export function useModal(initialOptions?: ModalOptions): UseModalResult {
       if (
         modalRef.current &&
         !modalInstanceRef.current &&
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window as any).bootstrap?.Modal
       ) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         modalInstanceRef.current = new (window as any).bootstrap.Modal(
           modalRef.current,
           {

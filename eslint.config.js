@@ -3,24 +3,32 @@ import parser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 
 const compat = new FlatCompat({
-  baseDirectory: new URL(".", import.meta.url).pathname,
+  baseDirectory: import.meta.dirname,
 });
 
-export default [
-  ...compat.extends("next/core-web-vitals"),
+const main = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+
   {
-    ignores: ["build/**/*", ".next/**/*", "node_modules/**/*"],
+    ignores: [
+      "build/**/*",
+      ".next/**/*",
+      "node_modules/**/*",
+      "public/**/*",
+      ".idea/**/*",
+      "dist/**/*",
+    ],
   },
+
   {
-    files: ["**/*.ts", "**/*.tsx", "*.ts", "*.tsx"],
+    files: ["**/*.ts", "**/*.tsx"],
     plugins: {
       "@typescript-eslint": tsPlugin,
     },
     languageOptions: {
       parser,
       parserOptions: {
-        project: "./tsconfig.json",
-        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.json"],
       },
     },
     rules: {
@@ -35,11 +43,11 @@ export default [
         "error",
         { checksVoidReturn: { attributes: false } },
       ],
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
     },
     linterOptions: {
       reportUnusedDisableDirectives: true,
     },
   },
 ];
+
+export default main;

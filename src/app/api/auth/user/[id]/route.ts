@@ -1,5 +1,4 @@
 import { NextResponse } from "next/dist/server/web/spec-extension/response";
-import { getCurrentUser } from "~/server/auth/utils/currentUser";
 import { getUser } from "~/server/auth/utils/getUser";
 
 export async function GET(request: Request) {

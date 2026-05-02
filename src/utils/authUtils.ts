@@ -21,6 +21,7 @@ export function createAuthError(
 /**
  * Standard response type for auth operations
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface AuthResult<T> {
   success: boolean;
   data?: {
@@ -32,6 +33,7 @@ export interface AuthResult<T> {
 /**
  * Create a successful auth result
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function createSuccessResult<T>(data: {
   username: string;
 }): AuthResult<typeof data> {

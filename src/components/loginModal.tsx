@@ -1,18 +1,14 @@
 "use client";
-import { redirect } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useNotification } from "~/client/notification";
-import { useTheme } from "~/client/theme";
 import { signIn } from "~/server/auth/actions/signIn";
 import type { signInSchema } from "~/server/auth/authSchemas";
 
 export const LoginModal = () => {
   const [error, setError] = useState<string>();
-  const [loading, setLoading] = useState(false);
   const { addNotification } = useNotification();
-  const theme = useTheme();
   const form = useForm<z.infer<typeof signInSchema>>({
     defaultValues: {
       email: "",
@@ -43,9 +39,12 @@ export const LoginModal = () => {
     }
 
     const modalElement = document.getElementById("modal-login");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (modalElement && (window as any).bootstrap?.Modal) {
       const modalInstance = 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window as any).bootstrap.Modal.getInstance(modalElement) ??
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         new (window as any).bootstrap.Modal(modalElement);
       modalInstance.hide();
       document.body.classList.remove("modal-open");

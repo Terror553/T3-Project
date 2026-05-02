@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -66,7 +67,7 @@ const ProfilePage = () => {
             ></div>
             <div className="profile-header-info">
               <div className="profile-header-user-avatar">
-                <img src={user.avatarUrl} alt={user.username} />
+                <Image src={user.avatarUrl} alt={user.username} width={128} height={128} />
               </div>
               <div className="profile-header-user-content">
                 <div className="profile-header-user-name">
@@ -222,9 +223,11 @@ const ProfilePage = () => {
                             <div className="message" id="post-">
                               <div className="message-icon">
                                 <Link href={`/profile/${currentUser.id}/`}>
-                                  <img
+                                  <Image
                                     src={currentUser.avatarUrl}
                                     alt={currentUser.username}
+                                    width={128}
+                                    height={128}
                                   />
                                 </Link>
                               </div>
@@ -267,9 +270,9 @@ const ProfilePage = () => {
                                   <div className="message" id="profilePost-1">
                                     <div className="message-icon">
                                       <Link href="/profile/Terror/">
-                                        <img
-                                          src="https://crafatar.com/renders/head/cac1b575710e4b5fbe537e3e612227c4?size=500&amp;overlay"
-                                          alt="Terror"
+                                        <Image
+                                          src={user.avatarUrl}
+                                          alt={user.username}
                                         />
                                       </Link>
                                     </div>
@@ -277,18 +280,18 @@ const ProfilePage = () => {
                                       <div className="message-title">
                                         <Link
                                           href="/profile/Terror/"
-                                          style={{ color: "#ff0000" }}
+                                          style={replaceColor({ color: user.group?.color, gradient: user.group?.gradient, start: user.group?.start, end: user.group?.end, isBadge: false })}
                                           data-poload="/queries/user/?id=1"
                                         >
-                                          Terror
+                                          {user.username}
                                         </Link>
                                       </div>
                                       <div className="message-post">
-                                        Du himf
+                                        {post.content}
                                       </div>
                                       <div className="message-meta">
-                                        <span title="09 Jun 2025, 14:41">
-                                          Vor 23 Tagen
+                                        <span title={formatDate(post.createdAt, true)}>
+                                          {formatDate(post.createdAt, false)}
                                         </span>
                                         <ul className="message-actions">
                                           <li>
@@ -347,9 +350,9 @@ const ProfilePage = () => {
                                           <div className="message message-reply">
                                             <div className="message-icon">
                                               <Link href="/profile/Terror/">
-                                                <img
-                                                  src="https://api.dicebear.com/5.x/initials/png?seed=Terror&amp;size=128"
-                                                  alt="Terror"
+                                                <Image
+                                                  src={user.avatarUrl}
+                                                  alt={user.username}
                                                 />
                                               </Link>
                                             </div>
@@ -374,11 +377,6 @@ const ProfilePage = () => {
                                                   </div>
                                                   <input
                                                     type="hidden"
-                                                    name="token"
-                                                    value="47e4b3e0ca7270c82c6d16dd6b78eb2d"
-                                                  />
-                                                  <input
-                                                    type="hidden"
                                                     name="action"
                                                     value="reply"
                                                   />
@@ -397,29 +395,29 @@ const ProfilePage = () => {
                                   </div>
                                   <div className="message" id="profilePost-1">
                                     <div className="message-icon">
-                                      <Link href="/profile/Terror/">
-                                        <img
-                                          src="https://crafatar.com/renders/head/cac1b575710e4b5fbe537e3e612227c4?size=500&amp;overlay"
-                                          alt="Terror"
+                                      <Link href={`/profile/${user.id}/`}>
+                                        <Image
+                                          src={user.avatarUrl}
+                                          alt={user.username}
                                         />
                                       </Link>
                                     </div>
                                     <div className="message-content">
                                       <div className="message-title">
                                         <Link
-                                          href="/profile/Terror/"
-                                          style={{ color: "#ff0000" }}
+                                          href={`/profile/${user.id}/`}
+                                          style={replaceColor({ color: user.group?.color, gradient: user.group?.gradient, start: user.group?.start, end: user.group?.end, isBadge: false })}
                                           data-poload="/queries/user/?id=1"
                                         >
-                                          Terror
+                                          {user.username}
                                         </Link>
                                       </div>
                                       <div className="message-post">
-                                        Du himf
+                                        {post.content}
                                       </div>
                                       <div className="message-meta">
-                                        <span title="09 Jun 2025, 14:41">
-                                          Vor 23 Tagen
+                                        <span title={formatDate(post.createdAt, true)}>
+                                          {formatDate(post.createdAt, false)}
                                         </span>
                                         <ul className="message-actions">
                                           <li>
@@ -444,10 +442,10 @@ const ProfilePage = () => {
                                         >
                                           <div className="message message-reply">
                                             <div className="message-icon">
-                                              <Link href="/profile/Terror/">
-                                                <img
-                                                  src="https://api.dicebear.com/5.x/initials/png?seed=Terror&amp;size=128"
-                                                  alt="Terror"
+                                              <Link href={`/profile/${user.id}/`}>
+                                                <Image
+                                                  src={user.avatarUrl}
+                                                  alt={user.username}
                                                 />
                                               </Link>
                                             </div>
@@ -526,9 +524,11 @@ const ProfilePage = () => {
                                 <div className="message">
                                   <div className="message-icon">
                                     <Link href={`/profile/${user.id}`}>
-                                      <img
+                                      <Image
                                         src={user.avatarUrl}
                                         alt={user.username}
+                                        width={128}
+                                        height={128}
                                       />
                                     </Link>
                                   </div>
@@ -593,10 +593,12 @@ const ProfilePage = () => {
                                   }`}
                                   onClick={() => setSelected(value)}
                                 >
-                                  <img
+                                  <Image
                                     className="img_picker_img"
                                     src="/default.png"
                                     alt="Default Banner"
+                                    width={128}
+                                    height={128}
                                   />
                                 </div>
                               </li>
@@ -657,9 +659,11 @@ const ProfilePage = () => {
                   <div className="message">
                     <div className="message-icon">
                       <Link href="/profile/Terror/">
-                        <img
+                        <Image
                           src="https://crafatar.com/renders/head/cac1b575710e4b5fbe537e3e612227c4?size=500&amp;overlay"
                           alt="Terror"
+                          width={128}
+                          height={128}
                         />
                       </Link>
                     </div>

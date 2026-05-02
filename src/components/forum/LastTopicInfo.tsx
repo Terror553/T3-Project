@@ -51,9 +51,11 @@ export const LastTopicInfo = ({
     <>
       <div className="forum-node-latest-icon">
         <Link href={`/profile/${topic.forum_user.id}/`}>
-          <img
+          <Image
             src={topic.forum_user.avatarUrl}
             alt={topic.forum_user.username || ""}
+            width={128}
+            height={128}
           />
         </Link>
       </div>

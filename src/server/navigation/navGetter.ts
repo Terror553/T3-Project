@@ -1,5 +1,4 @@
 import { db } from "../db";
-import type { NavigationProps } from "../types/navigation";
 
 export type nav = {
   id: number;
