@@ -50,3 +50,41 @@ export const signUpSchema = z
       });
     }
   });
+
+  export const passwordChangeSchema = z
+  .object({
+    currentPassword: z
+      .string({ required_error: "You must provide your current password" }),
+    password: z
+      .string({ required_error: "New Password must be provided" })
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        {
+          message:
+            "New Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.",
+        },
+      ),
+    passwordConfirm: z
+      .string({ required_error: "New Password must be provided" })
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        {
+          message:
+            "New Password must be the same as the password and meet the same requirements.",
+        },
+      ),
+  })
+  .superRefine(({ passwordConfirm, password }, ctx) => {
+    if (passwordConfirm != password) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "New Password & Confirm Password must match",
+        path: ["password"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "New Password & Confirm Password must match",
+        path: ["passwordConfirm"],
+      });
+    }
+  });
