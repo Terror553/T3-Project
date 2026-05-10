@@ -1,3 +1,5 @@
+"use server";
+import { createTopicSchema } from "~/lib/schemas/createTopicSchema";
 import { db } from "../db";
 import type {
   ForumCategory,
@@ -9,6 +11,15 @@ import type {
   ForumReactionEmoji,
 } from "../types/forum";
 import { generateWhereClause } from "../utils/dbUtils";
+import type { z } from "zod";
+import {
+  ErrorCode,
+  createErrorResult,
+  createSuccessResult,
+  type AppResult,
+} from "~/utils/errorHandler";
+import { getCurrentUser } from "../auth/utils/currentUser";
+import { createSlug } from "../utils/forumUtils";
 
 export async function getCategories() {
   const forum = await db.forumCategory.findMany();
@@ -285,4 +296,59 @@ export async function getLatestTopic(id: number | string) {
     count: replies.length,
     latestReply: replies[replies.length - 1],
   } as ForumTopic;
+}
+
+export async function createTopic(
+  unsafeData: z.infer<typeof createTopicSchema>,
+): Promise<AppResult<{ slug: string | null; subcategory: number }>> {
+  // Validate input data
+  const validationResult = createTopicSchema.safeParse(unsafeData);
+
+  if (!validationResult.success) {
+    return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
+  }
+  const data = validationResult.data;
+
+  try {
+    // Find user by email
+    const user = await getCurrentUser();
+
+    // Check if user exists
+    if (!user) {
+      return createErrorResult(
+        "You need to be signed in to create a topic",
+        ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    const slug = createSlug(data.title);
+    const newTopic = await db.forumTopic.create({
+      data: {
+        title: data.title,
+        content: data.content,
+        slug,
+        author: {
+          connect: {
+            id: user.id,
+          },
+        },
+        subcategory: {
+          connect: {
+            id: data.subcategory,
+          },
+        },
+      },
+    });
+
+    return createSuccessResult({
+      slug: newTopic.slug, // Placeholder slug, replace with actual slug generation logic
+      subcategory: data.subcategory,
+    });
+  } catch (error) {
+    console.error("Error during sign in:", error);
+    return createErrorResult(
+      "An unexpected error occurred",
+      ErrorCode.SERVER_ERROR,
+    );
+  }
 }

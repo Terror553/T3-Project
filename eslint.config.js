@@ -17,6 +17,7 @@ const main = [
       "public/**/*",
       ".idea/**/*",
       "dist/**/*",
+      "next-env.d.ts",
     ],
   },
 
