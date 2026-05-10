@@ -22,3 +22,8 @@ export interface ProfileWallReply {
   userId: number | null;
   postId: number | null;
 }
+
+export interface ProfileSettingsNav {
+  name: string;
+  href: string;
+}

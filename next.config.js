@@ -9,7 +9,7 @@ const config = {
   images: {
     domains: ["crafatar.com"],
   },
-  allowedDevOrigins: ["http://localhost:3000", "localhost", "192.168.178.35", "crafatar.com"],
+  allowedDevOrigins: ["http://localhost:3000", "localhost", "192.168.178.35", "crafatar.com", "10.8.0.4"],
   distDir: "build",
   pageExtensions: ["tsx", "ts"],
 };
