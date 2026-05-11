@@ -8,7 +8,7 @@ import { FormProvider } from "./form/FormProvider";
 import { useNotification } from "~/client/notification";
 import { Button } from "~/components/ui";
 import { redirect } from "next/navigation";
-import { createTopicSchema } from "~/lib/schemas/createTopicSchema";
+import { createTopicSchema } from "~/lib/schemas/topicSchemas";
 import { createTopic } from "~/server/forum/forum";
 import { TextArea } from "./form/TextArea";
 

@@ -1,5 +1,9 @@
 "use server";
-import { createTopicSchema } from "~/lib/schemas/createTopicSchema";
+import {
+  createTopicSchema,
+  deleteTopicSchema,
+  editTopicSchema,
+} from "~/lib/schemas/topicSchemas";
 import { db } from "../db";
 import type {
   ForumCategory,
@@ -20,6 +24,7 @@ import {
 } from "~/utils/errorHandler";
 import { getCurrentUser } from "../auth/utils/currentUser";
 import { createSlug } from "../utils/forumUtils";
+import { sanitizeInput } from "~/lib/sanitize";
 
 export async function getCategories() {
   const forum = await db.forumCategory.findMany();
@@ -325,7 +330,7 @@ export async function createTopic(
     const newTopic = await db.forumTopic.create({
       data: {
         title: data.title,
-        content: data.content,
+        content: sanitizeInput(data.content),
         slug,
         author: {
           connect: {
@@ -345,7 +350,161 @@ export async function createTopic(
       subcategory: data.subcategory,
     });
   } catch (error) {
-    console.error("Error during sign in:", error);
+    console.error("Error during topic creation:", error);
+    return createErrorResult(
+      "An unexpected error occurred",
+      ErrorCode.SERVER_ERROR,
+    );
+  }
+}
+
+export async function editTopic(
+  unsafeData: z.infer<typeof editTopicSchema>,
+): Promise<AppResult<{ slug: string | null; id: number }>> {
+  // Validate input data
+  const validationResult = editTopicSchema.safeParse(unsafeData);
+
+  if (!validationResult.success) {
+    return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
+  }
+  const data = validationResult.data;
+
+  try {
+    // Find user by email
+    const user = await getCurrentUser();
+
+    // Check if user exists
+    if (!user) {
+      return createErrorResult(
+        "You need to be signed in to create a topic",
+        ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    let where;
+
+    if (data.id == null) {
+      where = {
+        slug: data.slug!,
+      };
+    } else {
+      where = {
+        id: data.id,
+      };
+    }
+
+    const topic = await db.forumTopic.findFirst({ where });
+    let slug = data.slug;
+
+    if (!topic) {
+      return createErrorResult("Topic not found", ErrorCode.NOT_FOUND);
+    }
+
+    if (topic.authorId !== user.id) {
+      return createErrorResult(
+        "You are not authorized to edit this topic",
+        ErrorCode.UNAUTHORIZED,
+      );
+    }
+
+    if (topic.title == data.title && topic.content == data.content) {
+      return createErrorResult(
+        "No changes detected",
+        ErrorCode.VALIDATION_ERROR,
+      );
+    }
+
+    if (topic.title !== data.title) {
+      slug = createSlug(data.title);
+      topic.slug = slug;
+    }
+
+    topic.content = data.content;
+
+    await db.forumTopic.update({
+      where: { id: topic.id },
+      data: {
+        title: topic.title,
+        content: topic.content,
+        slug: topic.slug,
+      },
+    });
+
+    return createSuccessResult({
+      slug: slug || topic.slug, // Use the updated slug if it exists, otherwise use the existing one
+      id: topic.id,
+    });
+  } catch (error) {
+    console.error("Error during editing topic:", error);
+    return createErrorResult(
+      "An unexpected error occurred",
+      ErrorCode.SERVER_ERROR,
+    );
+  }
+}
+
+export async function deleteTopic(
+  unsafeData: z.infer<typeof deleteTopicSchema>,
+): Promise<AppResult<{ success: boolean }>> {
+  // Validate input data
+  const validationResult = deleteTopicSchema.safeParse(unsafeData);
+
+  if (!validationResult.success) {
+    return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
+  }
+  const data = validationResult.data;
+
+  try {
+    // Find user by email
+    const user = await getCurrentUser();
+
+    // Check if user exists
+    if (!user) {
+      return createErrorResult(
+        "You need to be signed in to delete a topic",
+        ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    let where;
+
+    if (data.id == null) {
+      where = {
+        slug: data.slug!,
+      };
+    } else {
+      where = {
+        id: data.id,
+      };
+    }
+
+    const topic = await db.forumTopic.findFirst({ where });
+
+    if (!topic) {
+      return createErrorResult("Topic not found", ErrorCode.NOT_FOUND);
+    }
+
+    if (topic.authorId !== user.id && user.group?.highTeam !== 1) {
+      return createErrorResult(
+        "You are not authorized to delete this topic",
+        ErrorCode.UNAUTHORIZED,
+      );
+    }
+
+    await db.forumTopic.update({
+      where: { id: topic.id },
+      data: {
+        title: topic.title,
+        content: topic.content,
+        slug: topic.slug,
+      },
+    });
+
+    return createSuccessResult({
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error during deleting topic:", error);
     return createErrorResult(
       "An unexpected error occurred",
       ErrorCode.SERVER_ERROR,

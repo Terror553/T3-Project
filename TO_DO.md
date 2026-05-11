@@ -6,15 +6,15 @@ This document tracks unfinished features and modules across the codebase. It map
 
 ## 1. Forum Core Mutations
 
-_Severity: Critical | Completion: 30%_
+_Severity: Critical | Completion: 40%_
 
 **Context:** The forum is currently read-only. We have `getCategories`, `getSubCategories`, and `getTopic` in `src/server/forum/forum.ts`, but no way for users to create, edit, or delete content.
 
-- [ ] **Topic Creation & Management**
-  - **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
-  - **Server Logic:** Add `createTopic`, `editTopic`, `deleteTopic` to `src/server/forum/forum.ts`.
-  - **Validation:** Create Zod schemas (e.g., `createTopicSchema`) in a new file `src/lib/schemas/forumSchemas.ts`.
-  - **UI/Client:** Build `CreateTopicForm.tsx` utilizing `FormProvider`, `useFormManager`, and `sanitizeInput`.
+- [ ] **Topic Creation & Management** (Partial)
+  - [ ] **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
+  - [ ] **Server Logic:** Add `createTopic`, `editTopic`, `deleteTopic` to `src/server/forum/forum.ts`. (createTopic done)
+  - [x] **Validation:** Create Zod schemas in `src/lib/schemas/createTopicSchema.ts`.
+  - [x] **UI/Client:** Build `topicCreationForm.tsx` utilizing `FormProvider`, `useFormManager`, and `sanitizeInput`.
 - [ ] **Topic Replies**
   - **API:** Create `src/app/api/forum/topic/[id]/reply/route.ts`.
   - **Server Logic:** Add `createReply`, `editReply`, `deleteReply` mapped to the `ForumTopicReply` model.
@@ -71,13 +71,13 @@ _Severity: Low | Completion: 10%_
 
 ## 5. User Settings & Extended Profile
 
-_Severity: Medium | Completion: 30%_
+_Severity: Medium | Completion: 50%_
 
 **Context:** The `Profile` schema types exist (`profile.ts`, `settings.ts`, `user-data.ts`). Base login/registration works (via server actions), but users cannot edit their internal settings.
 
-- [ ] **Change Password & Edit Profile**
-  - **Server Action:** Build out the missing "change password" server action described in `DOC.md` Section 14.2.
-  - **UI/Client:** Add `ChangePasswordForm.tsx` (already stubbed, needs completion hookups) to `src/app/profile/page.tsx`.
+- [x] **Change Password**
+  - [x] **Server Action:** Build out the missing "change password" server action described in `DOC.md` Section 14.2.
+  - [x] **UI/Client:** Added `ChangePasswordForm.tsx` via `src/app/profile/settings/change-password/page.tsx`.
 - [ ] **Extended User Preferences**
   - **API/Server:** Expose GET/PUT routes for adjusting theme, timezone, etc., utilizing `src/server/types/settings.ts`.
 
@@ -95,6 +95,51 @@ _Severity: Medium | Completion: 0%_
   - **Logic:** Admin actions for creating, editing, and archiving `ForumCategory` and `ForumSubcategory`.
 - [ ] **Emoji & Role Management**
   - **Logic:** UI for adding rows to `ForumReactionEmoji` and modifying user roles.
+
+---
+
+## 7. Global Modal Manager
+
+_Severity: Medium | Completion: 60%_
+
+**Context:** Currently, modals (like `loginModal.tsx`) fall back to hardcoded component IDs (e.g., `#modal-login`) and manually interact with `window.bootstrap.Modal` for state management, leading to heavy boilerplate and duplicated markup. We need a simple, centralized modal manager so any component can invoke a modal dialog dynamically without rendering its own `div.modal` tree.
+
+- [x] **Global Modal Provider**
+  - **File:** Create a context and provider in `src/client/modalUtils.tsx` (previously planned as `ModalProvider.tsx`).
+  - **Logic:** It should hold the current active modal configuration (title, body component, footer, settings).
+  - **Component:** The provider itself renders a single `<div className="modal fade">` container placed once in the app (e.g. in `src/app/layout.tsx`), preventing DOM clutter.
+- [x] **Simple Hook Interface**
+  - **File:** Create `useModalManager` hook.
+  - **Functions:** Expose simple methods like `openModal({ title, content, size })` and `closeModal()` to programmatically trigger modals from anywhere.
+- [ ] **Refactoring Existing Modals**
+  - **Migration:** Refactor `src/components/loginModal.tsx` and similar files to stop rendering the Bootstrap modal shell (`modal-dialog`, `modal-content`). They should only map to the content inside, which is passed into the new modal manager.
+
+## 8. Dashboard Analytics & Game Server Integration
+
+_Severity: Low | Completion: 15%_
+
+**Context:** The new `/dashboard` routes structure provides overview, analytics, and settings. However, it needs integration with the Minecraft server stats and user activity models (e.g. `Job`, `UserJob`, `McServerSetting`).
+
+- [ ] **Dashboard Data Endpoints**
+  - **API:** Fetch analytics data in `/api/dashboard/stats/route.ts` bridging `ConsoleLog` or user metrics.
+  - **UI/Client:** Refine the `/dashboard/analytics` view with actual data components.
+- [ ] **Profile Wall**
+  - **Data Types/Server:** Hook up `ProfileWall` and `ProfileWallReply` models to `profile.ts`.
+  - **UI/Client:** Render user wall component on the public profile view natively.
+
+---
+
+## 9. Refactor Forum Data Fetching (Subcategory / Topic Views)
+
+_Severity: Low | Completion: 0%_
+
+**Context:** `src/app/forum/subcategory/[id]/page.tsx` uses a dense manual `useEffect` hook to fetch data. It creates a network waterfall (fetching the subcategory, waiting, then fetching the latest topic) and duplicates loading/error state boilerplate. This should be unified or moved to the server.
+
+- [ ] **Unify Database Query**
+  - **Server Logic:** Update `src/server/forum/forum.ts` to return the `latestEntry` directly as a relation when fetching a subcategory in a single Prisma query.
+- [ ] **Refactor React Logic**
+  - **UI/Client:** Convert `subcategory/[id]/page.tsx` directly into a React Server Component (fetching data server-side to skip internal API fetches) OR extract the states into a unified `useSubcategory(id)` hook matching the pattern seen in `useForum.ts`.
+  - **Cleanup:** Remove the internal `/api/forum/latest-topic/[id]` endpoint once the data is unified in the subcategory query.
 
 ---
 

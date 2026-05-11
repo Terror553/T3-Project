@@ -3,7 +3,11 @@
 import { cookies } from "next/headers";
 import { passwordChangeSchema } from "../authSchemas";
 import { createUserSession } from "../session";
-import { comparePasswords, generateSalt, hashPassword } from "../utils/passwordHasher";
+import {
+  comparePasswords,
+  generateSalt,
+  hashPassword,
+} from "../utils/passwordHasher";
 import {
   AuthErrorCode,
   createErrorResult,
@@ -39,16 +43,6 @@ export async function changePassword(
   const data = validationResult.data;
 
   try {
-    // Get current User
-    const user = await getCurrentUser();
-
-    if (!user) {
-      return createErrorResult(
-        "You need to be signed in to change your password",
-        AuthErrorCode.UNAUTHORIZED,
-      );
-    }
-
     // Verify password
     const isCorrectPassword = await comparePasswords({
       hashedPassword: user.password,
@@ -86,18 +80,18 @@ export async function changePassword(
     const updatedUser = await db.forumUser.update({
       where: {
         id: user.id,
-        },
-        data: {
-            password: hashedPassword,
-            salt: salt,
-        },
+      },
+      data: {
+        password: hashedPassword,
+        salt: salt,
+      },
     });
-    
-    if(!updatedUser) {
-        return createErrorResult(
-            "Failed to update password. Please try again.",
-            AuthErrorCode.SERVER_ERROR,
-        );
+
+    if (!updatedUser) {
+      return createErrorResult(
+        "Failed to update password. Please try again.",
+        AuthErrorCode.SERVER_ERROR,
+      );
     }
 
     await createUserSession(sessionUser, await cookies());

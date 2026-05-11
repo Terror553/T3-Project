@@ -1,5 +1,3 @@
-import type { User } from "./user";
-
 export interface NavItem {
   id: number;
   createdAt: Date;
@@ -9,9 +7,13 @@ export interface NavItem {
   fullLink: string;
   authorId: number | null;
   teamLink: number;
+  dropdown?: NavItem[];
 }
 
-export interface NavigationProps {
-  navigation: NavItem[];
-  user?: User;
+export interface SubNavItem {
+  id: number;
+  name: string;
+  icon: string;
+  fullLink: string;
+  dropdown?: SubNavItem[];
 }

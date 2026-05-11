@@ -22,6 +22,7 @@ import "~/styles/cookies/cookieconsent.min.css";
 import "~/styles/theme/theme.css";
 import "~/styles/theme/theme-dark.css";
 import { ToastContainer } from "~/components/toastContainer";
+import { ModalProvider } from "~/client/modalUtils";
 
 export default async function RootLayout({
   children,
@@ -104,20 +105,21 @@ export default async function RootLayout({
       <body className="antialiased">
         <NotificationProvider>
           <UserProvider initialUser={sessionUser}>
-            <div className="wrapper" id="wrapper">
-              <Navbar initialUser={sessionUser} />
-              <main className="main">
-                <div className="container">{children}</div>
-              </main>
-              <Footer />
-              <div className="scroll-to-top" id="button-scrollToTop">
-                <a href="#" data-popper-placement="top" title="Scroll To Top">
-                  <i className="fas fa-angle-up"></i>
-                </a>
+            <ModalProvider>
+              <div className="wrapper" id="wrapper">
+                <Navbar initialUser={sessionUser} />
+                <main className="main">
+                  <div className="container">{children}</div>
+                </main>
+                <Footer />
+                <div className="scroll-to-top" id="button-scrollToTop">
+                  <a href="#" data-popper-placement="top" title="Scroll To Top">
+                    <i className="fas fa-angle-up"></i>
+                  </a>
+                </div>
+                <div className="loading-bar"></div>
               </div>
-              <div className="loading-bar"></div>
-            </div>
-
+            </ModalProvider>
             <ToastContainer />
 
             {/* Load external scripts using Next.js Script component */}

@@ -5,12 +5,14 @@
 This guide is the main technical onboarding and maintenance reference for this repository.
 
 It is written to help developers:
+
 - Understand how the project is structured.
 - Add, modify, and remove features safely.
 - Reuse existing patterns for database, API, server actions, types, forms, and notifications.
 - Avoid common mistakes when extending the codebase.
 
 Use this document together with:
+
 - `AGENTS.md` for day-to-day coding standards and command references.
 - `prisma/schema.prisma` for data model truth.
 - `src/server/types/*` for app-facing type contracts.
@@ -151,10 +153,12 @@ Typical auth mutation flow:
 Environment schema is defined in `src/env.js` using `@t3-oss/env-nextjs`.
 
 Current required server variables:
+
 - `DATABASE_URL`: must be a valid URL.
 - `NODE_ENV`: `development | test | production`.
 
 Important behavior:
+
 - Build/start can fail early if required env vars are missing or invalid.
 - `SKIP_ENV_VALIDATION=true` can bypass validation during specific workflows (for example Docker builds).
 
@@ -210,6 +214,7 @@ npm run db:studio
 ### 7.4 Query Pattern Used in This Codebase
 
 Server modules often:
+
 - Fetch rich relation trees (`include` / `select`).
 - Map Prisma shape into app-facing custom types in `src/server/types`.
 
@@ -257,12 +262,14 @@ Checklist:
 - App domain types: explicit interfaces under `src/server/types/*`.
 
 Why custom app types exist here:
+
 - The app returns transformed shapes (for legacy naming and UI convenience).
 - A direct Prisma type is often not equal to the final API payload shape.
 
 ### 8.2 Example: Forum Type Mapping
 
 `src/server/forum/forum.ts` maps DB records into interfaces in `src/server/types/forum.ts`, such as:
+
 - `ForumTopic.forum_topic_replies`
 - `ForumTopic.forum_user`
 - `ForumSubcategory.latestEntry`
@@ -286,6 +293,7 @@ This mapping is intentional and should remain consistent.
 This project uses a server-action-based authentication flow with cookie-based sessions. For a detailed walkthrough of the entire authentication flow, see section `16A.10 Authentication Flow`.
 
 The main components of the authentication system are:
+
 - **Server Actions**: `src/server/auth/actions/signIn.ts`, `src/server/auth/actions/signUp.ts`, and `src/server/auth/actions/logOut.ts` handle the core logic for user authentication, account creation, and logging out.
 - **Session Management**: `src/server/auth/session.ts` manages the user's session, including creating, updating, and removing the session cookie.
 - **Password Hashing**: `src/server/auth/utils/passwordHasher.ts` provides functions for hashing and comparing passwords.
@@ -408,6 +416,7 @@ Never rely on client-only validation for security.
 `addNotification(message, type, duration)` is the primary API.
 
 Supported types:
+
 - `success`
 - `error`
 - `info`
@@ -435,6 +444,7 @@ addNotification("Failed to update profile", "error", 5000);
 ### 13.1 Theme Context
 
 `src/client/theme.tsx` provides:
+
 - `isDarkMode`
 - `toggleTheme`
 - `showLoadingBar(id)`
@@ -468,6 +478,7 @@ Use unique loading IDs per concurrent operation.
 ### 14.1 Forum Feature
 
 Core files:
+
 - `src/server/forum/forum.ts`
 - `src/app/api/forum/**/*`
 - `src/hooks/useForum.ts`
@@ -475,6 +486,7 @@ Core files:
 - `src/components/forum/*`
 
 Capabilities currently present:
+
 - Category listing
 - Subcategory details
 - Topic details
@@ -502,6 +514,7 @@ export async function getFeaturedTopics() {
 ### 14.2 Auth Feature
 
 Core files:
+
 - `src/server/auth/actions/signIn.ts`
 - `src/server/auth/actions/signUp.ts`
 - `src/server/auth/session.ts`
@@ -521,12 +534,14 @@ How to add "change password" feature:
 ### 14.3 Wiki Feature
 
 Core files:
+
 - `src/server/wiki/wiki.ts`
 - `src/app/api/wiki/route.ts`
 - `src/app/wiki/page.tsx`
 - `src/components/wiki.tsx`
 
 Current behavior:
+
 - Loads category + subcategory tree with author/group metadata.
 - Maps DB shape to `WikiCategoryFull` view shape.
 
@@ -845,11 +860,88 @@ These are the default auth mutation entry points for client components.
 
 ```ts
 const signInResult = await signIn({ email, password });
-const signUpResult = await signUp({ username, email, password, passwordConfirm });
+const signUpResult = await signUp({
+  username,
+  email,
+  password,
+  passwordConfirm,
+});
 await logOut();
 ```
 
+#### `src/server/auth/actions/changePassword.ts`
+
+This handles secure password changes for logged-in users, verifying the old password before hashing and persisting the new one.
+
+```ts
+import { changePassword } from "~/server/auth/actions/changePassword";
+
+const result = await changePassword({
+  currentPassword: "old",
+  newPassword: "new",
+  confirmPassword: "new",
+});
+
+if (result.success) {
+  // handled
+}
+```
+
 ### 16A.5 Client Contexts and Hooks
+
+#### `src/client/modalUtils.tsx`
+
+The Global Modal Manager abstracts away the boilerplate of Bootstrap modals. It provides a `ModalProvider` to hold the modal state and a single modal shell, plus a `useModalManager` hook to interact with it programmatically.
+
+**1. Wrap your application with the provider** (e.g. in `src/app/layout.tsx`):
+
+```tsx
+import { ModalProvider } from "~/client/modalUtils";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <ModalProvider>{children}</ModalProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+**2. Trigger the modal from any component**:
+
+Instead of rendering the outer `div.modal` tree and managing Bootstrap methods directly, call `openModal` and pass your content as JSX.
+
+```tsx
+import { useModalManager } from "~/client/modalUtils";
+
+export function SettingsButton() {
+  const { openModal, closeModal } = useModalManager();
+
+  return (
+    <button
+      onClick={() =>
+        openModal({
+          title: "My Global Modal",
+          content: <p>Dynamic content loaded from anywhere.</p>,
+          size: "lg",
+          staticBackdrop: true,
+          onShow: () => console.log("Modal opened"),
+          onHide: () => console.log("Modal closed"),
+          footer: (
+            <button onClick={closeModal} className="btn">
+              Close
+            </button>
+          ),
+        })
+      }
+    >
+      Open Settings
+    </button>
+  );
+}
+```
 
 #### `src/client/user.tsx`
 
@@ -867,7 +959,8 @@ updateUser(null); // e.g. optimistic logout UI
 Use notification context for global user feedback.
 
 ```tsx
-const { addNotification, removeNotification, notifications } = useNotification();
+const { addNotification, removeNotification, notifications } =
+  useNotification();
 
 addNotification("Saved successfully", "success", 3000);
 removeNotification(notifications[0]?.id ?? "");
@@ -895,6 +988,25 @@ const { loading, forum, error } = useForum();
 if (loading) return <p>Loading...</p>;
 if (error) return <p>{error}</p>;
 return <ForumCategoryList categories={forum} />;
+```
+
+#### `src/client/navUtils.tsx`
+
+Use the `SubNavBar` component to create vertical side-navigation layouts (e.g. settings, dashboards).
+
+```tsx
+import SubNavBar from "~/client/navUtils";
+
+const navItems = [
+  { name: "Overview", href: "/dashboard/overview" },
+  { name: "Settings", href: "/dashboard/settings" },
+];
+
+return (
+  <SubNavBar props={{ title: "Dashboard", navItems }}>
+    <div>Content goes here</div>
+  </SubNavBar>
+);
 ```
 
 ### 16A.6 Feature Usage Examples
@@ -970,9 +1082,13 @@ const nav = await fetch("/api/auth/navigation").then((r) => r.json());
 
 ```ts
 const categories = await fetch("/api/forum").then((r) => r.json());
-const subcategory = await fetch(`/api/forum/subcategory/${id}`).then((r) => r.json());
+const subcategory = await fetch(`/api/forum/subcategory/${id}`).then((r) =>
+  r.json(),
+);
 const topic = await fetch(`/api/forum/topic/${id}`).then((r) => r.json());
-const latest = await fetch(`/api/forum/latest-topic/${id}`).then((r) => r.json());
+const latest = await fetch(`/api/forum/latest-topic/${id}`).then((r) =>
+  r.json(),
+);
 ```
 
 #### Wiki API
@@ -986,7 +1102,11 @@ const wiki = await fetch("/api/wiki").then((r) => r.json());
 Use domain types directly in hooks and components for strict contracts.
 
 ```ts
-import type { ForumCategory, ForumTopic, ForumUser } from "~/server/types/forum";
+import type {
+  ForumCategory,
+  ForumTopic,
+  ForumUser,
+} from "~/server/types/forum";
 import type { WikiCategoryFull } from "~/server/types/wiki";
 
 const [forum, setForum] = useState<ForumCategory[]>([]);
@@ -1080,6 +1200,7 @@ npm run build
 ```
 
 Additionally:
+
 - Manually verify changed pages and API routes.
 - Test unhappy paths (invalid params, unauthorized access, empty datasets).
 - Test notifications and loading states for async operations.
@@ -1089,6 +1210,7 @@ Additionally:
 ## 18. Error Handling and Logging Conventions
 
 Recommended conventions:
+
 - Catch errors at API boundary.
 - Return generic safe error messages to client.
 - Log detailed error on server (`console.error`) with context string.
@@ -1177,9 +1299,25 @@ npm run db:studio
 - Form manager: `src/lib/useFormManager.ts`
 - Prisma schema: `prisma/schema.prisma`
 
+### 16A.4 Client Utilities (`src/client`)
+
+#### `src/client/navUtils.tsx`
+
+Use the `SubNavBar` component when rendering nested navigation. It uses Next.js `Link` internally to ensure Single-Page Application (SPA) routing, which prevents full page reloads and preserves layout state.
+
+```tsx
+import SubNavBar from "~/client/navUtils";
+
+<SubNavBar props={{ title: "Dashboard", navItems }}>
+  {/* The child page content rendered via SPA transitions */}
+  {children}
+</SubNavBar>
+```
+
 ---
 
 If you add a major new module (for example, messaging, moderation queue, or admin panel), update this document in the same PR with:
+
 - New data model notes
 - API contract summary
 - UI flow and integration points

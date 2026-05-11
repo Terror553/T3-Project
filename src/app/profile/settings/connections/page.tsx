@@ -1,11 +1,9 @@
+"use client";
+
 export default function Settings() {
   return (
     <>
-      <div className="col-xl-9 col-lg-8">
-        <div className="card">
-          <div className="card-body">Connections</div>
-        </div>
-      </div>
+      <h2>Connections</h2>
     </>
   );
 }
