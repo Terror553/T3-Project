@@ -1,5 +1,9 @@
 # MelonenMC T3 Project - Full Developer Documentation
 
+## 0. Important Disclaimer
+
+The files DOC.md, DOC_AGENT.md, AGENTS.d, FILES.md and TO_DO.md are fully AI generated. They have been overseen and approved by myself that the Information outlined in them is correct. The src/, public/ and prisma/ folder do not contain ANY AI generated code. The code is written completley by Humans (Only me, i'm the only contributor/maintainer)
+
 ## 1. Purpose of This Document
 
 This guide is the main technical onboarding and maintenance reference for this repository.
@@ -1311,7 +1315,7 @@ import SubNavBar from "~/client/navUtils";
 <SubNavBar props={{ title: "Dashboard", navItems }}>
   {/* The child page content rendered via SPA transitions */}
   {children}
-</SubNavBar>
+</SubNavBar>;
 ```
 
 ---
