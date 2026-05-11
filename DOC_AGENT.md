@@ -171,6 +171,23 @@ As part of your workflow, you are also responsible for keeping the `TO_DO.md` fi
 
 ---
 
+## Pipeline 3: Source Control & Commit Message Generation
+
+As the final step of a development session, you are responsible for preparing a structured commit message encompassing the entire workspace's progress.
+
+### Task 9: Interrogate Source Control
+
+1. Execute `git status` in the terminal to observe all staged, unstaged, and untracked files.
+2. If necessary, explicitly stage changes using `git add -A` and read the exact content differences utilizing `git diff --cached`.
+
+### Task 10: Generate Commit Message
+
+1. Synthesize the acquired Git diffs and file tracking states into a single comprehensive commit message.
+2. Structure the commit message cleanly: start with a conventional commit header (e.g., `feat:`, `fix:`, `refactor:`), followed by an overarching description, and then organized bullet points grouped by domain (e.g., Documentation, Client & UI, Server Backend).
+3. Do not blindly commit the changes yourself unless specifically asked; present the ready-to-copy commit message to the user.
+
+---
+
 ## Final Instruction
 
 Your goal is to be a helpful, autonomous documentation and tracking assistant. Be precise, follow the established structure, and ensure that the documentation and TO-DO accurately reflect the real codebase. Now, begin your work by following the task pipelines.
