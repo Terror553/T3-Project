@@ -119,6 +119,7 @@ export interface ForumTopic {
   latestReply?: ForumTopicReply;
   forum_topic_follow?: ForumTopicFollow[];
   forum_reactions?: ForumReaction[];
+  hidden: number;
 }
 
 /**

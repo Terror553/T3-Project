@@ -262,7 +262,7 @@
 *::before,
 *::after {
   outline: none;
-  scrollbar-width: thin;
+  scrollbar-width: initial;
 }
 
 html {

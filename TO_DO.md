@@ -6,13 +6,13 @@ This document tracks unfinished features and modules across the codebase. It map
 
 ## 1. Forum Core Mutations
 
-_Severity: Critical | Completion: 40%_
+_Severity: Critical | Completion: 43%_
 
 **Context:** The forum is currently read-only. We have `getCategories`, `getSubCategories`, and `getTopic` in `src/server/forum/forum.ts`, but no way for users to create, edit, or delete content.
 
 - [ ] **Topic Creation & Management** (Partial)
   - [ ] **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
-  - [ ] **Server Logic:** Add `createTopic`, `editTopic`, `deleteTopic` to `src/server/forum/forum.ts`. (createTopic done)
+  - [x] **Server Logic:** Add `createTopic`, `editTopic`, `deleteTopic` to `src/server/forum/forum.ts`.
   - [x] **Validation:** Create Zod schemas in `src/lib/schemas/createTopicSchema.ts`.
   - [x] **UI/Client:** Build `topicCreationForm.tsx` utilizing `FormProvider`, `useFormManager`, and `sanitizeInput`.
 - [ ] **Topic Replies**

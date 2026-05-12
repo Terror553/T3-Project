@@ -175,7 +175,12 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
                     >
                       <div className="nav-link-icon">
                         {/* Ensure user.avatarUrl is available */}
-                        <Image src={user.avatarUrl} alt={user.username} width={128} height={128} />
+                        <Image
+                          src={user.avatarUrl}
+                          alt={user.username}
+                          width={128}
+                          height={128}
+                        />
                       </div>
                       <div
                         className="nav-link-text"
@@ -317,7 +322,12 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
         {/* ... header-logo and header-status links ... */}
         <div className="header-logo animated">
           <Link href="/">
-            <Image src="/default.png" alt="MelonenMC" width={128} height={128} />
+            <Image
+              src="/default.png"
+              alt="MelonenMC"
+              width={128}
+              height={128}
+            />
           </Link>
         </div>
         <Link

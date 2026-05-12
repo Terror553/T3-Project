@@ -232,6 +232,7 @@ model ForumTopic {
     replies        ForumTopicReply[]
     subcategory    ForumSubcategory?    @relation(fields: [subcategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_01d2ff4b1bbf5c9eee83310498a")
     author         ForumUser?           @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c228733246cf2aee0240663b354")
+    hidden         Int                  @default(0) @db.TinyInt
 
     @@index([subcategoryId], map: "FK_01d2ff4b1bbf5c9eee83310498a")
     @@index([authorId], map: "FK_c228733246cf2aee0240663b354")

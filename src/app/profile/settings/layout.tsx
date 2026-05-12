@@ -10,17 +10,41 @@ export default function ProfileSettings({
       props={{
         title: "Profile Settings",
         navItems: [
-          { name: "Overview", href: "/profile/settings/overview" },
-          { name: "Messaging", href: "/profile/settings/messaging" },
-          { name: "Alerts", href: "/profile/settings/alerts" },
-          { name: "Connections", href: "/profile/settings/connections" },
           {
-            name: "Profile Settings",
-            href: "/profile/settings/profile-settings",
+            id: 1,
+            name: "Overview",
+            fullLink: "/profile/settings/overview",
+            icon: "",
           },
           {
+            id: 2,
+            name: "Messaging",
+            fullLink: "/profile/settings/messaging",
+            icon: "",
+          },
+          {
+            id: 3,
+            name: "Alerts",
+            fullLink: "/profile/settings/alerts",
+            icon: "",
+          },
+          {
+            id: 4,
+            name: "Connections",
+            fullLink: "/profile/settings/connections",
+            icon: "",
+          },
+          {
+            id: 5,
+            name: "Profile Settings",
+            fullLink: "/profile/settings/profile-settings",
+            icon: "",
+          },
+          {
+            id: 6,
             name: "Followed Topics",
-            href: "/profile/settings/followed-topics",
+            fullLink: "/profile/settings/followed-topics",
+            icon: "",
           },
         ],
       }}

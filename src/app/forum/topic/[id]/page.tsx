@@ -773,6 +773,8 @@ export default function Topic() {
                                         <Image
                                           src="https://mc-heads.net/avatar/ccbe40c30430423cbcc13a4167b06a79/128"
                                           alt="TerrorV2"
+                                          width={32}
+                                          height={32}
                                         />
                                       </Link>
                                     </div>

@@ -33,15 +33,19 @@ export const LoginModal = () => {
     const result = await signIn({ email, password });
     if (result.error) {
       setError(result.error.message);
-      addNotification(result.error.message, "error", 5000); 
+      addNotification(result.error.message, "error", 5000);
     } else {
-      addNotification(`Willkommen zurück, <b><n>${result.data?.username}</n></b>!`, "success", 5000);
+      addNotification(
+        `Willkommen zurück, <b><n>${result.data?.username}</n></b>!`,
+        "success",
+        5000,
+      );
     }
 
     const modalElement = document.getElementById("modal-login");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (modalElement && (window as any).bootstrap?.Modal) {
-      const modalInstance = 
+      const modalInstance =
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window as any).bootstrap.Modal.getInstance(modalElement) ??
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

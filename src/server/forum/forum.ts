@@ -497,6 +497,7 @@ export async function deleteTopic(
         title: topic.title,
         content: topic.content,
         slug: topic.slug,
+        hidden: 1,
       },
     });
 

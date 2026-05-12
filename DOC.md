@@ -2,7 +2,7 @@
 
 ## 0. Important Disclaimer
 
-The files DOC.md, DOC_AGENT.md, AGENTS.d, FILES.md, TO_DO.md, and the Commit Messages are fully AI generated. They have been overseen and approved by myself that the Information outlined in them is correct. The src/, public/ and prisma/ folder do not contain ANY AI generated code. The code is written completley by Humans (Only me, i'm the only contributor/maintainer)
+The files DOC.md, DOC_AGENT.md, AGENTS.d, FILES.md, TO_DO.md, and the Commit Messages are fully AI generated. They have been overseen and approved by myself and i have insured that the Information provided in them is correct. The src/, public/ and prisma/ folder do not contain ANY AI generated code. The code is written completley by Humans (Only me, i'm the only contributor/maintainer)
 
 ## 1. Purpose of This Document
 
@@ -256,7 +256,12 @@ Checklist:
 5. Update UI and API serialization assumptions.
 6. Run `npm run check` and verify key pages manually.
 
----
+**Example: Adding a `hidden` field for soft deletes**
+If you add `hidden Int @default(0) @db.TinyInt` to `ForumTopic`:
+
+- You update `prisma/schema.prisma`.
+- You add `hidden: number;` to the `ForumTopic` interface in `src/server/types/forum.ts`.
+- You ensure your Prisma query selectors (e.g. `src/server/forum/forum.ts`) pull the new field and update it correctly during a soft delete.
 
 ## 8. Type System Guide
 
@@ -264,6 +269,7 @@ Checklist:
 
 - Prisma-generated types: implicit from Prisma client.
 - App domain types: explicit interfaces under `src/server/types/*`.
+- Global declarations: Located in `src/global.d.ts` (e.g., CSS modules definitions).
 
 Why custom app types exist here:
 
@@ -445,16 +451,15 @@ addNotification("Failed to update profile", "error", 5000);
 
 ## 13. Theme and Loading UX
 
-### 13.1 Theme Context
+### 13.1 Theme Utilities
 
-`src/client/theme.tsx` provides:
+`src/client/theme.ts` provides the `useTheme()` hook which exports:
 
-- `isDarkMode`
-- `toggleTheme`
 - `showLoadingBar(id)`
 - `hideLoadingBar(id)`
+- `toggleTheme()`
 
-It persists mode in `localStorage` and controls `.loading-bar` element class state.
+It controls the `.loading-bar` element class state without passing context down the tree.
 
 ### 13.2 Feature Loading Pattern
 

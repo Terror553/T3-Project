@@ -35,12 +35,7 @@ export default async function RootLayout({
   )) as ForumUser;
 
   return (
-    <html
-      lang="en"
-      data-theme="dark"
-      className="loaded"
-      suppressHydrationWarning
-    >
+    <html lang="en" data-theme="dark" className="loaded">
       <head>
         <meta charSet="UTF-8" />
         <meta
@@ -54,53 +49,12 @@ export default async function RootLayout({
               --primary: #038157;
               --primary-text: var(--primary);
               --header-height: 300px;
-              --header-logo-height: 250px;
+              --header-logo-height: 200px;
               --portal-logo-height: 200px;
               --avatars-border-radius: 50%;
             }
           `}
         </style>
-        <Script
-          id="config-inline"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              var siteName = "MelonenMC";
-              var siteURL = "/";
-              var fullSiteURL = "https://melonenmc.de/";
-              var page = "index";
-              var route = "/";
-              var csrfToken = "84ac47220c003e91862f8d84831352fd";
-              var debugging = false;
-              var cookieNotice = false;
-              var collapsibleForums = true;
-              var prefetchForms = true;
-              var stickyNavbar = false;
-              var darkMode = true;
-              var darkModeToggle = true;
-              var headerZoomOnScroll = false;
-              var headerParticles = false;
-              var headerParticlesColor = "#ffffff";
-              var portalParticles = false;
-              var portalParticlesColor = "#ffffff";
-              var chroma = true;
-              var chromaSaturation = "50%";
-              var chromaLightness = "50%";
-              var chromaMultiplier = 0.5;
-              var locale = {
-                submit: "Submit", cancel: "Cancel", close: "Close",
-                confirmDelete: "Are you sure you wish to delete this?",
-                copied: "Kopiert!!!",
-                cookieNotice: "This website uses cookies to enhance your browsing experience. By registering on our website or closing this notice you agree with their use.",
-                noMessages: "No new messages", newMessage1: "You have 1 new message", newMessagesX: "You have {{count}} new messages",
-                noAlerts: "No new alerts", newAlert1: "You have 1 new alert", newAlertsX: "You have {{count}} new alerts",
-                andMoreX: "and {{count}} more", bungeeInstance: "This server is a Bungee instance.",
-                onePlayerOnline: "There is currently 1 player online.", xPlayersOnline: "There are currently {{count}} players online.",
-                noPlayersOnline: "There are no players online.", offline: "Offline",
-              };
-            `,
-          }}
-        />
       </head>
       <body className="antialiased">
         <NotificationProvider>
