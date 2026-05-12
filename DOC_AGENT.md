@@ -188,6 +188,22 @@ As the final step of a development session, you are responsible for preparing a 
 
 ---
 
+## Pipeline 4: Automated Commit & Changelog Management
+
+Building upon the commit message generated in Pipeline 3, this pipeline handles executing the commit conditionally and maintaining a local changelog.
+
+### Task 11: Prompt for User Confirmation
+
+1. After generating the commit message in Task 10, you **must explicitly ASK FOR PERMISSION BEFORE COMMITTING**. Present the generated message to the user and wait for their confirmation before proceeding.
+
+### Task 12: Execute Commit & Update Changelog
+
+1. Once the user approves, execute the `git commit` command using the approved message.
+2. After a successful commit, update the `COMMITS.md` file by running the following terminal command to retrieve the full commit history, sorted from oldest to newest with the entire commit messages:
+   `git log --reverse --name-status --pretty=format:'### Commit %h%n- **Time**: %cd%n- **Committer**: %an%n- **Message**: %n%B%n' | Out-File -FilePath COMMITS.md -Encoding utf8`
+
+---
+
 ## Final Instruction
 
 Your goal is to be a helpful, autonomous documentation and tracking assistant. Be precise, follow the established structure, and ensure that the documentation and TO-DO accurately reflect the real codebase. Now, begin your work by following the task pipelines.
