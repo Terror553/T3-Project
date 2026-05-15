@@ -6,12 +6,12 @@ This document tracks unfinished features and modules across the codebase. It map
 
 ## 1. Forum Core Mutations
 
-_Severity: Critical | Completion: 43%_
+_Severity: Critical | Completion: 80%_
 
 **Context:** The forum is currently read-only. We have `getCategories`, `getSubCategories`, and `getTopic` in `src/server/forum/forum.ts`, but no way for users to create, edit, or delete content.
 
-- [ ] **Topic Creation & Management** (Partial)
-  - [ ] **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
+- [x] **Topic Creation & Management** (Partial)
+  - [x] **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
   - [x] **Server Logic:** Add `createTopic`, `editTopic`, `deleteTopic` to `src/server/forum/forum.ts`.
   - [x] **Validation:** Create Zod schemas in `src/lib/schemas/topicSchemas.ts`.
   - [x] **UI/Client:** Build `topicCreationForm.tsx` utilizing `FormProvider`, `useFormManager`, and `sanitizeInput`.
@@ -56,7 +56,7 @@ _Severity: High | Completion: 5%_
 
 ## 4. Minecraft Integration & Clans
 
-_Severity: Low | Completion: 10%_
+_Severity: Low | Completion: 100%_
 
 **Context:** Prisma models (`Clan`, `EnderChest`, `Cooldown`) and Type interfaces (`src/server/types/clan.ts`, `minecraft.ts`, `verification.ts`) exist, meaning game-server sync is planned but missing web implementation.
 
@@ -100,7 +100,7 @@ _Severity: Medium | Completion: 0%_
 
 ## 7. Global Modal Manager
 
-_Severity: Medium | Completion: 60%_
+_Severity: Medium | Completion: 100%_
 
 **Context:** Currently, modals (like `loginModal.tsx`) fall back to hardcoded component IDs (e.g., `#modal-login`) and manually interact with `window.bootstrap.Modal` for state management, leading to heavy boilerplate and duplicated markup. We need a simple, centralized modal manager so any component can invoke a modal dialog dynamically without rendering its own `div.modal` tree.
 
@@ -111,8 +111,8 @@ _Severity: Medium | Completion: 60%_
 - [x] **Simple Hook Interface**
   - [x] **File:** Create `useModalManager` hook.
   - [x] **Functions:** Expose simple methods like `openModal({ title, content, size })` and `closeModal()` to programmatically trigger modals from anywhere.
-- [ ] **Refactoring Existing Modals**
-  - **Migration:** Refactor `src/components/loginModal.tsx` and similar files to stop rendering the Bootstrap modal shell (`modal-dialog`, `modal-content`). They should only map to the content inside, which is passed into the new modal manager.
+- [x] **Refactoring Existing Modals**
+  - [x] **Migration:** Refactor `src/components/loginModal.tsx` and similar files to stop rendering the Bootstrap modal shell (`modal-dialog`, `modal-content`). They should only map to the content inside, which is passed into the new modal manager.
 
 ## 8. Dashboard Analytics & Game Server Integration
 
@@ -121,8 +121,8 @@ _Severity: Low | Completion: 50%_
 **Context:** The new `/dashboard` routes structure provides overview, analytics, and settings. However, it needs integration with the Minecraft server stats and user activity models (e.g. `Job`, `UserJob`, `McServerSetting`).
 
 - [x] **Dashboard Data Endpoints**
-  - **API:** Fetch analytics data in `/api/dashboard/stats/route.ts` bridging `ConsoleLog` or user metrics.
-  - **UI/Client:** Refine the `/dashboard/analytics` view with actual data components.
+  - [x] **API:** Fetch analytics data in `/api/dashboard/stats/route.ts` bridging `ConsoleLog` or user metrics.
+  - [x] **UI/Client:** Refine the `/dashboard/analytics` view with actual data components.
 - [ ] **Profile Wall**
   - **Data Types/Server:** Hook up `ProfileWall` and `ProfileWallReply` models to `profile.ts`.
   - **UI/Client:** Render user wall component on the public profile view natively.

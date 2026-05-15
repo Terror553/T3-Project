@@ -249,19 +249,21 @@ return {
 
 Checklist:
 
-1. Update model in `prisma/schema.prisma`.
-2. Run migration command (`npm run db:generate`).
-3. Update server module selectors/includes using that model.
-4. Update relevant custom app types in `src/server/types/*`.
-5. Update UI and API serialization assumptions.
-6. Run `npm run check` and verify key pages manually.
+1.  Update model in `prisma/schema.prisma`.
+2.  Run migration command (`npm run db:generate`).
+3.  Update server module selectors/includes using that model.
+4.  Update relevant custom app types in `src/server/types/*`.
+5.  Update UI and API serialization assumptions.
+6.  Run `npm run check` and verify key pages manually.
 
 **Example: Adding a `hidden` field for soft deletes**
-If you add `hidden Int @default(0) @db.TinyInt` to `ForumTopic`:
+A `hidden Int @default(0) @db.TinyInt` field has been added to the `ForumTopic` model to allow for soft deletion of topics.
 
-- You update `prisma/schema.prisma`.
-- You add `hidden: number;` to the `ForumTopic` interface in `src/server/types/forum.ts`.
-- You ensure your Prisma query selectors (e.g. `src/server/forum/forum.ts`) pull the new field and update it correctly during a soft delete.
+- The `prisma/schema.prisma` file has been updated.
+- The `hidden: number;` property has been added to the `ForumTopic` interface in `src/server/types/forum.ts`.
+- The `deleteTopic` function in `src/server/forum/forum.ts` now updates this field instead of deleting the record.
+
+---
 
 ## 8. Type System Guide
 
@@ -308,7 +310,7 @@ The main components of the authentication system are:
 - **Session Management**: `src/server/auth/session.ts` manages the user's session, including creating, updating, and removing the session cookie.
 - **Password Hashing**: `src/server/auth/utils/passwordHasher.ts` provides functions for hashing and comparing passwords.
 - **Authentication Schemas**: `src/server/auth/authSchemas.ts` defines the Zod schemas for validating authentication-related data.
-- **Client-side Components**: `src/components/loginForm.tsx` and `src/app/login/page.tsx` provide the user interface for logging in.
+- **Client-side Components**: `src/components/loginModal.tsx` provides the user interface for logging in.
 - **User Context**: `src/client/user.tsx` provides a React context for accessing the current user's data on the client.
 - **Notification System**: `src/client/notification.tsx` is used to display success and error messages to the user.
 
@@ -323,10 +325,10 @@ The main components of the authentication system are:
 
 Each action generally does:
 
-1. Validate with Zod.
-2. Query DB.
-3. Return standardized success/error payload.
-4. Create/update/remove session when needed.
+1.  Validate with Zod.
+2.  Query DB.
+3.  Return standardized success/error payload.
+4.  Create/update/remove session when needed.
 
 Example usage from client side:
 
@@ -338,16 +340,16 @@ if (!result.success) {
   return;
 }
 
-await refreshUser();
+// The user context will be automatically updated via the UserProvider
 addNotification(`Welcome ${result.data?.username}`, "success", 5000);
 ```
 
 ### 9.4 Adding a New Protected Feature
 
-1. Resolve current user on server (`getCurrentUser` or session helper).
-2. Reject unauthorized users early.
-3. Use role/team checks if feature is staff-only.
-4. Return consistent auth errors using `AuthErrorCode` and `createErrorResult`.
+1.  Resolve current user on server (`getCurrentUser` or session helper).
+2.  Reject unauthorized users early.
+3.  Use role/team checks if feature is staff-only.
+4.  Return consistent auth errors using `AuthErrorCode` and `createErrorResult`.
 
 ---
 
@@ -379,11 +381,11 @@ export async function GET() {
 
 ### 10.4 Route Creation Checklist
 
-1. Add route at `src/app/api/<feature>/route.ts` (or nested dynamic route).
-2. Delegate logic to `src/server/<feature>/<module>.ts`.
-3. Return typed JSON.
-4. Add client fetching integration in page/hook.
-5. Add loading and error UI states.
+1.  Add route at `src/app/api/<feature>/route.ts` (or nested dynamic route).
+2.  Delegate logic to `src/server/<feature>/<module>.ts`.
+3.  Return typed JSON.
+4.  Add client fetching integration in page/hook.
+5.  Add loading and error UI states.
 
 ---
 
@@ -394,8 +396,9 @@ export async function GET() {
 - Validation schemas: Zod.
 - Form state manager: `src/lib/useFormManager.ts`.
 - Provider wrapper: `src/components/form/FormProvider.tsx`.
-- Input component(s): `src/components/form/TextInput.tsx`.
-- Input sanitizer: `src/lib/sanitize.ts`.
+- Input components: `src/components/form/TextInput.tsx`, `src/components/form/TextArea.tsx`, `src/components/form/Select.tsx`.
+- Rich Text Editor: `src/components/editor.tsx` (TinyMCE).
+- Input sanitizer: `isomorphic-dompurify` is used on the server for rich text content.
 
 ### 11.2 Validation Flow
 
@@ -406,16 +409,16 @@ Never rely on client-only validation for security.
 
 ### 11.3 New Form Recipe
 
-1. Create a Zod schema (feature-level schema file).
-2. Create initial values typed as `z.infer<typeof schema>`.
-3. Wrap your fields in `FormProvider`.
-4. Use `useFormContext` in inner form component.
-5. Submit to server action/API.
-6. Show success/failure toast using notification context.
+1.  Create a Zod schema (feature-level schema file, e.g., `src/lib/schemas/topicSchemas.ts`).
+2.  Create initial values typed as `z.infer<typeof schema>`.
+3.  Wrap your fields in `FormProvider`.
+4.  Use `useFormContext` in inner form component.
+5.  Submit to server action/API.
+6.  Show success/failure toast using notification context.
 
 ---
 
-## 12. Notifications and User Feedback
+## 12. Notifications, Modals, and User Feedback
 
 ### 12.1 Notification Architecture
 
@@ -432,7 +435,36 @@ Supported types:
 - `info`
 - `warning`
 
-### 12.2 Example
+### 12.2 Modal Architecture
+
+A global modal manager is implemented to provide a consistent and centralized way to display modals.
+
+- **Provider**: `src/client/modalUtils.tsx` (`ModalProvider`)
+- **Hook**: `useModalManager` from the same file.
+- **Mount Point**: The `ModalProvider` is included in the root layout (`src/app/layout.tsx`), which renders a single modal shell for the entire application.
+
+**Usage:**
+
+```tsx
+import { useModalManager } from "~/client/modalUtils";
+
+function MyComponent() {
+  const { openModal, closeModal } = useModalManager();
+
+  const showLogin = () => {
+    openModal({
+      title: "Login",
+      content: <LoginForm />, // Your form component
+    });
+  };
+
+  return <button onClick={showLogin}>Open Login Modal</button>;
+}
+```
+
+This pattern avoids duplicating modal HTML and logic across the application.
+
+### 12.3 Example
 
 ```ts
 const { addNotification } = useNotification();
@@ -441,7 +473,7 @@ addNotification("Profile updated", "success", 3000);
 addNotification("Failed to update profile", "error", 5000);
 ```
 
-### 12.3 Best Practices
+### 12.4 Best Practices
 
 - Success toasts: short duration (2-4 seconds).
 - Error toasts: longer duration (4-8 seconds).
@@ -492,7 +524,7 @@ Core files:
 - `src/app/api/forum/**/*`
 - `src/hooks/useForum.ts`
 - `src/app/forum/**/*`
-- `src/components/forum/*`
+- `src/components/topicCreationForm.tsx`
 
 Capabilities currently present:
 
@@ -501,24 +533,25 @@ Capabilities currently present:
 - Topic details
 - Latest topic lookup
 - Derived counts and latest reply metadata
+- **Topic Creation, Editing, and Deletion**: Full lifecycle management for topics is implemented via server actions in `src/server/forum/forum.ts`.
 
 How to add a forum endpoint example ("featured topics"):
 
-1. Add function in `src/server/forum/forum.ts`:
+1.  Add function in `src/server/forum/forum.ts`:
 
 ```ts
 export async function getFeaturedTopics() {
   return db.forumTopic.findMany({
-    where: { pinned: 1 },
+    where: { pinned: 1, hidden: 0 }, // Also check for hidden topics
     orderBy: { createdAt: "desc" },
     take: 10,
   });
 }
 ```
 
-2. Add API route `src/app/api/forum/featured/route.ts`.
-3. Add hook or page fetch.
-4. Render with existing forum components or new presentational component.
+2.  Add API route `src/app/api/forum/featured/route.ts`.
+3.  Add hook or page fetch.
+4.  Render with existing forum components or new presentational component.
 
 ### 14.2 Auth Feature
 
@@ -527,18 +560,19 @@ Core files:
 - `src/server/auth/actions/signIn.ts`
 - `src/server/auth/actions/signUp.ts`
 - `src/server/auth/session.ts`
-- `src/components/loginForm.tsx`
+- `src/components/loginModal.tsx`
 - `src/app/api/auth/user/route.ts`
 
 How to add "change password" feature:
 
-1. Add Zod schema in auth schema module.
-2. Add server action that:
-   - Validates old password.
-   - Hashes new password.
-   - Updates DB.
-3. Add client form with `FormProvider`.
-4. Add notifications and optional forced re-login.
+1.  Add Zod schema in auth schema module.
+2.  Add server action that:
+    - Validates old password.
+    - Hashes new password.
+    - Updates DB.
+    - **Important**: Updates the session cookie with the new user data to prevent the user from being logged out.
+3.  Add client form with `FormProvider`.
+4.  Add notifications and handle UI feedback.
 
 ### 14.3 Wiki Feature
 
@@ -554,40 +588,52 @@ Current behavior:
 - Loads category + subcategory tree with author/group metadata.
 - Maps DB shape to `WikiCategoryFull` view shape.
 
+### 14.4 Admin Dashboard
+
+A new, comprehensive admin dashboard has been added under `src/app/dashboard`.
+
+- **Layout**: `src/app/dashboard/layout.tsx` defines the new nested navigation structure.
+- **Pages**: Numerous placeholder pages have been created for features like:
+  - Configuration (General, Navigation, Privacy, etc.)
+  - User Management (Users, Punishments, Reports)
+  - Store (Configuration, Products, Payments, etc.)
+  - Forum (Settings, Forums, Labels)
+- **Purpose**: This provides the foundation for building out administrative functionalities. Each page is a starting point for implementing the respective feature.
+
 ---
 
 ## 15. Add / Modify / Remove Feature Playbooks
 
 ### 15.1 Add a New Feature (Recommended Path)
 
-1. Define the capability and data contract first.
-2. Add/adjust DB schema only if needed.
-3. Implement server module function in `src/server/<feature>`.
-4. Add API route or server action.
-5. Add/update types in `src/server/types`.
-6. Add UI integration (hook/page/component).
-7. Add notification and loading states.
-8. Validate with `npm run check` and manual testing.
+1.  Define the capability and data contract first.
+2.  Add/adjust DB schema only if needed.
+3.  Implement server module function in `src/server/<feature>`.
+4.  Add API route or server action.
+5.  Add/update types in `src/server/types`.
+6.  Add UI integration (hook/page/component).
+7.  Add notification and loading states.
+8.  Validate with `npm run check` and manual testing.
 
 ### 15.2 Modify an Existing Feature Safely
 
-1. Find all usage points:
-   - API route
-   - Server module
-   - Type contract
-   - Hook/component consumers
-2. Update data shape in one pass (producer + consumers).
-3. Keep backward compatibility for route consumers if external clients exist.
-4. Verify affected pages manually in browser.
+1.  Find all usage points:
+    - API route
+    - Server module
+    - Type contract
+    - Hook/component consumers
+2.  Update data shape in one pass (producer + consumers).
+3.  Keep backward compatibility for route consumers if external clients exist.
+4.  Verify affected pages manually in browser.
 
 ### 15.3 Remove a Feature Safely
 
-1. Remove UI entry points first (navigation/buttons/pages).
-2. Remove hooks/components no longer referenced.
-3. Remove API routes and server module functions.
-4. Remove obsolete types.
-5. If DB objects are obsolete, create migration.
-6. Run lint/type/build and confirm no dead imports/references.
+1.  Remove UI entry points first (navigation/buttons/pages).
+2.  Remove hooks/components no longer referenced.
+3.  Remove API routes and server module functions.
+4.  Remove obsolete types.
+5.  If DB objects are obsolete, create migration.
+6.  Run lint/type/build and confirm no dead imports/references.
 
 ---
 
@@ -597,7 +643,7 @@ Current behavior:
 
 Goal: show "latest 5 wiki updates" on home page.
 
-1. Server function in `src/server/wiki/wiki.ts`:
+1.  Server function in `src/server/wiki/wiki.ts`:
 
 ```ts
 export async function getLatestWikiUpdates() {
@@ -609,26 +655,26 @@ export async function getLatestWikiUpdates() {
 }
 ```
 
-2. API route `src/app/api/wiki/latest/route.ts` calling that function.
-3. Hook `src/hooks/useLatestWiki.ts` to fetch and type result.
-4. Component `src/components/wiki/LatestUpdates.tsx` to render list.
-5. On API error show: `addNotification("Failed to load latest wiki updates", "error", 5000)`.
+2.  API route `src/app/api/wiki/latest/route.ts` calling that function.
+3.  Hook `src/hooks/useLatestWiki.ts` to fetch and type result.
+4.  Component `src/components/wiki/LatestUpdates.tsx` to render list.
+5.  On API error show: `addNotification("Failed to load latest wiki updates", "error", 5000)`.
 
 ### 16.2 Example: Add Field to Topic Card
 
 Goal: show reaction count on topic list.
 
-1. Ensure server query includes reactions relation.
-2. Extend `ForumTopic` type with computed `reactionCount?: number`.
-3. Map `reactionCount` in server module.
-4. Render count in subcategory/topic component.
+1.  Ensure server query includes reactions relation.
+2.  Extend `ForumTopic` type with computed `reactionCount?: number`.
+3.  Map `reactionCount` in server module.
+4.  Render count in subcategory/topic component.
 
 ### 16.3 Example: Add Role-Gated Admin Action
 
-1. Resolve current user and group/team flags.
-2. Reject non-team users.
-3. Log operation and return standard auth error codes.
-4. In UI hide control for non-eligible users.
+1.  Resolve current user and group/team flags.
+2.  Reject non-team users.
+3.  Log operation and return standard auth error codes.
+4.  In UI hide control for non-eligible users.
 
 ---
 
