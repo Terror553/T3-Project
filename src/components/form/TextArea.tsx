@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormContext } from "~/lib/useFormManager";
+import { Editor } from "../editor";
 
 interface TextAreaProps<T extends Record<string, string>> {
   name: keyof T & string;
@@ -12,12 +13,14 @@ export function TextArea<T extends Record<string, string>>({
   name,
   label,
 }: TextAreaProps<T>) {
-  const { values, errors, handleChange } = useFormContext<T>();
+  const { values, errors, setValues } = useFormContext<T>();
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    handleChange(name)({
-      target: { name, value: e.target.value },
-    } as React.ChangeEvent<HTMLInputElement>);
+    // Bypass default sanitizeInput in handleChange to allow raw HTML from TinyMCE
+    setValues((prev) => ({
+      ...prev,
+      [name]: e.target.value,
+    }));
   };
 
   return (
@@ -25,12 +28,11 @@ export function TextArea<T extends Record<string, string>>({
       <label htmlFor={name} className="form-label">
         {label}
       </label>
-      <textarea
+      <Editor
+        key={name}
         id={name}
-        name={name}
-        value={values[name]}
         onChange={handleTextAreaChange}
-        className="form-control"
+        initialValue={values[name]}
       />
       <br />
       {errors[name] && <p className="alert alert-danger">{errors[name]}</p>}

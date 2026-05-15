@@ -66,6 +66,7 @@ For each new or modified file you identified:
 1.  Read its full content.
 2.  Determine its purpose based on its location, name, and content. Is it a new API route, a new React component, a server-side utility, a database type definition, etc.?
 3.  If it's a modification, understand what changed. Was a function signature updated? Was a new export added?
+4.  **Extensively analyze the usage and implementation details.** Gather enough information to provide a comprehensive explanation of every feature, component, API route, and utility.
 
 ---
 
@@ -91,11 +92,13 @@ The `DOC.md` file is organized into sections. When adding or modifying documenta
 
 ### How to Add New Documentation
 
+**Critically Important:** You must write **comprehensive explanations** for the usage and implementation of EVERYTHING! Never provide just a brief summary. You must detail every feature extensively, breaking down its parameters, expected inputs/outputs, implementation logic, state management, and edge cases.
+
 **1. If you find a new utility function:**
 
 - Locate the appropriate subsection in **Section 16A**. For example, a new function in `src/utils/dateUtils.ts` goes under `16A.1 Shared Utilities`.
 - Add a new header for the file if it doesn't exist.
-- Provide a brief explanation of what the function does and a clear code example of how to use it.
+- Provide a highly detailed description of its usage and implementation, accompanied by a comprehensive code example of how to use it.
 
 **Example: Adding a new `formatTime` function to `src/utils/dateUtils.ts`**
 
@@ -119,7 +122,8 @@ const time = formatTime(new Date()); // e.g. "14:20"
 
 -   Go to **Section 16A.7 API Route Examples by Existing Endpoint**.
 -   Add the new endpoint to the relevant category (Auth, Forum, Wiki, etc.).
--   Provide a `fetch` example showing how to call it.
+-   Provide a thorough explanation of the endpoint's implementation, describing payload expectations, HTTP verbs, status codes, and authorization rules.
+-   Provide a detailed `fetch` example showing how to call and utilize it effectively.
 
 **Example: Adding a new "featured topics" API**
 
@@ -133,7 +137,7 @@ const featured = await fetch(`/api/forum/featured`).then((r) => r.json());
 **3. If you find a new React Component:**
 
 - Determine if it's a general-purpose component or part of a larger feature.
-- Add a usage example in a relevant part of **Section 16A**, such as `16A.5 Client Contexts and Hooks` if it's a hook-related component, or within a feature example.
+- Add a comprehensive breakdown of the component's implementation, describing its props, internal state, and functionality in a relevant part of **Section 16A**, such as `16A.5 Client Contexts and Hooks` if it's a hook-related component, or within a feature example. Provide detailed usage examples showing its integration.
 
 **4. If a database model changes in `prisma/schema.prisma`:**
 

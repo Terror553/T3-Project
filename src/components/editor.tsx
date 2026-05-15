@@ -8,15 +8,24 @@ import React from "react";
 export function Editor({
   id,
   textarea,
+  onChange,
+  initialValue = "",
 }: {
   id: string | number;
   textarea?: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  initialValue?: string;
 }) {
   const editorRef = useRef<TinyMCEEditorClass | null>(null);
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>(initialValue);
 
   const handleEditorChange = (content: string) => {
     setValue(content);
+    if (onChange) {
+      onChange({
+        target: { name: id.toString(), value: content },
+      } as React.ChangeEvent<HTMLTextAreaElement>);
+    }
   };
 
   return (

@@ -51,7 +51,7 @@ export interface ForumUser {
     gradient: number;
     start: string | null;
     end: string | null;
-  } | null;
+  };
   password?: string; // Should only be available in specific server contexts
   salt?: string; // Should only be available in specific server contexts
 }
@@ -149,4 +149,30 @@ export interface ForumCategory {
   createdAt: Date;
   updatedAt: Date;
   forum_subcategories: ForumSubcategory[];
+}
+
+export interface ForumMessage {
+  id: number;
+  createdAt: Date;
+  message: string;
+  title: string;
+  seen: number;
+  receiverId?: number;
+  senderId?: number;
+  messageReplies: ForumMessageReply[];
+  receiver?: ForumUser;
+  sender?: ForumUser;
+}
+
+export interface ForumMessageReply {
+  id: number;
+  createdAt: Date;
+  message: string;
+  seen: number;
+  receiverId?: number;
+  senderId?: number;
+  messageId: number;
+  sender?: ForumUser;
+  forumMessage?: ForumMessage;
+  receiver?: ForumUser;
 }

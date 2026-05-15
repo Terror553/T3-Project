@@ -754,49 +754,120 @@ const remaining = getRemainingTime(Date.now() + 5000);
 
 ### 16A.3 Form and Input Utilities (`src/lib` + form components)
 
-#### `src/lib/sanitize.ts`
+#### `src/lib/sanitize.ts` (Comprehensive Implementation Example)
 
-Use `sanitizeInput` to neutralize angle brackets before storing transient form values.
+**Usage & Implementation Details:**
+The `sanitizeInput` function is a crucial security utility that neutralizes potentially dangerous HTML characters from user input strings before they are processed or stored in state.
+
+**Implementation Logic:**
+
+- **State/Input Transformation**: It takes a single `input` parameter of type `string`.
+- **Sanitization Strategy**: It uses global Regular Expressions (`/g`) to perform inline replacement of `<` with `&lt;` and `>` with `&gt;`. This lightweight transformation effectively prevents arbitrary HTML/script injection from executing when values are reflected back to the DOM without proper encoding.
+
+**Usage Example:**
 
 ```ts
 import { sanitizeInput } from "~/lib/sanitize";
 
-const clean = sanitizeInput(userInput);
+const rawInput = "<script>alert('XSS')</script>";
+const cleanInput = sanitizeInput(rawInput);
+// Result: "&lt;script&gt;alert('XSS')&lt;/script&gt;"
 ```
 
-#### `src/lib/useFormManager.ts` + `src/components/form/FormProvider.tsx`
+#### `src/lib/useFormManager.ts` & `src/components/form/FormProvider.tsx` (Comprehensive Implementation Example)
 
-Use these as the standard schema-based form foundation.
+**Usage & Implementation Details:**
+These modules provide a typed, schema-validated, context-driven foundation for building complex forms across the application. `useFormManager` acts as the engine, while `FormProvider` acts as the context broadcast shell.
+
+**Implementation Logic (`useFormManager`):**
+
+- **State Management**: Controls two primary generic state objects:
+  - `values (T)`: The current data populated across form input fields. Initialized via `initialValues`.
+  - `errors (Partial<Record<keyof T, string>>)`: Validation error messages keyed to the specific field.
+- **Input Handlers (`handleChange`)**: Returns an event handler factory that updates the `values` state on change. Critically, it applies `sanitizeInput` automatically to the target's value prior to state hydration, making baseline text inputs secure by default.
+- **Validation & Submission (`handleSubmit`)**: Prevents default browser submission behavior. Uses the injected Zod schema (`schema.safeParse`) to rigorously validate `values`. If validation fails, it extracts Zod `err.message` properties and hydrates the `errors` state. If successful, it clears errors and fires the developer-supplied `onSubmit` handler with the strongly typed result payload.
+
+**Usage Example:**
 
 ```tsx
-const schema = z.object({ name: z.string().min(2) });
-type Values = z.infer<typeof schema>;
+import { z } from "zod";
+import { FormProvider } from "~/components/form/FormProvider";
+import { useFormContext } from "~/lib/useFormManager";
 
-<FormProvider<Values>
-  schema={schema}
-  initialValues={{ name: "" }}
-  onSubmit={(data) => console.log(data)}
->
-  <MyFormFields />
-</FormProvider>;
+const UserSchema = z.object({ username: z.string().min(3, "Too short") });
+type UserValues = z.infer<typeof UserSchema>;
+
+// 1. Context Consumer
+function UserFields() {
+  const { values, errors, handleChange, handleSubmit } =
+    useFormContext<UserValues>();
+
+  return (
+    <form onSubmit={handleSubmit} className="p-4">
+      <input
+        value={values.username}
+        onChange={handleChange("username")}
+        className="form-control"
+      />
+      {errors.username && (
+        <span className="text-danger">{errors.username}</span>
+      )}
+      <button type="submit">Save</button>
+    </form>
+  );
+}
+
+// 2. Form Provider/Manager Initialization
+export function UserForm() {
+  return (
+    <FormProvider<UserValues>
+      schema={UserSchema}
+      initialValues={{ username: "" }}
+      onSubmit={(validData) => console.log("Success:", validData.username)}
+    >
+      <UserFields />
+    </FormProvider>
+  );
+}
 ```
 
-Inside field components:
+#### `src/components/editor.tsx` (Comprehensive Implementation Example)
+
+**Usage & Implementation Details:**
+The `Editor` component integrates the `@tinymce/tinymce-react` rich-text editor within the standard React and pure HTML form lifecycles. It resolves complexities relating to FormData payload extraction by shadowing a hidden `<textarea>`.
+
+**Implementation Logic:**
+
+- **State Management**: Maintains a local `value (string)` state tracking the current raw HTML output of the TinyMCE canvas.
+- **Side Effects & Callbacks**: Defines an internal `handleEditorChange` which intercepts TinyMCE's `onEditorChange` and `onChange` events, synchronizing the editor's internal content with the React state `value`.
+- **HTML Form Integration**: In addition to the physical `<TINYEditor>` DOM injection, it renders a synchronized `<textarea hidden name={id} value={value} readOnly />`. When standard HTML `<form>` submissions occur or `FormData` is constructed, this hidden read-only textarea seamlessly provides the rich-text payload under the supplied `id` or `textarea` prop name.
+- **Configuration**: Comes bundled with dozens of predefined plugins (`advlist`, `link`, `image`, `codesample`, etc.) and a full contextual toolbar built into the `init` property.
+
+**Usage Example:**
 
 ```tsx
-const { values, errors, handleChange, handleSubmit } = useFormContext<Values>();
+import { Editor } from "~/components/editor";
 
-<form onSubmit={handleSubmit}>
-  <input value={values.name} onChange={handleChange("name")} />
-  {errors.name && <p>{errors.name}</p>}
-</form>;
+export function CreatePostForm() {
+  const submitAction = async (formData: FormData) => {
+    "use server";
+    // Extracts cleanly due to the hidden shadowed <textarea>
+    const content = formData.get("postBody");
+    console.log("Rich HTML content:", content);
+  };
+
+  return (
+    <form action={submitAction}>
+      <label>Post Body</label>
+      {/* 'id' corresponds to the generated hidden textarea's name attribute */}
+      <Editor id="postBody" />
+      <button type="submit" className="btn btn-primary mt-2">
+        Publish
+      </button>
+    </form>
+  );
+}
 ```
-
-### 16A.4 Auth Utilities and Actions
-
-#### `src/server/auth/utils/passwordHasher.ts`
-
-Use for credential creation and verification.
 
 ```ts
 const salt = generateSalt();
@@ -897,6 +968,49 @@ if (result.success) {
 ```
 
 ### 16A.5 Client Contexts and Hooks
+
+#### `src/hooks/useForum.ts` (Comprehensive Implementation Example)
+
+**Usage & Implementation Details:**
+The `useForum` custom React hook orchestrates the retrieval of forum categories while managing standard lifecycle states (loading, error, and data payload).
+
+**Implementation Logic:**
+
+- **State Management**: It utilizes three primary state variables:
+  - `loading (boolean)`: Indicates if the fetch request is currently in-flight. Initializes as `true`.
+  - `forum (ForumCategory[])`: Stores the array of forum categories returned by the API. Initializes as an empty array `[]`.
+  - `error (string | null)`: Captures user-friendly error messages if the request fails.
+- **Side Effects (`useEffect`)**:
+  - On mount (and when `showLoadingBar`/`hideLoadingBar` dependencies change), it triggers an asynchronous `fetchData` sequence.
+  - An intentional `100ms` delay is baked in via `setTimeout` to prevent UI flickering on extremely fast networks and guarantee the loading bar is perceived.
+  - It integrates directly with the `useTheme` context, signaling `showLoadingBar("forum")` immediately before the network call, and `hideLoadingBar("forum")` in the `finally` block to ensure the visual progress indicator behaves correctly regardless of success or failure.
+- **Data Fetching & Validation**:
+  - Hits the `/api/forum` endpoint.
+  - If the response is not `ok`, it explicitly throws a status-coded error, catching it below to populate the `error` state.
+  - Asserts the JSON payload structure as `ForumCategory[]` upon successful return.
+
+**Usage Example:**
+
+```tsx
+import { useForum } from "~/hooks/useForum";
+
+export default function ForumPage() {
+  const { loading, forum, error } = useForum();
+
+  if (loading) return <div>Loading forum data...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
+
+  return (
+    <div>
+      {forum.map((category) => (
+        <CategoryCard key={category.id} data={category} />
+      ))}
+    </div>
+  );
+}
+```
+
+#### Other Hooks
 
 #### `src/client/modalUtils.tsx`
 

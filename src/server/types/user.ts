@@ -20,35 +20,15 @@ export type User = {
 export interface ForumUser {
   id: number;
   username: string;
-  email: string;
-  password: string;
-  salt: string;
+  email?: string;
+  password?: string;
+  salt?: string;
   userAuthToken?: string | null;
   avatarUrl: string;
-  bannerUrl: string;
+  bannerUrl?: string;
   signature: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
   roleId?: number | null;
   userId?: number | null;
-}
-
-export interface ForumMessages {
-  id: number;
-  createdAt: Date;
-  message: string;
-  title: string;
-  seen: number;
-  receiverId?: number | null;
-  senderId?: number | null;
-}
-
-export interface ForumMessageReplies {
-  id: number;
-  createdAt: Date;
-  message: string;
-  seen: number;
-  receiverId?: number | null;
-  senderId?: number | null;
-  messageId?: number | null;
 }

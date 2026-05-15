@@ -9,17 +9,17 @@ export function useForum() {
   const [forum, setForum] = useState<ForumCategory[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { showLoadingBar, hideLoadingBar } = useTheme();
-  
+
   useEffect(() => {
     async function fetchData() {
       try {
         await new Promise((resolve) => setTimeout(resolve, 100)); // Small delay for UX
-        showLoadingBar("forumLoadingBar");
         setLoading(true);
         setError(null);
+        showLoadingBar("forum");
 
         const forumRes = await fetch("/api/forum");
-        
+
         if (!forumRes.ok) {
           throw new Error(`Forum API Error ${forumRes.status}`);
         }
@@ -31,7 +31,7 @@ export function useForum() {
         setError("Failed to load forum data. Please try again later.");
       } finally {
         setLoading(false);
-        hideLoadingBar("forumLoadingBar");
+        hideLoadingBar("forum");
       }
     }
 

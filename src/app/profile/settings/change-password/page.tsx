@@ -4,7 +4,7 @@ import { useModalManager } from "~/client/modalUtils";
 import { PasswordChangeForm } from "~/components/changePasswordForm";
 
 export default function ChangePasswordPage() {
-  const { openModal, closeModal } = useModalManager();
+  const { openModal } = useModalManager();
 
   const handleOpenModal = () => {
     openModal({

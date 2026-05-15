@@ -1,3 +1,5 @@
+import type { ForumUser } from "../types/user";
+
 export function generateWhereClause(id: number | string): {
   id?: number;
   slug?: string;

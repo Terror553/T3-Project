@@ -13,7 +13,7 @@ _Severity: Critical | Completion: 43%_
 - [ ] **Topic Creation & Management** (Partial)
   - [ ] **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
   - [x] **Server Logic:** Add `createTopic`, `editTopic`, `deleteTopic` to `src/server/forum/forum.ts`.
-  - [x] **Validation:** Create Zod schemas in `src/lib/schemas/createTopicSchema.ts`.
+  - [x] **Validation:** Create Zod schemas in `src/lib/schemas/topicSchemas.ts`.
   - [x] **UI/Client:** Build `topicCreationForm.tsx` utilizing `FormProvider`, `useFormManager`, and `sanitizeInput`.
 - [ ] **Topic Replies**
   - **API:** Create `src/app/api/forum/topic/[id]/reply/route.ts`.
@@ -105,22 +105,22 @@ _Severity: Medium | Completion: 60%_
 **Context:** Currently, modals (like `loginModal.tsx`) fall back to hardcoded component IDs (e.g., `#modal-login`) and manually interact with `window.bootstrap.Modal` for state management, leading to heavy boilerplate and duplicated markup. We need a simple, centralized modal manager so any component can invoke a modal dialog dynamically without rendering its own `div.modal` tree.
 
 - [x] **Global Modal Provider**
-  - **File:** Create a context and provider in `src/client/modalUtils.tsx` (previously planned as `ModalProvider.tsx`).
-  - **Logic:** It should hold the current active modal configuration (title, body component, footer, settings).
-  - **Component:** The provider itself renders a single `<div className="modal fade">` container placed once in the app (e.g. in `src/app/layout.tsx`), preventing DOM clutter.
+  - [x] **File:** Create a context and provider in `src/client/modalUtils.tsx` (previously planned as `ModalProvider.tsx`).
+  - [x] **Logic:** It should hold the current active modal configuration (title, body component, footer, settings).
+  - [x] **Component:** The provider itself renders a single `<div className="modal fade">` container placed once in the app (e.g. in `src/app/layout.tsx`), preventing DOM clutter.
 - [x] **Simple Hook Interface**
-  - **File:** Create `useModalManager` hook.
-  - **Functions:** Expose simple methods like `openModal({ title, content, size })` and `closeModal()` to programmatically trigger modals from anywhere.
+  - [x] **File:** Create `useModalManager` hook.
+  - [x] **Functions:** Expose simple methods like `openModal({ title, content, size })` and `closeModal()` to programmatically trigger modals from anywhere.
 - [ ] **Refactoring Existing Modals**
   - **Migration:** Refactor `src/components/loginModal.tsx` and similar files to stop rendering the Bootstrap modal shell (`modal-dialog`, `modal-content`). They should only map to the content inside, which is passed into the new modal manager.
 
 ## 8. Dashboard Analytics & Game Server Integration
 
-_Severity: Low | Completion: 15%_
+_Severity: Low | Completion: 50%_
 
 **Context:** The new `/dashboard` routes structure provides overview, analytics, and settings. However, it needs integration with the Minecraft server stats and user activity models (e.g. `Job`, `UserJob`, `McServerSetting`).
 
-- [ ] **Dashboard Data Endpoints**
+- [x] **Dashboard Data Endpoints**
   - **API:** Fetch analytics data in `/api/dashboard/stats/route.ts` bridging `ConsoleLog` or user metrics.
   - **UI/Client:** Refine the `/dashboard/analytics` view with actual data components.
 - [ ] **Profile Wall**

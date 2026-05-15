@@ -449,7 +449,12 @@ export default function Topic() {
                                   </div>
                                 </div>
                                 <div className="forum-post-content">
-                                  <div className="post">{topic.content}</div>
+                                  <div
+                                    className="post"
+                                    dangerouslySetInnerHTML={{
+                                      __html: topic.content,
+                                    }}
+                                  />
                                 </div>
                                 <div className="forum-post-reactions">
                                   <Link
@@ -620,9 +625,12 @@ export default function Topic() {
                                             </ul>
                                           </div>
                                           <div className="forum-post-content">
-                                            <div className="post">
-                                              {reply.content}
-                                            </div>
+                                            <div
+                                              className="post"
+                                              dangerouslySetInnerHTML={{
+                                                __html: reply.content,
+                                              }}
+                                            />
                                           </div>
                                           <div className="forum-post-reactions">
                                             <Link

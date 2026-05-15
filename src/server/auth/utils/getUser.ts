@@ -1,12 +1,20 @@
 import { db } from "~/server/db";
 import type { ForumUser } from "~/server/types/forum";
 
-export async function getUser(id: number) {
+export async function getUser(
+  id: number,
+  includeSensitive = false,
+): Promise<ForumUser | null> {
+  const sensitiveFields = includeSensitive
+    ? { password: true, salt: true, email: true }
+    : {};
+
   const fullUser = await db.forumUser.findFirst({
     where: {
       id: id,
     },
     include: {
+      ...sensitiveFields,
       group: true,
       profileWalls: {
         include: {

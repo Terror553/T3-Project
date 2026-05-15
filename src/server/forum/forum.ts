@@ -24,7 +24,6 @@ import {
 } from "~/utils/errorHandler";
 import { getCurrentUser } from "../auth/utils/currentUser";
 import { createSlug } from "../utils/forumUtils";
-import { sanitizeInput } from "~/lib/sanitize";
 
 export async function getCategories() {
   const forum = await db.forumCategory.findMany();
@@ -303,9 +302,11 @@ export async function getLatestTopic(id: number | string) {
   } as ForumTopic;
 }
 
+import DOMPurify from "isomorphic-dompurify";
+
 export async function createTopic(
   unsafeData: z.infer<typeof createTopicSchema>,
-): Promise<AppResult<{ slug: string | null; subcategory: number }>> {
+): Promise<AppResult<{ slug: string | null; id: number }>> {
   // Validate input data
   const validationResult = createTopicSchema.safeParse(unsafeData);
 
@@ -327,10 +328,29 @@ export async function createTopic(
     }
 
     const slug = createSlug(data.title);
+    const subcategory = await getSubCategory(data.subcategory);
+    const existingTopic = await db.forumTopic.findFirst({
+      where: {
+        slug,
+        title: data.title,
+        subcategory: {
+          id: subcategory.id,
+        },
+      },
+    });
+    if (existingTopic) {
+      return createErrorResult(
+        "A topic with the same title already exists in this subcategory",
+        ErrorCode.VALIDATION_ERROR,
+      );
+    }
+
+    data.content = DOMPurify.sanitize(data.content);
+
     const newTopic = await db.forumTopic.create({
       data: {
         title: data.title,
-        content: sanitizeInput(data.content),
+        content: data.content,
         slug,
         author: {
           connect: {
@@ -339,20 +359,20 @@ export async function createTopic(
         },
         subcategory: {
           connect: {
-            id: data.subcategory,
+            id: subcategory.id,
           },
         },
       },
     });
 
     return createSuccessResult({
-      slug: newTopic.slug, // Placeholder slug, replace with actual slug generation logic
-      subcategory: data.subcategory,
+      slug, // Placeholder slug, replace with actual slug generation logic
+      id: newTopic.id,
     });
   } catch (error) {
     console.error("Error during topic creation:", error);
     return createErrorResult(
-      "An unexpected error occurred",
+      data.subcategory + "An unexpected error occurred, " + error,
       ErrorCode.SERVER_ERROR,
     );
   }
@@ -400,7 +420,7 @@ export async function editTopic(
       return createErrorResult("Topic not found", ErrorCode.NOT_FOUND);
     }
 
-    if (topic.authorId !== user.id) {
+    if (topic.authorId !== user.id && user.group?.highTeam !== 1) {
       return createErrorResult(
         "You are not authorized to edit this topic",
         ErrorCode.UNAUTHORIZED,
@@ -419,7 +439,7 @@ export async function editTopic(
       topic.slug = slug;
     }
 
-    topic.content = data.content;
+    topic.content = DOMPurify.sanitize(data.content);
 
     await db.forumTopic.update({
       where: { id: topic.id },
