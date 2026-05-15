@@ -6,12 +6,14 @@ import { Editor } from "../editor";
 interface TextAreaProps<T extends Record<string, string>> {
   name: keyof T & string;
   label: string;
+  labelHidden?: boolean;
   type?: string;
 }
 
 export function TextArea<T extends Record<string, string>>({
   name,
   label,
+  labelHidden = false,
 }: TextAreaProps<T>) {
   const { values, errors, setValues } = useFormContext<T>();
 
@@ -25,7 +27,7 @@ export function TextArea<T extends Record<string, string>>({
 
   return (
     <div className="form-group">
-      <label htmlFor={name} className="form-label">
+      <label hidden={labelHidden} htmlFor={name} className="form-label">
         {label}
       </label>
       <Editor

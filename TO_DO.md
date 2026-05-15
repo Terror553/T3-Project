@@ -40,17 +40,17 @@ _Severity: Medium | Completion: 10%_
 
 ## 3. Private Messaging System
 
-_Severity: High | Completion: 5%_
+_Severity: High | Completion: 100%_
 
 **Context:** The `ForumMessage` and `ForumMessageReply` models exist in the database, and the feature is referenced in `DOC.md` (Section 23). There is no server module, types, or UI for it.
 
-- [ ] **Messaging Core Module**
-  - **Data Types:** Create `src/server/types/messaging.ts` to transform Prisma messages into app models.
-  - **Server Logic:** Create `src/server/messaging/messaging.ts` for sending/receiving loops.
-- [ ] **Messaging API Routes**
-  - **API:** Implement `src/app/api/messages/route.ts` (GET inbox, POST new thread) and `src/app/api/messages/[id]/route.ts` (GET thread, POST reply).
-- [ ] **Messaging UI**
-  - **Page:** Build `src/app/messages/page.tsx` containing an inbox view and thread renderer.
+- [x] **Messaging Core Module**
+  - [x] **Data Types:** Create `src/server/types/messaging.ts` to transform Prisma messages into app models.
+  - [x] **Server Logic:** Create `src/server/messaging/messaging.ts` for sending/receiving loops.
+- [x] **Messaging API Routes**
+  - [x] **API:** Implement `src/app/api/messages/route.ts` (GET inbox, POST new thread) and `src/app/api/messages/[id]/route.ts` (GET thread, POST reply).
+- [x] **Messaging UI**
+  - [x] **Page:** Build `src/app/messages/page.tsx` containing an inbox view and thread renderer.
 
 ---
 

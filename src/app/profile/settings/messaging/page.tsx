@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/client/theme";
-import { getUserMessages } from "~/server/auth/utils/getUserMessages";
 import type { ForumMessage } from "~/server/types/forum";
+import { formatDate, getRelativeTime } from "~/utils/dateUtils";
+import { replaceColor } from "~/utils/styleUtils";
 
-export default function Settings() {
+export default function Messages() {
   const [messages, setMessages] = useState<ForumMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const { showLoadingBar, hideLoadingBar } = useTheme();
@@ -18,7 +19,10 @@ export default function Settings() {
         showLoadingBar("messagesLoadingBar");
         setLoading(true);
 
-        const messages = await getUserMessages();
+        const [msgRes] = await Promise.all([fetch("/api/user/messages")]);
+        if (!msgRes.ok) throw new Error(`User API Error ${msgRes.status}`);
+
+        const messages = (await msgRes.json()) as ForumMessage[];
 
         if (!messages) throw new Error(`Unknown error fetching messages`);
 
@@ -41,7 +45,7 @@ export default function Settings() {
         <p>Loading...</p>
       ) : (
         <>
-          {messages.length > 0 ? (
+          {messages ? (
             <>
               <div className="action-bar">
                 <div className="action-bar-pagination">
@@ -64,12 +68,12 @@ export default function Settings() {
                   </ul>
                 </div>
                 <div className="action-bar-buttons">
-                  <a
-                    href="/user/messaging/?action=new"
+                  <Link
+                    href="/profile/settings/messaging/new"
                     className="btn btn-primary btn-sm"
                   >
                     New Message
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="col-xl-12 col-lg-8">
@@ -80,41 +84,67 @@ export default function Settings() {
                         You do not have any messages.
                       </div>
                       <div className="card-footer">
-                        <a
-                          href="/user/messaging/?action=new"
+                        <Link
+                          href="/profile/settings/messaging/new"
                           className="btn btn-primary"
                         >
                           New Message
-                        </a>
+                        </Link>
                       </div>
                     </>
                   ) : (
                     <>
-                      <>
-                        <div className="card-body">
-                          <div className="list list-relaxed list-divided">
-                            <div className="list-item">
+                      <div className="card-body">
+                        <div className="list list-relaxed list-divided">
+                          {messages.map((message) => (
+                            <div className="list-item" key={message.id}>
                               <div className="list-content">
-                                <a href="/user/messaging/?action=view&amp;message=1">
-                                  test
+                                <a
+                                  href={`/profile/settings/messaging/${message.id}`}
+                                >
+                                  {message.title}
                                 </a>
                                 <div className="list-meta">
                                   <div>
-                                    Participants:{" "}
-                                    <Link href="/profile/admin/">admin</Link>
+                                    Sender:{" "}
+                                    <Link
+                                      href={`/profile/${message.sender.id}/`}
+                                      style={replaceColor({
+                                        color: message.sender.group?.color,
+                                        gradient:
+                                          message.sender.group?.gradient,
+                                        end: message.sender.group?.end,
+                                        start: message.sender.group?.start,
+                                        isBadge: false,
+                                      })}
+                                    >
+                                      {message.sender.username}
+                                    </Link>
+                                    , Reciever:{" "}
+                                    <Link
+                                      href={`/profile/${message.receiver.id}/`}
+                                      style={replaceColor({
+                                        color: message.receiver.group?.color,
+                                        gradient:
+                                          message.receiver.group?.gradient,
+                                        end: message.receiver.group?.end,
+                                        start: message.receiver.group?.start,
+                                        isBadge: false,
+                                      })}
+                                    >
+                                      {message.receiver.username}
+                                    </Link>
                                   </div>
                                   <div className="d-sm-none">
                                     Last Message:{" "}
                                     <Link
-                                      href="/profile/admin/"
-                                      style={{ color: "#ff0000" }}
-                                      data-poload="/queries/user/?id=1"
+                                      href={`/profile/${message.receiver.id}/`}
                                     >
-                                      admin
+                                      {message.receiver.username}
                                     </Link>
                                     •
-                                    <span title="12 May 2026, 23:53">
-                                      less than a minute ago
+                                    <span title={formatDate(message.createdAt)}>
+                                      {getRelativeTime(message.createdAt)}
                                     </span>
                                   </div>
                                 </div>
@@ -122,10 +152,15 @@ export default function Settings() {
                               <div className="list-extra text-end align-self-center d-none d-sm-block">
                                 <div className="user-item user-item-right">
                                   <div className="user-item-avatar">
-                                    <Link href="/profile/admin/">
+                                    <Link
+                                      href={`/profile/${message.sender?.id}/`}
+                                    >
                                       <Image
-                                        src="http://10.8.0.4:3000/_next/image?url=%2Fdefault.png&w=128&q=75"
-                                        alt="admin"
+                                        src={message.sender?.avatarUrl}
+                                        alt={
+                                          message.sender?.username ||
+                                          "User Avatar"
+                                        }
                                         width={30}
                                         height={30}
                                       />
@@ -133,24 +168,35 @@ export default function Settings() {
                                   </div>
                                   <div className="user-item-content">
                                     <Link
-                                      href="/profile/admin/"
-                                      style={{ color: "#ff0000" }}
-                                      data-poload="/queries/user/?id=1"
+                                      href={`/profile/${message.sender?.id}/`}
+                                      style={replaceColor({
+                                        color: message.sender.group?.color,
+                                        gradient:
+                                          message.sender.group?.gradient,
+                                        end: message.sender.group?.end,
+                                        start: message.sender.group?.start,
+                                        isBadge: false,
+                                      })}
                                     >
-                                      admin
+                                      {message.sender.username}
                                     </Link>
                                     <div className="user-item-meta">
-                                      <span title="12 May 2026, 23:53">
-                                        less than a minute ago
+                                      <span
+                                        title={formatDate(
+                                          message.createdAt,
+                                          true,
+                                        )}
+                                      >
+                                        {getRelativeTime(message.createdAt)}
                                       </span>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          ))}
                         </div>
-                      </>
+                      </div>
                     </>
                   )}
                 </div>
@@ -160,34 +206,34 @@ export default function Settings() {
                 <div className="action-bar-pagination">
                   <ul className="pagination d-inline-flex">
                     <li className="page-item  disabled">
-                      <a className="page-link" href="#">
+                      <Link className="page-link" href="#">
                         «
-                      </a>
+                      </Link>
                     </li>
                     <li className="page-item  active ">
-                      <a className="page-link" href="/user/messaging/&amp;p=1">
+                      <Link className="page-link" href={""}>
                         1
-                      </a>
+                      </Link>
                     </li>
                     <li className="page-item  disabled ">
-                      <a className="page-link" href="#">
+                      <Link className="page-link" href="#">
                         »
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
                 <div className="action-bar-buttons">
-                  <a
-                    href="/user/messaging/?action=new"
+                  <Link
+                    href="/profile/settings/messaging/new"
                     className="btn btn-primary btn-sm"
                   >
                     New Message
-                  </a>
+                  </Link>
                 </div>
               </div>
             </>
           ) : (
-            <>No topic found</>
+            <>Error..</>
           )}
         </>
       )}

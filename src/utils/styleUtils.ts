@@ -49,5 +49,14 @@ export function replaceColor({
     }
   }
 
+  if (isBadge) {
+    return {
+      background: minecraftColorToRGB(color),
+      WebkitBackgroundClip: "text",
+      display: "inline-block",
+      WebkitTextFillColor: "transparent",
+    };
+  }
+
   return baseStyles;
 }

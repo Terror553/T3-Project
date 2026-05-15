@@ -154,14 +154,13 @@ export interface ForumCategory {
 export interface ForumMessage {
   id: number;
   createdAt: Date;
+
   message: string;
   title: string;
   seen: number;
-  receiverId?: number;
-  senderId?: number;
   messageReplies: ForumMessageReply[];
-  receiver?: ForumUser;
-  sender?: ForumUser;
+  receiver: ForumUser;
+  sender: ForumUser;
 }
 
 export interface ForumMessageReply {
@@ -172,7 +171,7 @@ export interface ForumMessageReply {
   receiverId?: number;
   senderId?: number;
   messageId: number;
-  sender?: ForumUser;
+  sender: ForumUser;
   forumMessage?: ForumMessage;
-  receiver?: ForumUser;
+  receiver: ForumUser;
 }

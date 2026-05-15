@@ -130,6 +130,14 @@ npm run build
   - API route: `src/app/api/wiki/route.ts`
   - Server data module: `src/server/wiki/wiki.ts`
 
+- Private Messaging:
+  - Pages: `src/app/profile/settings/messaging/page.tsx` and `src/app/profile/settings/messaging/[id]/page.tsx`
+  - API Routes: `src/app/api/user/messages/route.ts` and `src/app/api/user/messages/[id]/route.ts`
+  - Server Actions: `src/server/auth/actions/messageActions.ts`
+  - Components: `src/components/messageReplyForm.tsx`
+  - Schemas and Types: `src/lib/schemas/messageSchema.ts` and `src/server/types/forum.ts`
+  - Data Fetching: `src/server/auth/utils/getUserMessages.ts`
+
 ---
 
 ## 5. Application Flow (End to End)
@@ -599,6 +607,36 @@ A new, comprehensive admin dashboard has been added under `src/app/dashboard`.
   - Store (Configuration, Products, Payments, etc.)
   - Forum (Settings, Forums, Labels)
 - **Purpose**: This provides the foundation for building out administrative functionalities. Each page is a starting point for implementing the respective feature.
+
+### 14.5 Private Messaging Feature
+
+A private messaging system has been implemented, allowing users to send and receive private messages.
+
+Core files:
+
+- **Pages**:
+  - `src/app/profile/settings/messaging/page.tsx`: Lists all messages for the current user.
+  - `src/app/profile/settings/messaging/[id]/page.tsx`: Displays a single message thread, including replies.
+- **API Routes**:
+  - `src/app/api/user/messages/route.ts`: Fetches all messages for the logged-in user.
+  - `src/app/api/user/messages/[id]/route.ts`: Fetches a single message by its ID.
+- **Server Actions**:
+  - `src/server/auth/actions/messageActions.ts`: Contains the `sendMessageReply` action for replying to messages.
+- **Components**:
+  - `src/components/messageReplyForm.tsx`: The form used for sending replies.
+- **Schemas and Types**:
+  - `src/lib/schemas/messageSchema.ts`: Zod schema for validating message content.
+  - `src/server/types/forum.ts`: Contains the `ForumMessage` and `ForumMessageReply` types.
+- **Data Fetching**:
+  - `src/server/auth/utils/getUserMessages.ts`: Includes `getUserMessages` and `getMessage` to retrieve message data from the database.
+
+**Flow for Replying to a Message:**
+
+1.  The user views a message at `src/app/profile/settings/messaging/[id]/page.tsx`.
+2.  The `MessageReplyForm` component is displayed, which uses a `FormProvider` with the `messageSchema`.
+3.  Upon submission, the form calls the `sendMessageReply` server action.
+4.  The server action validates the input, sanitizes the message content, and creates a new `ForumMessageReply` record in the database.
+5.  The page is refreshed to show the new reply.
 
 ---
 
