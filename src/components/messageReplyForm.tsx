@@ -97,7 +97,7 @@ function MessageReplyInner({
   return (
     <form onSubmit={handleSubmit} id="form-message-reply">
       <TextArea labelHidden={true} label="Message" name="message" />
-      <input name="id" value={id} readOnly />
+      <input name="id" value={id} readOnly hidden={true} />
       <hr />
       <Button
         type="submit"
