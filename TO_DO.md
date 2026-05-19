@@ -40,16 +40,17 @@ _Severity: Medium | Completion: 10%_
 
 ## 3. Private Messaging System
 
-_Severity: High | Completion: 0%_
+_Severity: High | Completion: 25%_
 
-**Context:** The `ForumMessage` and `ForumMessageReply` models exist in the database, and the feature is referenced in `DOC.md` (Section 23). There is no server module, types, or UI for it.
+**Context:** The `ForumMessage` and `ForumMessageReply` models exist in the database, and the feature is referenced in `DOC.md` (Section 23). A `messageReplyForm.tsx` component has been created, but there is no server module, types, or other UI for it.
 
 - [ ] **Messaging Core Module**
   - [ ] **Data Types:** Create `src/server/types/messaging.ts` to transform Prisma messages into app models.
   - [ ] **Server Logic:** Create `src/server/messaging/messaging.ts` for sending/receiving loops.
 - [ ] **Messaging API Routes**
   - [ ] **API:** Implement `src/app/api/messages/route.ts` (GET inbox, POST new thread) and `src/app/api/messages/[id]/route.ts` (GET thread, POST reply).
-- [ ] **Messaging UI**
+- [x] **Messaging UI (Partial)**
+  - [x] **UI/Client:** The `src/components/messageReplyForm.tsx` component has been created for replying to messages.
   - [ ] **Page:** Build `src/app/messages/page.tsx` containing an inbox view and thread renderer.
 
 ---
@@ -147,16 +148,15 @@ _Severity: Low | Completion: 0%_
 
 ## 10. File Uploads & CDN
 
-_Severity: High | Completion: 25%_
+_Severity: High | Completion: 50%_
 
-**Context:** The backend has an API route (`src/app/api/upload/route.ts`) to generate pre-signed URLs for S3 uploads. However, there is no client-side implementation to use this, nor is there a clear link between uploaded files and other database models.
+**Context:** The backend has an API route (`src/app/api/upload/route.ts`) to generate pre-signed URLs for S3 uploads. A test component `src/components/uploadTest.tsx` exists that demonstrates the upload functionality. However, there is no reusable client-side component, nor is there a clear link between uploaded files and other database models.
 
+- [x] **API Route for Pre-signed URLs**
+  - [x] **API:** Implement `src/app/api/upload/route.ts` to generate pre-signed URLs for S3 uploads.
 - [ ] **File Upload Component**
   - [ ] **UI/Client:** Create a reusable `UploadFile.tsx` component that allows users to select a file.
-  - [ ] **Client Logic:**
-    - On file selection, call the `/api/upload` endpoint to get a signed URL and a key.
-    - Use the signed URL to upload the file directly to the S3 bucket (e.g., using `fetch` with a PUT request).
-    - Display upload progress, and handle success or error states with notifications.
+  - [x] **Client Logic (Partial):** The `src/components/uploadTest.tsx` component demonstrates how to get a signed URL and upload a file. This logic should be moved to a reusable component.
 - [ ] **Database Integration**
   - [ ] **Server Logic:** Create a new server action or API endpoint that saves the returned S3 key to the database, associating it with the relevant model (e.g., `User`, `ForumPostAttachment`).
   - [ ] **Prisma Schema:** Add a model to store uploaded file metadata, for example, `FileUpload` with fields like `id`, `key`, `url`, `fileName`, `contentType`, `size`, and a relation to the user who uploaded it.

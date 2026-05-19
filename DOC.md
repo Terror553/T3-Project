@@ -271,6 +271,10 @@ A `hidden Int @default(0) @db.TinyInt` field has been added to the `ForumTopic` 
 - The `hidden: number;` property has been added to the `ForumTopic` interface in `src/server/types/forum.ts`.
 - The `deleteTopic` function in `src/server/forum/forum.ts` now updates this field instead of deleting the record.
 
+### 7.6 Seeding the Database
+
+The `prisma/seed.ts` script has been significantly updated to populate the database with a rich set of sample data, including users, forum categories, topics, replies, and more. This is useful for development and testing purposes. To run the seed script, use the `db:seed` command from `package.json` (if it exists) or execute the script directly with `ts-node`.
+
 ---
 
 ## 8. Type System Guide
@@ -318,7 +322,95 @@ The main components of the authentication system are:
 - **Session Management**: `src/server/auth/session.ts` manages the user's session, including creating, updating, and removing the session cookie.
 - **Password Hashing**: `src/server/auth/utils/passwordHasher.ts` provides functions for hashing and comparing passwords.
 - **Authentication Schemas**: `src/server/auth/authSchemas.ts` defines the Zod schemas for validating authentication-related data.
-- **Client-side Components**: `src/components/loginModal.tsx` provides the user interface for logging in.
+- **Client-side Components**: `src/components/loginModal.tsx` provides the user interface for logging in. The `src/components/navbar.tsx` component now accepts an `initialUser` prop, which is used to render the user's information in the navbar without waiting for a client-side data fetch. This improves the initial loading experience.
+
+---
+
+## 11. `useTheme` Hook
+
+The `useTheme` hook, located in `src/client/theme.ts`, provides a set of utility functions for managing the application's theme and user interactions.
+
+### 11.1 Functions
+
+- `showLoadingBar(loadingBarName: string)`: Displays a loading bar. It takes a string identifier to manage multiple loading states.
+- `hideLoadingBar(loadingBarName: string)`: Hides the loading bar. The bar is only hidden when all active loading states have been resolved.
+- `copy(text: string)`: Copies the given text to the user's clipboard.
+- `isDarkMode()`: Returns `true` if the dark theme is currently active, and `false` otherwise.
+- `toggleTheme()`: Toggles the application's theme between light and dark modes and saves the preference to local storage.
+
+### 11.2 Usage Example
+
+```tsx
+import { useTheme } from "~/client/theme";
+
+export default function MyComponent() {
+  const { toggleTheme, isDarkMode } = useTheme();
+
+  return (
+    <div>
+      <p>Current theme: {isDarkMode() ? "Dark" : "Light"}</p>
+      <button onClick={toggleTheme}>Toggle Theme</button>
+    </div>
+  );
+}
+```
+
+---
+
+## 10. File Uploads
+
+This project includes a feature for uploading files to an S3 bucket. The implementation is split between a client-side component for handling the file selection and upload, and a server-side API route for generating a pre-signed URL.
+
+### 10.1 S3 Client Configuration
+
+The S3 client is configured in `src/server/s3.ts`. It uses the `aws-sdk/client-s3` package to create an S3 client instance. The configuration includes the S3 region, endpoint, and credentials, which are loaded from environment variables.
+
+### 10.2 API Route for Pre-signed URLs
+
+The API route at `src/app/api/upload/route.ts` is responsible for generating a pre-signed URL that allows the client to upload a file directly to the S3 bucket.
+
+- **HTTP Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "fileName": "string",
+    "contentType": "string"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "url": "string",
+    "key": "string"
+  }
+  ```
+
+The `key` is a unique identifier for the uploaded file, which can be saved in the database to associate the file with other data.
+
+### 10.3 Client-side Upload Component
+
+The `src/components/uploadTest.tsx` component provides a form for selecting a file and uploading it. It performs the following steps:
+
+1.  **Request a pre-signed URL**: It sends a `POST` request to the `/api/upload` route with the file name and content type.
+2.  **Upload the file**: It uses the received pre-signed URL to upload the file directly to the S3 bucket using a `PUT` request.
+
+### 10.4 Usage Example
+
+The `UploadForm` component in `src/components/uploadTest.tsx` can be used as follows:
+
+```tsx
+import UploadForm from "~/components/uploadTest";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1>Upload a File</h1>
+      <UploadForm />
+    </div>
+  );
+}
+```
+
 - **User Context**: `src/client/user.tsx` provides a React context for accessing the current user's data on the client.
 - **Notification System**: `src/client/notification.tsx` is used to display success and error messages to the user.
 
