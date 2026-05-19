@@ -10,12 +10,16 @@ import { LogOutButton } from "./logOut";
 import { LoginModal } from "./loginModal";
 import { replaceColor } from "~/utils/styleUtils";
 import Image from "next/image";
+import { useTheme } from "~/client/theme";
+import { useNotification } from "~/client/notification";
 
 // 1. Accept initialUser prop
 export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
   // 2. Initialize user state with the prop
   const [user, setUser] = useState<ForumUser | null>(initialUser);
   const [navigation, setNav] = useState<NavItem[]>([]);
+  const { copy } = useTheme();
+  const { addNotification } = useNotification();
   const userNavRef = useRef<HTMLUListElement>(null); // Ref für den User-Navigationsbereich
   const pathname = usePathname();
   // Innerhalb der Navbar Komponente, vor den useEffects
@@ -25,6 +29,11 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
       return pathname === "/" ? "active" : "";
     }
     return pathname?.startsWith(path) ? "active" : "";
+  };
+
+  const handleCopy = () => {
+    copy("Rick Rolled");
+    addNotification("IP copied to clipboard!", "success", 5000);
   };
 
   useEffect(() => {
@@ -341,12 +350,12 @@ export const Navbar = ({ initialUser }: { initialUser: ForumUser | null }) => {
           <div className="header-status-icon">
             <i className="fas fa-cube"></i>
           </div>
-          <div className="header-status-content">
+          <div className="header-status-content" onClick={handleCopy}>
             <div className="header-status-title">
               <span id="ip-minecraftServer">MelonenMC.de</span>
             </div>
             <div className="header-status-description">
-              <span id="count-minecraftServerPlayers">??</span> players online
+              <span>1??</span> players online
             </div>
           </div>
         </Link>

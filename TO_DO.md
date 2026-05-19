@@ -6,12 +6,12 @@ This document tracks unfinished features and modules across the codebase. It map
 
 ## 1. Forum Core Mutations
 
-_Severity: Critical | Completion: 80%_
+_Severity: Critical | Completion: 40%_
 
 **Context:** The forum is currently read-only. We have `getCategories`, `getSubCategories`, and `getTopic` in `src/server/forum/forum.ts`, but no way for users to create, edit, or delete content.
 
-- [x] **Topic Creation & Management** (Partial)
-  - [x] **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
+- [ ] **Topic Creation & Management** (Partial)
+  - [ ] **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
   - [x] **Server Logic:** Add `createTopic`, `editTopic`, `deleteTopic` to `src/server/forum/forum.ts`.
   - [x] **Validation:** Create Zod schemas in `src/lib/schemas/topicSchemas.ts`.
   - [x] **UI/Client:** Build `topicCreationForm.tsx` utilizing `FormProvider`, `useFormManager`, and `sanitizeInput`.
@@ -40,23 +40,23 @@ _Severity: Medium | Completion: 10%_
 
 ## 3. Private Messaging System
 
-_Severity: High | Completion: 100%_
+_Severity: High | Completion: 0%_
 
 **Context:** The `ForumMessage` and `ForumMessageReply` models exist in the database, and the feature is referenced in `DOC.md` (Section 23). There is no server module, types, or UI for it.
 
-- [x] **Messaging Core Module**
-  - [x] **Data Types:** Create `src/server/types/messaging.ts` to transform Prisma messages into app models.
-  - [x] **Server Logic:** Create `src/server/messaging/messaging.ts` for sending/receiving loops.
-- [x] **Messaging API Routes**
-  - [x] **API:** Implement `src/app/api/messages/route.ts` (GET inbox, POST new thread) and `src/app/api/messages/[id]/route.ts` (GET thread, POST reply).
-- [x] **Messaging UI**
-  - [x] **Page:** Build `src/app/messages/page.tsx` containing an inbox view and thread renderer.
+- [ ] **Messaging Core Module**
+  - [ ] **Data Types:** Create `src/server/types/messaging.ts` to transform Prisma messages into app models.
+  - [ ] **Server Logic:** Create `src/server/messaging/messaging.ts` for sending/receiving loops.
+- [ ] **Messaging API Routes**
+  - [ ] **API:** Implement `src/app/api/messages/route.ts` (GET inbox, POST new thread) and `src/app/api/messages/[id]/route.ts` (GET thread, POST reply).
+- [ ] **Messaging UI**
+  - [ ] **Page:** Build `src/app/messages/page.tsx` containing an inbox view and thread renderer.
 
 ---
 
 ## 4. Minecraft Integration & Clans
 
-_Severity: Low | Completion: 100%_
+_Severity: Low | Completion: 10%_
 
 **Context:** Prisma models (`Clan`, `EnderChest`, `Cooldown`) and Type interfaces (`src/server/types/clan.ts`, `minecraft.ts`, `verification.ts`) exist, meaning game-server sync is planned but missing web implementation.
 
@@ -114,15 +114,17 @@ _Severity: Medium | Completion: 100%_
 - [x] **Refactoring Existing Modals**
   - [x] **Migration:** Refactor `src/components/loginModal.tsx` and similar files to stop rendering the Bootstrap modal shell (`modal-dialog`, `modal-content`). They should only map to the content inside, which is passed into the new modal manager.
 
+---
+
 ## 8. Dashboard Analytics & Game Server Integration
 
-_Severity: Low | Completion: 50%_
+_Severity: Low | Completion: 0%_
 
 **Context:** The new `/dashboard` routes structure provides overview, analytics, and settings. However, it needs integration with the Minecraft server stats and user activity models (e.g. `Job`, `UserJob`, `McServerSetting`).
 
-- [x] **Dashboard Data Endpoints**
-  - [x] **API:** Fetch analytics data in `/api/dashboard/stats/route.ts` bridging `ConsoleLog` or user metrics.
-  - [x] **UI/Client:** Refine the `/dashboard/analytics` view with actual data components.
+- [ ] **Dashboard Data Endpoints**
+  - [ ] **API:** Fetch analytics data in `/api/dashboard/stats/route.ts` bridging `ConsoleLog` or user metrics.
+  - [ ] **UI/Client:** Refine the `/dashboard/analytics` view with actual data components.
 - [ ] **Profile Wall**
   - **Data Types/Server:** Hook up `ProfileWall` and `ProfileWallReply` models to `profile.ts`.
   - **UI/Client:** Render user wall component on the public profile view natively.
@@ -140,6 +142,26 @@ _Severity: Low | Completion: 0%_
 - [ ] **Refactor React Logic**
   - **UI/Client:** Convert `subcategory/[id]/page.tsx` directly into a React Server Component (fetching data server-side to skip internal API fetches) OR extract the states into a unified `useSubcategory(id)` hook matching the pattern seen in `useForum.ts`.
   - **Cleanup:** Remove the internal `/api/forum/latest-topic/[id]` endpoint once the data is unified in the subcategory query.
+
+---
+
+## 10. File Uploads & CDN
+
+_Severity: High | Completion: 25%_
+
+**Context:** The backend has an API route (`src/app/api/upload/route.ts`) to generate pre-signed URLs for S3 uploads. However, there is no client-side implementation to use this, nor is there a clear link between uploaded files and other database models.
+
+- [ ] **File Upload Component**
+  - [ ] **UI/Client:** Create a reusable `UploadFile.tsx` component that allows users to select a file.
+  - [ ] **Client Logic:**
+    - On file selection, call the `/api/upload` endpoint to get a signed URL and a key.
+    - Use the signed URL to upload the file directly to the S3 bucket (e.g., using `fetch` with a PUT request).
+    - Display upload progress, and handle success or error states with notifications.
+- [ ] **Database Integration**
+  - [ ] **Server Logic:** Create a new server action or API endpoint that saves the returned S3 key to the database, associating it with the relevant model (e.g., `User`, `ForumPostAttachment`).
+  - [ ] **Prisma Schema:** Add a model to store uploaded file metadata, for example, `FileUpload` with fields like `id`, `key`, `url`, `fileName`, `contentType`, `size`, and a relation to the user who uploaded it.
+- [ ] **Frontend Integration Example**
+  - [ ] **UI/Client:** Integrate the `UploadFile.tsx` component into a feature, for example, allowing users to upload a profile picture on their settings page.
 
 ---
 

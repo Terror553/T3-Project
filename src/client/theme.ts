@@ -26,11 +26,10 @@ export function useTheme() {
     }
   }, []);
 
-  const copy = useCallback(async (elementSelector: string) => {
-    const element = document.querySelector(elementSelector);
-    if (!element?.textContent) return;
+  const copy = useCallback(async (text: string) => {
+    if (!text) return;
     try {
-      await navigator.clipboard.writeText(element.textContent);
+      await navigator.clipboard.writeText(text);
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }

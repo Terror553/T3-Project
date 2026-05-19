@@ -1,4 +1,285 @@
-﻿# Project Files
+# Project Files
 
 This file contains a tree of all files and folders in the project, along with their last modified date.
-├── prisma/migrations/20250630130906_t3/migration.sql - _Modified: 2026-04-27 11:10:52 ├── prisma/migrations/20260428125523_yes/migration.sql - _Modified: 2026-04-28 14:55:23 ├── prisma/migrations/migration_lock.toml - _Modified: 2026-04-28 14:55:23 ├── prisma/schema.prisma - _Modified: 2026-05-12 18:00:26 ├── src/app/api/auth/navigation/route.ts - _Modified: 2026-04-27 11:10:52 ├── src/app/api/auth/user/[id]/route.ts - _Modified: 2026-04-29 14:51:15 ├── src/app/api/auth/user/route.ts - _Modified: 2026-04-27 11:10:52 ├── src/app/api/forum/category/route.ts - _Modified: 2026-04-27 11:10:52 ├── src/app/api/forum/latest-topic/[id]/route.ts - _Modified: 2026-04-27 11:10:52 ├── src/app/api/forum/route.ts - _Modified: 2026-04-27 11:10:52 ├── src/app/api/forum/subcategory/[id]/route.ts - _Modified: 2026-04-27 11:10:52 ├── src/app/api/forum/subcategory/route.ts - _Modified: 2026-05-11 15:02:09 ├── src/app/api/forum/topic/[id]/route.ts - _Modified: 2026-05-12 21:18:50 ├── src/app/api/user/messages/[id]/route.ts - _Modified: 2026-05-16 01:19:55 ├── src/app/api/user/messages/route.ts - _Modified: 2026-05-16 01:18:45 ├── src/app/api/wiki/route.ts - _Modified: 2026-04-27 11:10:52 ├── src/app/dashboard/announcements/page.tsx - _Modified: 2026-05-11 22:56:14 ├── src/app/dashboard/configuration/general/page.tsx - _Modified: 2026-05-11 22:55:18 ├── src/app/dashboard/configuration/navigation/page.tsx - _Modified: 2026-05-11 22:55:22 ├── src/app/dashboard/configuration/privacy/page.tsx - _Modified: 2026-05-11 22:55:27 ├── src/app/dashboard/configuration/reactions/page.tsx - _Modified: 2026-05-11 22:55:30 ├── src/app/dashboard/configuration/registration/page.tsx - _Modified: 2026-05-11 22:55:33 ├── src/app/dashboard/forum/forums/page.tsx - _Modified: 2026-05-11 23:05:00 ├── src/app/dashboard/forum/labels/page.tsx - _Modified: 2026-05-11 23:05:04 ├── src/app/dashboard/forum/settings/page.tsx - _Modified: 2026-05-11 23:05:10 ├── src/app/dashboard/groups/page.tsx - _Modified: 2026-05-11 22:56:06 ├── src/app/dashboard/layout.tsx - _Modified: 2026-05-11 23:10:05 ├── src/app/dashboard/overview/page.tsx - _Modified: 2026-05-11 22:54:14 ├── src/app/dashboard/page.tsx - _Modified: 2026-05-11 12:39:28 ├── src/app/dashboard/settings/page.tsx - _Modified: 2026-05-11 12:38:52 ├── src/app/dashboard/store/configuration/page.tsx - _Modified: 2026-05-11 23:05:25 ├── src/app/dashboard/store/coupons/page.tsx - _Modified: 2026-05-11 23:05:30 ├── src/app/dashboard/store/payments/page.tsx - _Modified: 2026-05-11 23:05:33 ├── src/app/dashboard/store/products/page.tsx - _Modified: 2026-05-11 23:05:36 ├── src/app/dashboard/store/sales/page.tsx - _Modified: 2026-05-11 23:05:39 ├── src/app/dashboard/store/subscriptions/page.tsx - _Modified: 2026-05-11 23:05:42 ├── src/app/dashboard/user-management/punishments/page.tsx - _Modified: 2026-05-11 22:56:52 ├── src/app/dashboard/user-management/reports/page.tsx - _Modified: 2026-05-11 22:57:01 ├── src/app/dashboard/user-management/users/page.tsx - _Modified: 2026-05-11 22:56:36 ├── src/app/forum/page.tsx - _Modified: 2026-04-27 11:10:52 ├── src/app/forum/subcategory/[id]/page.tsx - _Modified: 2026-04-29 14:53:20 ├── src/app/forum/topic/[id]/page.tsx - _Modified: 2026-05-12 23:42:01 ├── src/app/forum/topic/add/page.tsx - _Modified: 2026-05-12 21:27:52 ├── src/app/forum/topic/new/page.tsx - _Modified: 2026-05-12 21:27:52 ├── src/app/layout.tsx - _Modified: 2026-05-12 18:15:11 ├── src/app/login/page.tsx - _Modified: 2026-04-27 11:10:52 ├── src/app/page.tsx - _Modified: 2026-04-27 11:10:52 ├── src/app/profile/[id]/page.tsx - _Modified: 2026-04-29 14:57:35 ├── src/app/profile/page.tsx - _Modified: 2026-04-27 11:10:52 ├── src/app/profile/settings/alerts/page.tsx - _Modified: 2026-05-10 12:51:35 ├── src/app/profile/settings/change-password/page.tsx - _Modified: 2026-05-13 00:07:13 ├── src/app/profile/settings/connections/page.tsx - _Modified: 2026-05-10 19:16:25 ├── src/app/profile/settings/followed-topics/page.tsx - _Modified: 2026-05-10 12:51:35 ├── src/app/profile/settings/layout.tsx - _Modified: 2026-05-13 00:00:37 ├── src/app/profile/settings/messaging/[id]/page.tsx - _Modified: 2026-05-16 01:46:03 ├── src/app/profile/settings/messaging/page.tsx - _Modified: 2026-05-16 00:52:56 ├── src/app/profile/settings/overview/page.tsx - _Modified: 2026-05-10 10:40:20 ├── src/app/profile/settings/profile-settings/page.tsx - _Modified: 2026-05-10 12:51:37 ├── src/app/register/page.tsx - _Modified: 2026-04-28 15:13:42 ├── src/app/rules/page.tsx - _Modified: 2026-05-10 10:19:45 ├── src/app/wiki/page.tsx - _Modified: 2026-04-29 14:59:40 ├── src/client/modal.tsx - _Modified: 2026-04-29 14:45:37 ├── src/client/modalUtils.tsx - _Modified: 2026-05-10 19:14:20 ├── src/client/navUtils.tsx - _Modified: 2026-05-12 14:01:22 ├── src/client/notification.tsx - _Modified: 2026-05-12 21:27:05 ├── src/client/theme.ts - _Modified: 2026-05-12 21:37:25 ├── src/client/user.tsx - _Modified: 2026-04-29 14:52:34 ├── src/components/changePasswordForm.tsx - _Modified: 2026-05-08 01:59:41 ├── src/components/editor.tsx - _Modified: 2026-05-12 23:38:37 ├── src/components/footer.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/form/button.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/form/FormProvider.tsx - _Modified: 2026-04-29 14:42:03 ├── src/components/form/Select.tsx - _Modified: 2026-05-12 21:56:36 ├── src/components/form/TextArea.tsx - _Modified: 2026-05-16 01:17:10 ├── src/components/form/TextInput.tsx - _Modified: 2026-04-29 14:39:51 ├── src/components/forum/ForumCategoryItem.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/forum/ForumSubcategoryItem.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/forum/index.ts - _Modified: 2026-04-27 11:10:52 ├── src/components/forum/LastTopicInfo.tsx - _Modified: 2026-04-29 14:53:22 ├── src/components/loginForm.tsx - _Modified: 2026-04-29 14:39:59 ├── src/components/loginModal.tsx - _Modified: 2026-05-12 14:12:30 ├── src/components/logOut.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/messageReplyForm.tsx - _Modified: 2026-05-16 01:45:18 ├── src/components/navbar.tsx - _Modified: 2026-05-12 14:21:09 ├── src/components/navbar/AuthMenu.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/navbar/HeaderStatus.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/navbar/index.ts - _Modified: 2026-04-27 11:10:52 ├── src/components/navbar/MainNavigation.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/navbar/MobileNavigation.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/navbar/Navbar.tsx - _Modified: 2026-04-29 14:53:23 ├── src/components/navbar/UserMenu.tsx - _Modified: 2026-04-29 14:53:24 ├── src/components/notifcation.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/profileBar.tsx - _Modified: 2026-04-29 14:53:23 ├── src/components/Test.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/ThemeToggle.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/Toast.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/toastContainer.tsx - _Modified: 2026-04-29 14:58:51 ├── src/components/topicCreationForm.tsx - _Modified: 2026-05-12 23:23:01 ├── src/components/ui/Alert.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/ui/Button.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/ui/Card.tsx - _Modified: 2026-04-27 11:10:52 ├── src/components/ui/index.ts - _Modified: 2026-04-27 11:10:52 ├── src/components/wiki.tsx - _Modified: 2026-04-27 11:10:52 ├── src/env.js - _Modified: 2026-04-27 11:10:52 ├── src/global.d.ts - _Modified: 2026-05-12 13:56:41 ├── src/hooks/useForum.ts - _Modified: 2026-05-12 21:36:50 ├── src/lib/sanitize.ts - _Modified: 2026-05-11 15:00:51 ├── src/lib/schemas/loginSchema.ts - _Modified: 2026-04-27 11:10:52 ├── src/lib/schemas/messageSchema.ts - _Modified: 2026-05-16 01:04:34 ├── src/lib/schemas/topicSchemas.ts - _Modified: 2026-05-12 23:40:15 ├── src/lib/useFormManager.ts - _Modified: 2026-04-29 14:38:54 ├── src/server/auth/actions/changePassword.ts - _Modified: 2026-05-11 12:36:46 ├── src/server/auth/actions/logOut.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/auth/actions/messageActions.ts - _Modified: 2026-05-16 01:40:08 ├── src/server/auth/actions/signIn.ts - _Modified: 2026-05-10 12:52:46 ├── src/server/auth/actions/signUp.ts - _Modified: 2026-05-10 12:53:09 ├── src/server/auth/authSchemas.ts - _Modified: 2026-05-08 01:40:08 ├── src/server/auth/lib.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/auth/session.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/auth/utils/currentUser.ts - _Modified: 2026-04-29 14:58:56 ├── src/server/auth/utils/defaultRole.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/auth/utils/getUser.ts - _Modified: 2026-05-13 00:21:32 ├── src/server/auth/utils/getUserMessages.ts - _Modified: 2026-05-16 01:19:51 ├── src/server/auth/utils/passwordHasher.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/db.ts - _Modified: 2026-05-05 12:56:46 ├── src/server/forum/forum.ts - _Modified: 2026-05-12 23:49:49 ├── src/server/navigation/navGetter.ts - _Modified: 2026-04-29 14:59:35 ├── src/server/seed.ts.backup - _Modified: 2026-04-27 11:10:52 ├── src/server/types/clan.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/types/db.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/types/forum.ts - _Modified: 2026-05-16 00:50:20 ├── src/server/types/minecraft.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/types/navigation.ts - _Modified: 2026-05-16 01:52:05 ├── src/server/types/profile.ts - _Modified: 2026-05-11 22:26:00 ├── src/server/types/role.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/types/settings.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/types/user.ts - _Modified: 2026-05-13 10:25:50 ├── src/server/types/user-data.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/types/verification.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/types/wiki.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/utils/colorUtils.ts - _Modified: 2026-04-29 14:59:18 ├── src/server/utils/dateUtils.ts - _Modified: 2026-04-27 11:10:52 ├── src/server/utils/dbUtils.ts - _Modified: 2026-05-16 01:52:33 ├── src/server/utils/forumUtils.ts - _Modified: 2026-05-10 13:05:34 ├── src/server/wiki/wiki.ts - _Modified: 2026-04-27 11:10:52 ├── src/styles/bootstrap/bootstrap.min.css - _Modified: 2026-05-12 14:05:27 ├── src/styles/cookies/cookieconsent.min.css - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/all.min.css - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/webfonts/fa-brands-400.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/webfonts/fa-brands-400.woff2 - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/webfonts/fa-regular-400.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/webfonts/fa-regular-400.woff2 - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/webfonts/fa-solid-900.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/webfonts/fa-solid-900.woff2 - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/webfonts/fa-v4compatibility.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fontawesome-free/webfonts/fa-v4compatibility.woff2 - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/css.css - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/webfonts/fa-montserrat-200.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/webfonts/fa-montserrat-300.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/webfonts/fa-montserrat-400.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/webfonts/fa-montserrat-500.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/webfonts/fa-montserrat-600.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/webfonts/fa-montserrat-700.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/webfonts/fa-montserrat-800.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/fonts/webfonts/fa-montserrat-900.ttf - _Modified: 2026-04-27 11:10:52 ├── src/styles/prism/prism_light_default.css - _Modified: 2026-04-27 11:10:52 ├── src/styles/theme/theme.css - _Modified: 2026-05-12 14:03:57 ├── src/styles/theme/theme-dark.css - _Modified: 2026-04-27 11:10:52 ├── src/styles/toastr/toastr.min.css - _Modified: 2026-04-27 11:10:52 ├── src/utils/apiHandler.ts - _Modified: 2026-04-27 11:10:52 ├── src/utils/authUtils.ts - _Modified: 2026-04-29 14:59:57 ├── src/utils/dateUtils.ts - _Modified: 2026-05-16 00:42:26 ├── src/utils/errorHandler.ts - _Modified: 2026-05-10 12:47:33 ├── src/utils/styleUtils.ts - _Modified: 2026-05-16 00:40:09
+
+src
+|____styles
+| |____bootstrap
+| | |____bootstrap.min.css
+| |____cookies
+| | |____cookieconsent.min.css
+| |____theme
+| | |____theme-dark.css
+| | |____theme.css
+| |____fontawesome-free
+| | |____webfonts
+| | | |____fa-regular-400.ttf
+| | | |____fa-solid-900.woff2
+| | | |____fa-brands-400.woff2
+| | | |____fa-v4compatibility.woff2
+| | | |____fa-v4compatibility.ttf
+| | | |____fa-solid-900.ttf
+| | | |____fa-regular-400.woff2
+| | | |____fa-brands-400.ttf
+| | |____all.min.css
+| |____toastr
+| | |____toastr.min.css
+| |____fonts
+| | |____css.css
+| | |____webfonts
+| | | |____fa-montserrat-200.ttf
+| | | |____fa-montserrat-300.ttf
+| | | |____fa-montserrat-900.ttf
+| | | |____fa-montserrat-500.ttf
+| | | |____fa-montserrat-800.ttf
+| | | |____fa-montserrat-400.ttf
+| | | |____fa-montserrat-600.ttf
+| | | |____fa-montserrat-700.ttf
+| |____prism
+| | |____prism_light_default.css
+|____global.d.ts
+|____client
+| |____navUtils.tsx
+| |____modalUtils.tsx
+| |____theme.ts
+| |____modal.tsx
+| |____notification.tsx
+| |____user.tsx
+|____lib
+| |____sanitize.ts
+| |____schemas
+| | |____topicSchemas.ts
+| | |____messageSchema.ts
+| | |____loginSchema.ts
+| |____useFormManager.ts
+|____app
+| |____dashboard
+| | |____page.tsx
+| | |____user-management
+| | | |____punishments
+| | | | |____page.tsx
+| | | |____users
+| | | | |____page.tsx
+| | | |____reports
+| | | | |____page.tsx
+| | |____groups
+| | | |____page.tsx
+| | |____configuration
+| | | |____privacy
+| | | | |____page.tsx
+| | | |____registration
+| | | | |____page.tsx
+| | | |____navigation
+| | | | |____page.tsx
+| | | |____reactions
+| | | | |____page.tsx
+| | | |____general
+| | | | |____page.tsx
+| | |____overview
+| | | |____page.tsx
+| | |____store
+| | | |____products
+| | | | |____page.tsx
+| | | |____subscriptions
+| | | | |____page.tsx
+| | | |____sales
+| | | | |____page.tsx
+| | | |____coupons
+| | | | |____page.tsx
+| | | |____configuration
+| | | | |____page.tsx
+| | | |____payments
+| | | | |____page.tsx
+| | |____announcements
+| | | |____page.tsx
+| | |____settings
+| | | |____page.tsx
+| | |____layout.tsx
+| | |____forum
+| | | |____labels
+| | | | |____page.tsx
+| | | |____forums
+| | | | |____page.tsx
+| | | |____settings
+| | | | |____page.tsx
+| |____rules
+| | |____page.tsx
+| |____page.tsx
+| |____login
+| | |____page.tsx
+| |____register
+| | |____page.tsx
+| |____api
+| | |____auth
+| | | |____user
+| | | | |____route.ts
+| | | | |____[id]
+| | | | | |____route.ts
+| | | |____navigation
+| | | | |____route.ts
+| | |____user
+| | | |____messages
+| | | | |____route.ts
+| | | | |____[id]
+| | | | | |____route.ts
+| | |____wiki
+| | | |____route.ts
+| | |____upload
+| | | |____route.ts
+| | |____forum
+| | | |____route.ts
+| | | |____topic
+| | | | |____[id]
+| | | | | |____route.ts
+| | | |____latest-topic
+| | | | |____[id]
+| | | | | |____route.ts
+| | | |____subcategory
+| | | | |____route.ts
+| | | | |____[id]
+| | | | | |____route.ts
+| | | |____category
+| | | | |____route.ts
+| |____wiki
+| | |____page.tsx
+| |____profile
+| | |____page.tsx
+| | |____[id]
+| | | |____page.tsx
+| | |____settings
+| | | |____messaging
+| | | | |____page.tsx
+| | | | |____[id]
+| | | | | |____page.tsx
+| | | |____alerts
+| | | | |____page.tsx
+| | | |____change-password
+| | | | |____page.tsx
+| | | |____followed-topics
+| | | | |____page.tsx
+| | | |____overview
+| | | | |____page.tsx
+| | | |____profile-settings
+| | | | |____page.tsx
+| | | |____connections
+| | | | |____page.tsx
+| | | |____layout.tsx
+| |____layout.tsx
+| |____forum
+| | |____page.tsx
+| | |____topic
+| | | |____new
+| | | | |____page.tsx
+| | | |____[id]
+| | | | |____page.tsx
+| | | |____add
+| | | | |____page.tsx
+| | |____subcategory
+| | | |____[id]
+| | | | |____page.tsx
+|____hooks
+| |____useForum.ts
+|____env.js
+|____components
+| |____navbar
+| | |____AuthMenu.tsx
+| | |____MobileNavigation.tsx
+| | |____index.ts
+| | |____UserMenu.tsx
+| | |____Navbar.tsx
+| | |____MainNavigation.tsx
+| | |____HeaderStatus.tsx
+| |____logOut.tsx
+| |____form
+| | |____button.tsx
+| | |____Select.tsx
+| | |____TextArea.tsx
+| | |____TextInput.tsx
+| | |____FormProvider.tsx
+| |____messageReplyForm.tsx
+| |____changePasswordForm.tsx
+| |____ui
+| | |____Alert.tsx
+| | |____Button.tsx
+| | |____index.ts
+| | |____Card.tsx
+| |____loginForm.tsx
+| |____footer.tsx
+| |____wiki.tsx
+| |____navbar.tsx
+| |____uploads
+| | |____uploadFile.tsx
+| |____toastContainer.tsx
+| |____editor.tsx
+| |____profileBar.tsx
+| |____notifcation.tsx
+| |____uploadTest.tsx
+| |____Test.tsx
+| |____ThemeToggle.tsx
+| |____forum
+| | |____ForumSubcategoryItem.tsx
+| | |____LastTopicInfo.tsx
+| | |____index.ts
+| | |____ForumCategoryItem.tsx
+| |____loginModal.tsx
+| |____Toast.tsx
+| |____topicCreationForm.tsx
+|____utils
+| |____authUtils.ts
+| |____apiHandler.ts
+| |____errorHandler.ts
+| |____dateUtils.ts
+| |____styleUtils.ts
+|____server
+| |____auth
+| | |____session.ts
+| | |____actions
+| | | |____signUp.ts
+| | | |____signIn.ts
+| | | |____changePassword.ts
+| | | |____logOut.ts
+| | | |____messageActions.ts
+| | |____authSchemas.ts
+| | |____lib.ts
+| | |____utils
+| | | |____getUser.ts
+| | | |____getUserMessages.ts
+| | | |____currentUser.ts
+| | | |____passwordHasher.ts
+| | | |____defaultRole.ts
+| |____db.ts
+| |____s3.ts
+| |____types
+| | |____db.ts
+| | |____navigation.ts
+| | |____user.ts
+| | |____clan.ts
+| | |____profile.ts
+| | |____settings.ts
+| | |____wiki.ts
+| | |____minecraft.ts
+| | |____verification.ts
+| | |____user-data.ts
+| | |____forum.ts
+| | |____role.ts
+| |____seed.ts.backup
+| |____wiki
+| | |____wiki.ts
+| |____navigation
+| | |____navGetter.ts
+| |____forum
+| | |____forum.ts
+| |____utils
+| | |____colorUtils.ts
+| | |____forumUtils.ts
+| | |____dbUtils.ts
+| | |____dateUtils.ts
+prisma
+|____seed.ts
+|____schema.prisma
+|____migrations
+| |____20250630130906_t3
+| | |____migration.sql
+| |____20260428125523_yes
+| | |____migration.sql
+| |____migration_lock.toml
