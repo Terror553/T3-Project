@@ -1,4 +1,4 @@
-﻿### Commit 37b7ea9
+### Commit 37b7ea9
 - **Time**: Thu Apr 17 17:34:14 2025 +0200
 - **Committer**: Waleed Bakri
 - **Message**: 
@@ -457,7 +457,7 @@ M	tsconfig.json
 - **Time**: Sat Sep 13 22:29:38 2025 +0200
 - **Committer**: Waleed Bakri
 - **Message**: 
-*SP├äTER EINF├£GEN*
+*SPÄTER EINFÜGEN*
 
 
 M	eslint.config.js
@@ -889,3 +889,126 @@ M	src/server/forum/forum.ts
 M	src/server/types/forum.ts
 M	src/server/types/user.ts
 M	src/server/utils/dbUtils.ts
+
+### Commit 41d4e7b
+- **Time**: Fri May 15 23:46:03 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+COMMITS, TO_DO, FILES & DOC update.
+
+
+M	COMMITS.md
+M	DOC.md
+M	FILES.md
+M	TO_DO.md
+
+### Commit 44e77c2
+- **Time**: Sat May 16 15:04:07 2026 +0200
+- **Committer**: Waleed
+- **Message**: 
+Nothing
+
+
+A	.nvmrc
+A	prisma/seed.ts
+
+### Commit dfe2b7c
+- **Time**: Sat May 16 15:23:03 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat: Implement private messaging feature
+
+This commit introduces a comprehensive private messaging system, allowing users to send, receive, and reply to private messages.
+
+Key features and changes include:
+- **Private Messaging Pages**: New pages for viewing message inbox and individual message threads.
+- **API Endpoints**: Dedicated API routes for fetching message data.
+- **Server Actions**: A new server action for handling message replies securely.
+- **UI Components**: A new form for composing and sending message replies.
+- **Database Integration**: Leverages existing Prisma models for messages and replies.
+- **Documentation**: Updated DOC.md with details of the new feature and TO_DO.md to reflect its completion.
+
+
+M	DOC.md
+M	FILES.md
+M	TO_DO.md
+M	next.config.js
+A	src/app/api/user/messages/[id]/route.ts
+A	src/app/api/user/messages/route.ts
+A	src/app/profile/settings/messaging/[id]/page.tsx
+M	src/app/profile/settings/messaging/page.tsx
+M	src/components/form/TextArea.tsx
+A	src/components/messageReplyForm.tsx
+D	src/components/navigation.tsx
+A	src/lib/schemas/messageSchema.ts
+A	src/server/auth/actions/messageActions.ts
+M	src/server/auth/utils/getUserMessages.ts
+M	src/server/types/forum.ts
+M	src/server/utils/dbUtils.ts
+M	src/utils/dateUtils.ts
+M	src/utils/styleUtils.ts
+
+### Commit 9d8069b
+- **Time**: Sat May 16 15:51:44 2026 +0200
+- **Committer**: Waleed
+- **Message**: 
+Added placeholder avatars, hid the id field for messageReplyForm
+
+
+A	public/new/theme/avatar/1.png
+A	public/new/theme/avatar/2.png
+A	public/new/theme/avatar/3.png
+A	public/new/theme/avatar/4.png
+A	public/new/theme/avatar/5.png
+A	public/new/theme/avatar/6.png
+A	public/new/theme/avatar/7.png
+A	public/new/theme/avatar/8.png
+M	src/app/profile/page.tsx
+M	src/components/messageReplyForm.tsx
+
+### Commit 64e6e84
+- **Time**: Tue May 19 17:51:01 2026 +0200
+- **Committer**: Waleed
+- **Message**: 
+feat: Add file upload feature to-do and update docs
+
+- Added a new section to TO_DO.md for tracking the implementation of a file upload feature.
+- Updated FILES.md with the latest file structure and modification dates.
+
+
+M	.env.example
+M	FILES.md
+M	TO_DO.md
+M	next.config.js
+M	package-lock.json
+M	package.json
+A	src/app/api/upload/route.ts
+M	src/app/page.tsx
+M	src/client/theme.ts
+M	src/components/navbar.tsx
+A	src/components/uploadTest.tsx
+A	src/components/uploads/uploadFile.tsx
+A	src/server/s3.ts
+
+### Commit e2aea61
+- **Time**: Tue May 19 17:59:02 2026 +0200
+- **Committer**: Waleed
+- **Message**: 
+feat: Implement file uploads and update documentation
+
+- **File Uploads**: Implemented a file upload feature using AWS S3. This includes a new API route ('/api/upload') for generating pre-signed URLs and a client-side component for handling the upload process.
+
+- **'useTheme' Hook**: Added a new 'useTheme' hook to manage theme toggling, loading bars, and other UI interactions.
+
+- **Navbar**: The main navbar component has been updated to accept an 'initialUser' prop, improving the initial page load performance by avoiding a client-side data fetch for user information.
+
+- **Database Seeding**: The 'prisma/seed.ts' script has been significantly updated to provide a richer set of data for development and testing.
+
+- **Private Messaging**: Started the implementation of the private messaging system by creating a form for replying to messages.
+
+- **Documentation**: Updated 'DOC.md' and 'TO_DO.md' to reflect the latest changes and progress.
+
+
+M	DOC.md
+M	TO_DO.md
+M	src/components/uploads/uploadFile.tsx
