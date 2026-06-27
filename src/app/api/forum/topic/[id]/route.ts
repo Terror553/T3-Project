@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTopic } from "~/server/forum/forum";
+import { deleteTopic, getTopic } from "~/server/forum/forum";
 
 export async function GET(request: Request) {
   try {

@@ -367,7 +367,7 @@ The S3 client is configured in `src/server/s3.ts`. It uses the `aws-sdk/client-s
 
 ### 10.2 API Route for Pre-signed URLs
 
-The API route at `src/app/api/upload/route.ts` is responsible for generating a pre-signed URL that allows the client to upload a file directly to the S3 bucket.
+The API route at `src/app/api/upload/[path]/route.ts` is responsible for generating a pre-signed URL that allows the client to upload a file directly to the S3 bucket. The dynamic `[path]` segment controls the bucket or logical upload target, while the request body still provides the file metadata needed to sign the upload.
 
 - **HTTP Method**: `POST`
 - **Request Body**:
@@ -389,27 +389,93 @@ The `key` is a unique identifier for the uploaded file, which can be saved in th
 
 ### 10.3 Client-side Upload Component
 
-The `src/components/uploadTest.tsx` component provides a form for selecting a file and uploading it. It performs the following steps:
+The reusable `src/components/uploadForm.tsx` component provides a form for selecting a file and uploading it. It is wired into the shared `FormProvider` / `useFormManager` stack so the file lives inside managed form state instead of ad hoc component state. The legacy `src/components/uploadTest.tsx` file remains as a compatibility re-export, so existing imports continue to work while the real implementation lives in `uploadForm.tsx`.
 
-1.  **Request a pre-signed URL**: It sends a `POST` request to the `/api/upload` route with the file name and content type.
-2.  **Upload the file**: It uses the received pre-signed URL to upload the file directly to the S3 bucket using a `PUT` request.
+It performs the following steps:
+
+1.  **Track file selection in form state**: The file input calls `setFieldValue("file", selectedFile)` from `useFormManager`, which keeps the form state synchronized with the browser file picker.
+2.  **Create a preview URL**: The component derives a temporary object URL from the selected `File` and revokes it when the selection changes or the component unmounts.
+3.  **Normalize the preview ratio**: The `aspectRatio` prop accepts ratios like `16x9` or `1x1` and converts them into a CSS `aspect-ratio` value for the preview container.
+4.  **Request a pre-signed URL**: On submit, it sends a `POST` request to the `/api/upload/[path]` route with the file name and content type.
+5.  **Upload the file**: It uses the received pre-signed URL to upload the file directly to the S3 bucket using a `PUT` request.
+6.  **Notify the user**: Success and failure feedback is shown through the global notification system.
 
 ### 10.4 Usage Example
 
-The `UploadForm` component in `src/components/uploadTest.tsx` can be used as follows:
+The `UploadForm` component in `src/components/uploadForm.tsx` can be used as follows:
 
 ```tsx
-import UploadForm from "~/components/uploadTest";
+import UploadForm from "~/components/uploadForm";
 
 export default function MyPage() {
   return (
     <div>
       <h1>Upload a File</h1>
-      <UploadForm />
+      <UploadForm title="Upload Avatar" aspectRatio="1x1" />
     </div>
   );
 }
 ```
+
+The `title` prop controls the card header and the upload request label, while `aspectRatio` controls the preview frame shape. Both are optional and fall back to sensible defaults when omitted.
+
+### 10.5 Passing the Uploaded Key Into Another Form
+
+The current `UploadForm` is a self-contained uploader: it owns its own `FormProvider`, renders its own `<form>`, and only completes the upload after the S3 pre-signed flow returns `data.key`. That means you should not try to nest it directly inside another `<form>` element such as the register form. Instead, use the uploaded key as a handoff value between the uploader and the parent form.
+
+The recommended pattern is:
+
+1.  Let the uploader finish its S3 flow.
+2.  Capture `data.key` in the uploader completion path.
+3.  Store that key in the parent form state, usually in a hidden field or dedicated form value such as `avatarKey`.
+4.  Submit the parent form only after the key has been written into the parent state.
+
+In practice, this is easiest if the uploader is wrapped by a small adapter component that forwards the upload result upward. The wrapper keeps the current uploader behavior, but adds a bridge into the parent form context.
+
+```tsx
+type RegisterValues = {
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  avatarKey: string;
+};
+
+function RegisterAvatarUpload() {
+  const { setFieldValue } = useFormContext<RegisterValues>();
+
+  return (
+    <UploadForm
+      title="Upload Avatar"
+      aspectRatio="1x1"
+      onUploaded={({ key }) => {
+        setFieldValue("avatarKey", key);
+      }}
+    />
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <FormProvider
+      schema={registerSchema}
+      initialValues={{
+        username: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        avatarKey: "",
+      }}
+      onSubmit={handleRegister}
+    >
+      <RegisterFields />
+      <RegisterAvatarUpload />
+    </FormProvider>
+  );
+}
+```
+
+This pattern matters because `data.key` is the durable value you want to keep in the form, not the raw `File` object. The raw file only exists long enough to upload to S3; the key is what you store or send to the server when the parent form submits.
 
 - **User Context**: `src/client/user.tsx` provides a React context for accessing the current user's data on the client.
 - **Notification System**: `src/client/notification.tsx` is used to display success and error messages to the user.
@@ -497,6 +563,7 @@ export async function GET() {
 - Form state manager: `src/lib/useFormManager.ts`.
 - Provider wrapper: `src/components/form/FormProvider.tsx`.
 - Input components: `src/components/form/TextInput.tsx`, `src/components/form/TextArea.tsx`, `src/components/form/Select.tsx`.
+- Generic field support: `setFieldValue` in `src/lib/useFormManager.ts` allows non-text controls like file inputs or custom widgets to write directly into managed form state.
 - Rich Text Editor: `src/components/editor.tsx` (TinyMCE).
 - Input sanitizer: `isomorphic-dompurify` is used on the server for rich text content.
 
@@ -513,8 +580,20 @@ Never rely on client-only validation for security.
 2.  Create initial values typed as `z.infer<typeof schema>`.
 3.  Wrap your fields in `FormProvider`.
 4.  Use `useFormContext` in inner form component.
-5.  Submit to server action/API.
-6.  Show success/failure toast using notification context.
+5.  Use `handleChange` for text inputs and `setFieldValue` for non-text inputs such as `File` objects, selects with custom coercion, or compound widgets.
+6.  Submit to server action/API. The form manager now returns an async `handleSubmit`, so submission handlers can await async work without leaving the form lifecycle.
+7.  Show success/failure toast using notification context.
+
+### 11.4 Upload Keys in Form State
+
+When a child component uploads to S3, keep the resulting `data.key` in the parent form state instead of trying to serialize the `File` itself. The parent form should own a string field such as `avatarKey`, `bannerKey`, or `attachmentKey`, and the upload wrapper should write the key into that field once the upload succeeds.
+
+This is the important distinction:
+
+- `File` is temporary UI state used only during the upload request.
+- `data.key` is the persistent value that belongs in the form payload.
+
+If you later send the form to a server action or API route, include the key in the JSON or form payload and let the backend connect it to the correct database record.
 
 ---
 

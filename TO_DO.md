@@ -148,20 +148,20 @@ _Severity: Low | Completion: 0%_
 
 ## 10. File Uploads & CDN
 
-_Severity: High | Completion: 50%_
+_Severity: High | Completion: 60%_
 
-**Context:** The backend has an API route (`src/app/api/upload/route.ts`) to generate pre-signed URLs for S3 uploads. A test component `src/components/uploadTest.tsx` exists that demonstrates the upload functionality. However, there is no reusable client-side component, nor is there a clear link between uploaded files and other database models.
+**Context:** The backend has a dynamic upload route at `src/app/api/upload/[path]/route.ts` to generate pre-signed URLs for S3 uploads. The reusable client component now lives in `src/components/uploadForm.tsx` and is wired into the shared form manager, while `src/components/uploadTest.tsx` remains as a compatibility re-export. The missing piece is still persistence and a real product flow that stores uploads against application data.
 
 - [x] **API Route for Pre-signed URLs**
-  - [x] **API:** Implement `src/app/api/upload/route.ts` to generate pre-signed URLs for S3 uploads.
-- [ ] **File Upload Component**
-  - [ ] **UI/Client:** Create a reusable `UploadFile.tsx` component that allows users to select a file.
-  - [x] **Client Logic (Partial):** The `src/components/uploadTest.tsx` component demonstrates how to get a signed URL and upload a file. This logic should be moved to a reusable component.
+  - [x] **API:** Implement `src/app/api/upload/[path]/route.ts` to generate pre-signed URLs for S3 uploads.
+- [x] **File Upload Component**
+  - [x] **UI/Client:** Create a reusable `UploadForm.tsx` component that allows users to select a file and configure the preview title/aspect ratio through props.
+  - [x] **Client Logic (Partial):** The upload flow now lives in `src/components/uploadForm.tsx` and uses `FormProvider`, `useFormManager`, and `setFieldValue` for the file input.
 - [ ] **Database Integration**
   - [ ] **Server Logic:** Create a new server action or API endpoint that saves the returned S3 key to the database, associating it with the relevant model (e.g., `User`, `ForumPostAttachment`).
   - [ ] **Prisma Schema:** Add a model to store uploaded file metadata, for example, `FileUpload` with fields like `id`, `key`, `url`, `fileName`, `contentType`, `size`, and a relation to the user who uploaded it.
 - [ ] **Frontend Integration Example**
-  - [ ] **UI/Client:** Integrate the `UploadFile.tsx` component into a feature, for example, allowing users to upload a profile picture on their settings page.
+  - [ ] **UI/Client:** Integrate the `UploadForm.tsx` component into a feature, for example, allowing users to upload a profile picture on their settings page.
 
 ---
 

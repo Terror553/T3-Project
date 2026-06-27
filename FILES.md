@@ -2,284 +2,285 @@
 
 This file contains a tree of all files and folders in the project, along with their last modified date.
 
+prisma
+| |____migrations
+| | |____20250630130906_t3
+| | | |____migration.sql - _Modified: 2026-05-16 15:34:58
+| | |____20260428125523_yes
+| | | |____migration.sql - _Modified: 2026-05-16 15:34:58
+| | |____migration_lock.toml - _Modified: 2026-05-16 15:34:58
+| |____schema.prisma - _Modified: 2026-05-16 15:34:58
+| |____seed.ts - _Modified: 2026-05-16 15:45:37
 src
-|____styles
-| |____bootstrap
-| | |____bootstrap.min.css
-| |____cookies
-| | |____cookieconsent.min.css
-| |____theme
-| | |____theme-dark.css
-| | |____theme.css
-| |____fontawesome-free
-| | |____webfonts
-| | | |____fa-regular-400.ttf
-| | | |____fa-solid-900.woff2
-| | | |____fa-brands-400.woff2
-| | | |____fa-v4compatibility.woff2
-| | | |____fa-v4compatibility.ttf
-| | | |____fa-solid-900.ttf
-| | | |____fa-regular-400.woff2
-| | | |____fa-brands-400.ttf
-| | |____all.min.css
-| |____toastr
-| | |____toastr.min.css
-| |____fonts
-| | |____css.css
-| | |____webfonts
-| | | |____fa-montserrat-200.ttf
-| | | |____fa-montserrat-300.ttf
-| | | |____fa-montserrat-900.ttf
-| | | |____fa-montserrat-500.ttf
-| | | |____fa-montserrat-800.ttf
-| | | |____fa-montserrat-400.ttf
-| | | |____fa-montserrat-600.ttf
-| | | |____fa-montserrat-700.ttf
-| |____prism
-| | |____prism_light_default.css
-|____global.d.ts
-|____client
-| |____navUtils.tsx
-| |____modalUtils.tsx
-| |____theme.ts
-| |____modal.tsx
-| |____notification.tsx
-| |____user.tsx
-|____lib
-| |____sanitize.ts
-| |____schemas
-| | |____topicSchemas.ts
-| | |____messageSchema.ts
-| | |____loginSchema.ts
-| |____useFormManager.ts
-|____app
-| |____dashboard
-| | |____page.tsx
-| | |____user-management
-| | | |____punishments
-| | | | |____page.tsx
-| | | |____users
-| | | | |____page.tsx
-| | | |____reports
-| | | | |____page.tsx
-| | |____groups
-| | | |____page.tsx
-| | |____configuration
-| | | |____privacy
-| | | | |____page.tsx
-| | | |____registration
-| | | | |____page.tsx
-| | | |____navigation
-| | | | |____page.tsx
-| | | |____reactions
-| | | | |____page.tsx
-| | | |____general
-| | | | |____page.tsx
-| | |____overview
-| | | |____page.tsx
-| | |____store
-| | | |____products
-| | | | |____page.tsx
-| | | |____subscriptions
-| | | | |____page.tsx
-| | | |____sales
-| | | | |____page.tsx
-| | | |____coupons
-| | | | |____page.tsx
-| | | |____configuration
-| | | | |____page.tsx
-| | | |____payments
-| | | | |____page.tsx
-| | |____announcements
-| | | |____page.tsx
-| | |____settings
-| | | |____page.tsx
-| | |____layout.tsx
-| | |____forum
-| | | |____labels
-| | | | |____page.tsx
-| | | |____forums
-| | | | |____page.tsx
-| | | |____settings
-| | | | |____page.tsx
-| |____rules
-| | |____page.tsx
-| |____page.tsx
-| |____login
-| | |____page.tsx
-| |____register
-| | |____page.tsx
-| |____api
-| | |____auth
+| |____app
+| | |____api
+| | | |____auth
+| | | | |____navigation
+| | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____user
+| | | | | |____[id]
+| | | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | |____forum
+| | | | |____category
+| | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____latest-topic
+| | | | | |____[id]
+| | | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____subcategory
+| | | | | |____[id]
+| | | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____topic
+| | | | | |____[id]
+| | | | | | |____route.ts - _Modified: 2026-06-23 22:51:04
+| | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | |____upload
+| | | | |____[path]
+| | | | | |____route.ts - _Modified: 2026-06-27 23:51:06
 | | | |____user
-| | | | |____route.ts
-| | | | |____[id]
-| | | | | |____route.ts
-| | | |____navigation
-| | | | |____route.ts
-| | |____user
-| | | |____messages
-| | | | |____route.ts
-| | | | |____[id]
-| | | | | |____route.ts
-| | |____wiki
-| | | |____route.ts
-| | |____upload
-| | | |____route.ts
+| | | | |____messages
+| | | | | |____[id]
+| | | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | | |____wiki
+| | | | |____route.ts - _Modified: 2026-05-16 15:34:58
+| | |____dashboard
+| | | |____announcements
+| | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____configuration
+| | | | |____general
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____navigation
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____privacy
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____reactions
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____registration
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____forum
+| | | | |____forums
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____labels
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____settings
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____groups
+| | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____overview
+| | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____settings
+| | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____store
+| | | | |____configuration
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____coupons
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____payments
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____products
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____sales
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____subscriptions
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____user-management
+| | | | |____punishments
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____reports
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____users
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____layout.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____page.tsx - _Modified: 2026-05-16 15:34:58
 | | |____forum
-| | | |____route.ts
+| | | |____subcategory
+| | | | |____[id]
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
 | | | |____topic
 | | | | |____[id]
-| | | | | |____route.ts
-| | | |____latest-topic
-| | | | |____[id]
-| | | | | |____route.ts
-| | | |____subcategory
-| | | | |____route.ts
-| | | | |____[id]
-| | | | | |____route.ts
-| | | |____category
-| | | | |____route.ts
-| |____wiki
-| | |____page.tsx
-| |____profile
-| | |____page.tsx
-| | |____[id]
-| | | |____page.tsx
-| | |____settings
-| | | |____messaging
-| | | | |____page.tsx
-| | | | |____[id]
-| | | | | |____page.tsx
-| | | |____alerts
-| | | | |____page.tsx
-| | | |____change-password
-| | | | |____page.tsx
-| | | |____followed-topics
-| | | | |____page.tsx
-| | | |____overview
-| | | | |____page.tsx
-| | | |____profile-settings
-| | | | |____page.tsx
-| | | |____connections
-| | | | |____page.tsx
-| | | |____layout.tsx
-| |____layout.tsx
-| |____forum
-| | |____page.tsx
-| | |____topic
-| | | |____new
-| | | | |____page.tsx
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____add
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____new
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | |____login
+| | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | |____profile
 | | | |____[id]
-| | | | |____page.tsx
-| | | |____add
-| | | | |____page.tsx
-| | |____subcategory
-| | | |____[id]
-| | | | |____page.tsx
-|____hooks
-| |____useForum.ts
-|____env.js
-|____components
-| |____navbar
-| | |____AuthMenu.tsx
-| | |____MobileNavigation.tsx
-| | |____index.ts
-| | |____UserMenu.tsx
-| | |____Navbar.tsx
-| | |____MainNavigation.tsx
-| | |____HeaderStatus.tsx
-| |____logOut.tsx
-| |____form
-| | |____button.tsx
-| | |____Select.tsx
-| | |____TextArea.tsx
-| | |____TextInput.tsx
-| | |____FormProvider.tsx
-| |____messageReplyForm.tsx
-| |____changePasswordForm.tsx
-| |____ui
-| | |____Alert.tsx
-| | |____Button.tsx
-| | |____index.ts
-| | |____Card.tsx
-| |____loginForm.tsx
-| |____footer.tsx
-| |____wiki.tsx
-| |____navbar.tsx
-| |____uploads
-| | |____uploadFile.tsx
-| |____toastContainer.tsx
-| |____editor.tsx
-| |____profileBar.tsx
-| |____notifcation.tsx
-| |____uploadTest.tsx
-| |____Test.tsx
-| |____ThemeToggle.tsx
-| |____forum
-| | |____ForumSubcategoryItem.tsx
-| | |____LastTopicInfo.tsx
-| | |____index.ts
-| | |____ForumCategoryItem.tsx
-| |____loginModal.tsx
-| |____Toast.tsx
-| |____topicCreationForm.tsx
-|____utils
-| |____authUtils.ts
-| |____apiHandler.ts
-| |____errorHandler.ts
-| |____dateUtils.ts
-| |____styleUtils.ts
-|____server
-| |____auth
-| | |____session.ts
-| | |____actions
-| | | |____signUp.ts
-| | | |____signIn.ts
-| | | |____changePassword.ts
-| | | |____logOut.ts
-| | | |____messageActions.ts
-| | |____authSchemas.ts
-| | |____lib.ts
+| | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____settings
+| | | | |____alerts
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____change-password
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____connections
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____followed-topics
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____messaging
+| | | | | |____[id]
+| | | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____overview
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____profile-settings
+| | | | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | | | |____layout.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____page.tsx - _Modified: 2026-05-16 15:50:59
+| | |____register
+| | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | |____rules
+| | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | |____wiki
+| | | |____page.tsx - _Modified: 2026-05-16 15:34:58
+| | |____layout.tsx - _Modified: 2026-06-27 23:55:36
+| | |____page.tsx - _Modified: 2026-06-28 00:16:45
+| |____client
+| | |____modal.tsx - _Modified: 2026-05-16 15:34:58
+| | |____modalUtils.tsx - _Modified: 2026-05-16 15:34:58
+| | |____navUtils.tsx - _Modified: 2026-05-16 15:34:58
+| | |____notification.tsx - _Modified: 2026-05-16 15:34:58
+| | |____theme.ts - _Modified: 2026-05-18 01:55:40
+| | |____user.tsx - _Modified: 2026-05-16 15:34:58
+| |____components
+| | |____form
+| | | |____FormProvider.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____Select.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____TextArea.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____TextInput.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____button.tsx - _Modified: 2026-05-16 15:34:58
+| | |____forum
+| | | |____ForumCategoryItem.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____ForumSubcategoryItem.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____LastTopicInfo.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____index.ts - _Modified: 2026-05-16 15:34:58
+| | |____navbar
+| | | |____AuthMenu.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____HeaderStatus.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____MainNavigation.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____MobileNavigation.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____Navbar.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____UserMenu.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____index.ts - _Modified: 2026-05-16 15:34:58
+| | |____ui
+| | | |____Alert.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____Button.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____Card.tsx - _Modified: 2026-05-16 15:34:58
+| | | |____index.ts - _Modified: 2026-05-16 15:34:58
+| | |____uploads
+| | | |____uploadFile.tsx - _Modified: 2026-05-19 17:52:23
+| | |____Test.tsx - _Modified: 2026-05-16 15:34:58
+| | |____ThemeToggle.tsx - _Modified: 2026-05-16 15:34:58
+| | |____Toast.tsx - _Modified: 2026-05-16 15:34:58
+| | |____changePasswordForm.tsx - _Modified: 2026-05-16 15:34:58
+| | |____editor.tsx - _Modified: 2026-05-16 15:34:58
+| | |____footer.tsx - _Modified: 2026-05-16 15:34:58
+| | |____logOut.tsx - _Modified: 2026-05-16 15:34:58
+| | |____loginForm.tsx - _Modified: 2026-05-16 15:34:58
+| | |____loginModal.tsx - _Modified: 2026-05-16 15:34:58
+| | |____messageReplyForm.tsx - _Modified: 2026-05-16 15:46:55
+| | |____navbar.tsx - _Modified: 2026-05-18 01:56:41
+| | |____notifcation.tsx - _Modified: 2026-05-16 15:34:58
+| | |____profileBar.tsx - _Modified: 2026-05-16 15:34:58
+| | |____toastContainer.tsx - _Modified: 2026-05-16 15:34:58
+| | |____topicCreationForm.tsx - _Modified: 2026-05-16 15:34:58
+| | |____uploadForm.tsx - _Modified: 2026-06-28 00:19:21
+| | |____wiki.tsx - _Modified: 2026-05-16 15:34:58
+| |____hooks
+| | |____useForum.ts - _Modified: 2026-05-16 15:34:58
+| |____lib
+| | |____schemas
+| | | |____loginSchema.ts - _Modified: 2026-05-16 15:34:58
+| | | |____messageSchema.ts - _Modified: 2026-05-16 15:34:58
+| | | |____topicSchemas.ts - _Modified: 2026-05-16 15:34:58
+| | |____sanitize.ts - _Modified: 2026-05-16 15:34:58
+| | |____useFormManager.ts - _Modified: 2026-06-28 00:20:06
+| |____server
+| | |____auth
+| | | |____actions
+| | | | |____changePassword.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____logOut.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____messageActions.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____signIn.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____signUp.ts - _Modified: 2026-05-16 15:34:58
+| | | |____utils
+| | | | |____currentUser.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____defaultRole.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____getUser.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____getUserMessages.ts - _Modified: 2026-05-16 15:34:58
+| | | | |____passwordHasher.ts - _Modified: 2026-05-16 15:34:58
+| | | |____authSchemas.ts - _Modified: 2026-05-16 15:34:58
+| | | |____lib.ts - _Modified: 2026-05-16 15:34:58
+| | | |____session.ts - _Modified: 2026-05-16 15:34:58
+| | |____forum
+| | | |____forum.ts - _Modified: 2026-05-16 15:34:58
+| | |____navigation
+| | | |____navGetter.ts - _Modified: 2026-05-16 15:34:58
+| | |____types
+| | | |____clan.ts - _Modified: 2026-05-16 15:34:58
+| | | |____db.ts - _Modified: 2026-05-16 15:34:58
+| | | |____forum.ts - _Modified: 2026-05-16 15:34:58
+| | | |____minecraft.ts - _Modified: 2026-05-16 15:34:58
+| | | |____navigation.ts - _Modified: 2026-05-16 15:34:58
+| | | |____profile.ts - _Modified: 2026-05-16 15:34:58
+| | | |____role.ts - _Modified: 2026-05-16 15:34:58
+| | | |____settings.ts - _Modified: 2026-05-16 15:34:58
+| | | |____user-data.ts - _Modified: 2026-05-16 15:34:58
+| | | |____user.ts - _Modified: 2026-05-16 15:34:58
+| | | |____verification.ts - _Modified: 2026-05-16 15:34:58
+| | | |____wiki.ts - _Modified: 2026-05-16 15:34:58
 | | |____utils
-| | | |____getUser.ts
-| | | |____getUserMessages.ts
-| | | |____currentUser.ts
-| | | |____passwordHasher.ts
-| | | |____defaultRole.ts
-| |____db.ts
-| |____s3.ts
-| |____types
-| | |____db.ts
-| | |____navigation.ts
-| | |____user.ts
-| | |____clan.ts
-| | |____profile.ts
-| | |____settings.ts
-| | |____wiki.ts
-| | |____minecraft.ts
-| | |____verification.ts
-| | |____user-data.ts
-| | |____forum.ts
-| | |____role.ts
-| |____seed.ts.backup
-| |____wiki
-| | |____wiki.ts
-| |____navigation
-| | |____navGetter.ts
-| |____forum
-| | |____forum.ts
+| | | |____colorUtils.ts - _Modified: 2026-05-16 15:34:58
+| | | |____dateUtils.ts - _Modified: 2026-05-16 15:34:58
+| | | |____dbUtils.ts - _Modified: 2026-05-16 15:34:58
+| | | |____forumUtils.ts - _Modified: 2026-05-16 15:34:58
+| | |____wiki
+| | | |____wiki.ts - _Modified: 2026-05-16 15:34:58
+| | |____db.ts - _Modified: 2026-05-16 15:34:58
+| | |____s3.ts - _Modified: 2026-05-18 22:50:49
+| | |____seed.ts.backup - _Modified: 2026-05-16 15:34:58
+| |____styles
+| | |____bootstrap
+| | | |____bootstrap.min.css - _Modified: 2026-05-16 15:34:58
+| | |____cookies
+| | | |____cookieconsent.min.css - _Modified: 2026-05-16 15:34:58
+| | |____fontawesome-free
+| | | |____webfonts
+| | | | |____fa-brands-400.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-brands-400.woff2 - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-regular-400.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-regular-400.woff2 - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-solid-900.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-solid-900.woff2 - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-v4compatibility.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-v4compatibility.woff2 - _Modified: 2026-05-16 15:34:58
+| | | |____all.min.css - _Modified: 2026-05-16 15:34:58
+| | |____fonts
+| | | |____webfonts
+| | | | |____fa-montserrat-200.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-montserrat-300.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-montserrat-400.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-montserrat-500.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-montserrat-600.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-montserrat-700.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-montserrat-800.ttf - _Modified: 2026-05-16 15:34:58
+| | | | |____fa-montserrat-900.ttf - _Modified: 2026-05-16 15:34:58
+| | | |____css.css - _Modified: 2026-05-16 15:34:58
+| | |____prism
+| | | |____prism_light_default.css - _Modified: 2026-05-16 15:34:58
+| | |____theme
+| | | |____theme-dark.css - _Modified: 2026-05-16 15:34:58
+| | | |____theme.css - _Modified: 2026-06-28 00:11:01
+| | |____toastr
+| | | |____toastr.min.css - _Modified: 2026-05-16 15:34:58
 | |____utils
-| | |____colorUtils.ts
-| | |____forumUtils.ts
-| | |____dbUtils.ts
-| | |____dateUtils.ts
-prisma
-|____seed.ts
-|____schema.prisma
-|____migrations
-| |____20250630130906_t3
-| | |____migration.sql
-| |____20260428125523_yes
-| | |____migration.sql
-| |____migration_lock.toml
+| | |____apiHandler.ts - _Modified: 2026-05-16 15:34:58
+| | |____authUtils.ts - _Modified: 2026-05-16 15:34:58
+| | |____dateUtils.ts - _Modified: 2026-05-16 15:34:58
+| | |____errorHandler.ts - _Modified: 2026-05-16 15:34:58
+| | |____styleUtils.ts - _Modified: 2026-05-16 15:34:58
+| |____env.js - _Modified: 2026-05-16 15:34:58
+| |____global.d.ts - _Modified: 2026-05-16 15:34:58

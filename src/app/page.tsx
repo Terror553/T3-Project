@@ -1,12 +1,10 @@
-import TestForm from "~/components/Test";
-import UploadForm from "~/components/uploadTest";
+import UploadForm from "~/components/uploadForm";
 
 export default async function Home() {
   return (
     <>
       <h2>This is the homepage!</h2>
-      <TestForm />
-      <UploadForm />
+      <UploadForm title="Upload Avatar" aspectRatio="1x1" />
     </>
   );
 }

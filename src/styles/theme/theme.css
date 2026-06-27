@@ -4383,6 +4383,115 @@ small,
   border-radius: var(--avatars-border-radius);
 }
 
+/** UPLOAD IMAGE */
+
+.upload-image-card {
+  max-width: 720px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.upload-image-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  background: var(--background-secondary);
+  border: 1px solid var(--divider);
+}
+
+.upload-image-preview-image {
+  position: relative;
+  flex: 0 0 180px;
+  width: 180px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 0.65rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  box-shadow: var(--shadow-soft);
+}
+
+.upload-image-preview-img {
+  object-fit: cover;
+}
+
+.upload-image-preview-meta {
+  min-width: 0;
+}
+
+.upload-image-preview-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 0.35rem;
+}
+
+.upload-image-preview-name {
+  font-size: 1rem;
+  font-weight: var(--font-weight-heavy);
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.upload-image-preview-hint {
+  margin-top: 0.35rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.upload-image-input-group {
+  gap: 0.75rem;
+}
+
+.upload-image-input-group .form-control {
+  min-width: 0;
+}
+
+.upload-image-ratio-group {
+  margin-bottom: 1rem;
+}
+
+.upload-image-ratio-inputs {
+  gap: 0;
+}
+
+.upload-image-ratio-inputs .form-control {
+  min-width: 0;
+}
+
+.upload-image-ratio-inputs .input-group-text {
+  border-color: var(--divider);
+  background: var(--background-secondary);
+  color: var(--text-secondary);
+}
+
+@media (max-width: 576px) {
+  .upload-image-preview {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .upload-image-preview-image {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .upload-image-ratio-inputs {
+    flex-wrap: nowrap;
+  }
+
+  .upload-image-input-group {
+    flex-direction: column;
+  }
+
+  .upload-image-input-group .btn {
+    width: 100%;
+  }
+}
+
 @media (min-width: 576px) {
   .profile-header-user-avatar img {
     width: 135px;

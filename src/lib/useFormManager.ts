@@ -6,10 +6,15 @@ import { sanitizeInput } from "./sanitize";
 export interface FormContextValue<T extends Record<string, unknown>> {
   values: T;
   errors: Partial<Record<keyof T, string>>;
-  handleChange: (field: keyof T) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent) => void;
+  handleChange: (
+    field: keyof T,
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setFieldValue: <K extends keyof T>(field: K, value: T[K]) => void;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
   setValues: React.Dispatch<React.SetStateAction<T>>;
-  setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof T, string>>>>;
+  setErrors: React.Dispatch<
+    React.SetStateAction<Partial<Record<keyof T, string>>>
+  >;
 }
 
 export const FormContext = createContext<
@@ -37,13 +42,20 @@ export function useFormManager<T extends Record<string, unknown>>({
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
 
+  const setFieldValue = <K extends keyof T>(field: K, value: T[K]) => {
+    setValues((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const handleChange =
     (field: keyof T) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = sanitizeInput(e.target.value) as T[keyof T];
-      setValues((prev) => ({ ...prev, [field]: value }));
+      setFieldValue(field, value);
     };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(values);
 
@@ -56,7 +68,7 @@ export function useFormManager<T extends Record<string, unknown>>({
       setErrors(zodErrors);
     } else {
       setErrors({});
-      onSubmit(result.data);
+      await Promise.resolve(onSubmit(result.data));
     }
   };
 
@@ -64,6 +76,7 @@ export function useFormManager<T extends Record<string, unknown>>({
     values,
     errors,
     handleChange,
+    setFieldValue,
     handleSubmit,
     setValues,
     setErrors,

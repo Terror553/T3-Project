@@ -56,7 +56,7 @@ export default async function RootLayout({
           `}
         </style>
       </head>
-      <body className="antialiased">
+      <body className="antialiased" style={{ padding: 0, margin: 0 }}>
         <NotificationProvider>
           <UserProvider initialUser={sessionUser}>
             <ModalProvider>

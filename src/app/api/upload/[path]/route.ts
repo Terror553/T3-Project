@@ -5,6 +5,7 @@ import { s3 } from "~/server/s3";
 
 export async function POST(req: Request) {
   try {
+    const path = new URL(req.url).pathname.split("/").pop();
     const body = (await req.json()) as {
       fileName: string;
       contentType: string;
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
     const key = `${randomUUID()}-${body.fileName}`;
 
     const command = new PutObjectCommand({
-      Bucket: process.env.S3_BUCKET!,
+      Bucket: path,
       Key: key,
       ContentType: body.contentType,
     });
