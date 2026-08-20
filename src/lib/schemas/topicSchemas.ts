@@ -17,3 +17,31 @@ export const deleteTopicSchema = z.object({
   id: z.number().int().nullable(),
   slug: z.string().nullable(),
 });
+
+export const createReplySchema = z.object({
+  content: z.string().min(1).max(10000),
+  topicId: z.number().int().nullable().optional(),
+  slug: z.string().nullable().optional(),
+});
+
+export const editReplySchema = z.object({
+  id: z.number().int().nullable(),
+  content: z.string().min(1).max(10000),
+  topicId: z.number().int().nullable().optional(),
+});
+
+export const deleteReplySchema = z.object({
+  id: z.number().int().nullable(),
+  topicId: z.number().int().nullable().optional(),
+});
+
+export const reactSchema = z.object({
+  reactionId: z.number().int(),
+  topicId: z.number().int().nullable().optional(),
+  slug: z.string().nullable().optional(),
+});
+
+export const followSchema = z.object({
+  topicId: z.number().int().nullable().optional(),
+  slug: z.string().nullable().optional(),
+});

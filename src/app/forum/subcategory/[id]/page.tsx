@@ -10,8 +10,7 @@ import { replaceColor } from "~/utils/styleUtils";
 
 export default function Subcategory() {
   const [loading, setLoading] = useState(true);
-  const [subCategory, setSubCategory] = useState<ForumSubcategory>(); // Updated to ForumCategory[]
-  const [, setLatestEntry] = useState<ForumTopic>(); // Updated to ForumCategory[]
+  const [subCategory, setSubCategory] = useState<ForumSubcategory>();
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const { id } = useParams<{ id: string }>();
 
@@ -40,26 +39,13 @@ export default function Subcategory() {
         const subCategoryData =
           (await subCategoryRes.json()) as ForumSubcategory;
 
-        const [latestEntryRes] = await Promise.all([
-          fetch(`/api/forum/latest-topic/${subCategoryData.id}`),
-        ]);
-
-        if (!latestEntryRes.ok) {
-          throw new Error(
-            `LatestEntryRes ${latestEntryRes.status} ${latestEntryRes.statusText}`,
-          );
-        }
-
-        const latestEntryData = (await latestEntryRes.json()) as ForumTopic;
-
-        setLatestEntry(latestEntryData);
+        // latestEntry is included in the subcategory payload from the server; no extra fetch required
         setSubCategory(subCategoryData || undefined);
 
         setLoading(false);
         hideLoadingBar("loadingBarName");
       } catch (err) {
         setSubCategory(undefined);
-        setLatestEntry(undefined);
         setLoading(false);
         hideLoadingBar("loadingBarName");
         throw new Error(err as string);

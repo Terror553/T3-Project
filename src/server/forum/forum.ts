@@ -1,8 +1,13 @@
 "use server";
 import {
+  createReplySchema,
   createTopicSchema,
+  deleteReplySchema,
   deleteTopicSchema,
+  editReplySchema,
   editTopicSchema,
+  reactSchema,
+  followSchema,
 } from "~/lib/schemas/topicSchemas";
 import { db } from "../db";
 import type {
@@ -32,7 +37,7 @@ export async function getCategories() {
   }
 
   return Promise.all(
-    forum.map(async (category) => {
+    forum.map(async (category: any) => {
       const subcategories = await getSubCategories(category.id);
 
       return {
@@ -90,10 +95,10 @@ export async function getSubCategories(id: number | string) {
   }
 
   return Promise.all(
-    subcategories.map(async (subcategory) => {
+    subcategories.map(async (subcategory: any) => {
       const topics = await Promise.all(
-        subcategory.topics.map(async (topic) => {
-          const replies = topic.replies.map((reply) => ({
+          subcategory.topics.map(async (topic: any) => {
+                    const replies = topic.replies.map((reply: any) => ({
             ...reply,
             topicIdId: topic.id,
             forum_user: reply.author as ForumUser,
@@ -157,8 +162,8 @@ export async function getSubCategory(id: number | string) {
   }
 
   const topics = await Promise.all(
-    subcategory.topics.map(async (topic) => {
-      const replies = topic.replies.map((reply) => ({
+      subcategory.topics.map(async (topic: any) => {
+        const replies = topic.replies.map((reply: any) => ({
         ...reply,
         topicIdId: topic.id,
         forum_user: reply.author as ForumUser,
@@ -218,13 +223,13 @@ export async function getTopic(id: number | string) {
     throw new Error(`Topic with id ${id} not found`);
   }
 
-  const replies = topic.replies.map((reply) => ({
+  const replies = topic.replies.map((reply: any) => ({
     ...reply,
     topicIdId: topic.id,
     forum_user: reply.author as ForumUser,
   })) as ForumTopicReply[];
 
-  const reactions = topic.reactions.map((reaction) => ({
+  const reactions = topic.reactions.map((reaction: any) => ({
     ...reaction,
     forum_reaction_emojis: reaction.emoji as ForumReactionEmoji,
   })) as ForumReaction[];
@@ -281,13 +286,13 @@ export async function getLatestTopic(id: number | string) {
 
   const firstTopic = topics[0]!; // Assert that we have a topic since we checked length
 
-  const replies = firstTopic.replies.map((reply) => ({
+  const replies = firstTopic.replies.map((reply: any) => ({
     ...reply,
     topicIdId: firstTopic.id,
     forum_user: reply.author as ForumUser,
   })) as ForumTopicReply[];
 
-  const reactions = firstTopic.reactions.map((reaction) => ({
+  const reactions = firstTopic.reactions.map((reaction: any) => ({
     ...reaction,
     forum_reaction_emojis: reaction.emoji as ForumReactionEmoji,
   })) as ForumReaction[];
@@ -381,40 +386,26 @@ export async function createTopic(
 export async function editTopic(
   unsafeData: z.infer<typeof editTopicSchema>,
 ): Promise<AppResult<{ slug: string | null; id: number }>> {
-  // Validate input data
   const validationResult = editTopicSchema.safeParse(unsafeData);
 
   if (!validationResult.success) {
     return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
   }
+
   const data = validationResult.data;
 
   try {
-    // Find user by email
     const user = await getCurrentUser();
 
-    // Check if user exists
     if (!user) {
       return createErrorResult(
-        "You need to be signed in to create a topic",
+        "You need to be signed in to edit a topic",
         ErrorCode.INVALID_CREDENTIALS,
       );
     }
 
-    let where;
-
-    if (data.id == null) {
-      where = {
-        slug: data.slug!,
-      };
-    } else {
-      where = {
-        id: data.id,
-      };
-    }
-
+    const where = data.id == null ? { slug: data.slug ?? undefined } : { id: data.id };
     const topic = await db.forumTopic.findFirst({ where });
-    let slug = data.slug;
 
     if (!topic) {
       return createErrorResult("Topic not found", ErrorCode.NOT_FOUND);
@@ -427,31 +418,28 @@ export async function editTopic(
       );
     }
 
-    if (topic.title == data.title && topic.content == data.content) {
+    if (topic.title === data.title && topic.content === data.content) {
       return createErrorResult(
         "No changes detected",
         ErrorCode.VALIDATION_ERROR,
       );
     }
 
-    if (topic.title !== data.title) {
-      slug = createSlug(data.title);
-      topic.slug = slug;
-    }
-
-    topic.content = DOMPurify.sanitize(data.content);
+    const nextTitle = data.title.trim();
+    const nextContent = DOMPurify.sanitize(data.content.trim());
+    const nextSlug = topic.title !== nextTitle ? createSlug(nextTitle) : topic.slug;
 
     await db.forumTopic.update({
       where: { id: topic.id },
       data: {
-        title: topic.title,
-        content: topic.content,
-        slug: topic.slug,
+        title: nextTitle,
+        content: nextContent,
+        slug: nextSlug,
       },
     });
 
     return createSuccessResult({
-      slug: slug || topic.slug, // Use the updated slug if it exists, otherwise use the existing one
+      slug: nextSlug ?? topic.slug,
       id: topic.id,
     });
   } catch (error) {
@@ -466,19 +454,17 @@ export async function editTopic(
 export async function deleteTopic(
   unsafeData: z.infer<typeof deleteTopicSchema>,
 ): Promise<AppResult<{ success: boolean }>> {
-  // Validate input data
   const validationResult = deleteTopicSchema.safeParse(unsafeData);
 
   if (!validationResult.success) {
     return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
   }
+
   const data = validationResult.data;
 
   try {
-    // Find user by email
     const user = await getCurrentUser();
 
-    // Check if user exists
     if (!user) {
       return createErrorResult(
         "You need to be signed in to delete a topic",
@@ -486,18 +472,7 @@ export async function deleteTopic(
       );
     }
 
-    let where;
-
-    if (data.id == null) {
-      where = {
-        slug: data.slug!,
-      };
-    } else {
-      where = {
-        id: data.id,
-      };
-    }
-
+    const where = data.id == null ? { slug: data.slug ?? undefined } : { id: data.id };
     const topic = await db.forumTopic.findFirst({ where });
 
     if (!topic) {
@@ -514,9 +489,6 @@ export async function deleteTopic(
     await db.forumTopic.update({
       where: { id: topic.id },
       data: {
-        title: topic.title,
-        content: topic.content,
-        slug: topic.slug,
         hidden: 1,
       },
     });
@@ -530,5 +502,286 @@ export async function deleteTopic(
       "An unexpected error occurred",
       ErrorCode.SERVER_ERROR,
     );
+  }
+}
+
+export async function createReply(
+  unsafeData: z.infer<typeof createReplySchema>,
+): Promise<AppResult<{ id: number; topicId: number }>> {
+  const validationResult = createReplySchema.safeParse(unsafeData);
+
+  if (!validationResult.success) {
+    return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
+  }
+
+  const data = validationResult.data;
+
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return createErrorResult(
+        "You need to be signed in to reply to a topic",
+        ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    const topicId = data.topicId ?? null;
+    if (topicId == null) {
+      return createErrorResult("Topic id is required", ErrorCode.VALIDATION_ERROR);
+    }
+
+    const topic = await db.forumTopic.findUnique({ where: { id: topicId } });
+    if (!topic) {
+      return createErrorResult("Topic not found", ErrorCode.NOT_FOUND);
+    }
+
+    const nextContent = DOMPurify.sanitize(data.content.trim());
+    if (!nextContent.length) {
+      return createErrorResult("Reply content cannot be empty", ErrorCode.VALIDATION_ERROR);
+    }
+
+    const reply = await db.forumTopicReply.create({
+      data: {
+        content: nextContent,
+        topic: {
+          connect: { id: topic.id },
+        },
+        author: {
+          connect: { id: user.id },
+        },
+      },
+    });
+
+    return createSuccessResult({
+      id: reply.id,
+      topicId: topic.id,
+    });
+  } catch (error) {
+    console.error("Error during creating reply:", error);
+    return createErrorResult(
+      "An unexpected error occurred",
+      ErrorCode.SERVER_ERROR,
+    );
+  }
+}
+
+export async function editReply(
+  unsafeData: z.infer<typeof editReplySchema>,
+): Promise<AppResult<{ id: number; topicId: number }>> {
+  const validationResult = editReplySchema.safeParse(unsafeData);
+
+  if (!validationResult.success) {
+    return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
+  }
+
+  const data = validationResult.data;
+
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return createErrorResult(
+        "You need to be signed in to edit a reply",
+        ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    if (data.id == null) {
+      return createErrorResult("Reply id is required", ErrorCode.VALIDATION_ERROR);
+    }
+
+    const reply = await db.forumTopicReply.findUnique({ where: { id: data.id } });
+    if (!reply) {
+      return createErrorResult("Reply not found", ErrorCode.NOT_FOUND);
+    }
+
+    if (reply.authorId !== user.id && user.group?.highTeam !== 1) {
+      return createErrorResult(
+        "You are not authorized to edit this reply",
+        ErrorCode.UNAUTHORIZED,
+      );
+    }
+
+    const nextContent = DOMPurify.sanitize(data.content.trim());
+    if (!nextContent.length) {
+      return createErrorResult("Reply content cannot be empty", ErrorCode.VALIDATION_ERROR);
+    }
+
+    const updated = await db.forumTopicReply.update({
+      where: { id: reply.id },
+      data: {
+        content: nextContent,
+      },
+    });
+
+    return createSuccessResult({
+      id: updated.id,
+      topicId: reply.topicId ?? data.topicId ?? 0,
+    });
+  } catch (error) {
+    console.error("Error during editing reply:", error);
+    return createErrorResult(
+      "An unexpected error occurred",
+      ErrorCode.SERVER_ERROR,
+    );
+  }
+}
+
+export async function deleteReply(
+  unsafeData: z.infer<typeof deleteReplySchema>,
+): Promise<AppResult<{ success: boolean }>> {
+  const validationResult = deleteReplySchema.safeParse(unsafeData);
+
+  if (!validationResult.success) {
+    return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
+  }
+
+  const data = validationResult.data;
+
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return createErrorResult(
+        "You need to be signed in to delete a reply",
+        ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    if (data.id == null) {
+      return createErrorResult("Reply id is required", ErrorCode.VALIDATION_ERROR);
+    }
+
+    const reply = await db.forumTopicReply.findUnique({ where: { id: data.id } });
+    if (!reply) {
+      return createErrorResult("Reply not found", ErrorCode.NOT_FOUND);
+    }
+
+    if (reply.authorId !== user.id && user.group?.highTeam !== 1) {
+      return createErrorResult(
+        "You are not authorized to delete this reply",
+        ErrorCode.UNAUTHORIZED,
+      );
+    }
+
+    await db.forumTopicReply.delete({ where: { id: reply.id } });
+
+    return createSuccessResult({ success: true });
+  } catch (error) {
+    console.error("Error during deleting reply:", error);
+    return createErrorResult(
+      "An unexpected error occurred",
+      ErrorCode.SERVER_ERROR,
+    );
+  }
+}
+
+export async function toggleTopicReaction(
+  unsafeData: z.infer<typeof reactSchema>,
+): Promise<AppResult<{ added: boolean }>> {
+  const validationResult = reactSchema.safeParse(unsafeData);
+  if (!validationResult.success) {
+    return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
+  }
+  const data = validationResult.data;
+
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return createErrorResult(
+        "You need to be signed in to react",
+        ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    const topicId = data.topicId ?? null;
+    if (topicId == null) {
+      return createErrorResult("Topic id is required", ErrorCode.VALIDATION_ERROR);
+    }
+
+    const topic = await db.forumTopic.findUnique({ where: { id: topicId } });
+    if (!topic) {
+      return createErrorResult("Topic not found", ErrorCode.NOT_FOUND);
+    }
+
+    // Check existing reaction by this user for this topic and emoji
+    const existing = await db.forumReaction.findFirst({
+      where: {
+        authorId: user.id,
+        topicId: topic.id,
+        reactionId: data.reactionId,
+      },
+    });
+
+    if (existing) {
+      await db.forumReaction.delete({ where: { id: existing.id } });
+      return createSuccessResult({ added: false });
+    }
+
+    await db.forumReaction.create({
+      data: {
+        author: { connect: { id: user.id } },
+        topic: { connect: { id: topic.id } },
+        emoji: { connect: { id: data.reactionId } },
+      },
+    });
+
+    return createSuccessResult({ added: true });
+  } catch (error) {
+    console.error("Error toggling reaction:", error);
+    return createErrorResult("An unexpected error occurred", ErrorCode.SERVER_ERROR);
+  }
+}
+
+export async function toggleTopicFollow(
+  unsafeData: z.infer<typeof followSchema>,
+): Promise<AppResult<{ followed: boolean }>> {
+  const validationResult = followSchema.safeParse(unsafeData);
+  if (!validationResult.success) {
+    return createErrorResult("Invalid input data.", ErrorCode.VALIDATION_ERROR);
+  }
+
+  const data = validationResult.data;
+
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return createErrorResult(
+        "You need to be signed in to follow topics",
+        ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    const topicId = data.topicId ?? null;
+    if (topicId == null) {
+      return createErrorResult("Topic id is required", ErrorCode.VALIDATION_ERROR);
+    }
+
+    const topic = await db.forumTopic.findUnique({ where: { id: topicId } });
+    if (!topic) {
+      return createErrorResult("Topic not found", ErrorCode.NOT_FOUND);
+    }
+
+    const existing = await db.forumTopicFollow.findFirst({
+      where: { userId: user.id, topicId: topic.id },
+    });
+
+    if (existing) {
+      await db.forumTopicFollow.delete({ where: { id: existing.id } });
+      return createSuccessResult({ followed: false });
+    }
+
+    await db.forumTopicFollow.create({
+      data: {
+        user: { connect: { id: user.id } },
+        topic: { connect: { id: topic.id } },
+      },
+    });
+
+    return createSuccessResult({ followed: true });
+  } catch (error) {
+    console.error("Error toggling follow:", error);
+    return createErrorResult("An unexpected error occurred", ErrorCode.SERVER_ERROR);
   }
 }

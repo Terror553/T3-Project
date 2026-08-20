@@ -12,6 +12,7 @@ import type {
 } from "~/server/types/forum";
 import { formatDate } from "~/server/utils/dateUtils";
 import { replaceColor } from "~/utils/styleUtils";
+import { TopicReplyForm } from "~/components/topicReplyForm";
 
 export default function Topic() {
   const [loading, setLoading] = useState(true);
@@ -882,6 +883,18 @@ export default function Topic() {
                         </div>
                       </div>
                     </div>
+                    {/* Reply form - only show when topic exists and not locked */}
+                    {!loading && topic && !topic.locked && (
+                      <div className="card card-post mt-3">
+                        <div className="card-body">
+                          <h5>Antworten</h5>
+                          {/* TopicReplyForm handles submission and refresh */}
+                          {/* @ts-ignore */}
+                          <TopicReplyForm topicId={topic.id} />
+                        </div>
+                      </div>
+                    )}
+
                     <div id="chatbox-bottom"></div>
                   </div>
                 </div>
