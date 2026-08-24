@@ -6,6 +6,7 @@ import { useNotification } from "~/client/notification";
 import type { ForumMessage } from "~/server/types/forum";
 import { useTheme } from "~/client/theme";
 import { createMessageThreadSchema } from "~/lib/schemas/messagingSchemas";
+import UserPicker from "~/components/userPicker/UserPicker";
 
 const initialThreadValues = {
   receiverId: "",
@@ -100,23 +101,16 @@ export default function MessagesInbox() {
         <div className="card-body">
           <form onSubmit={handleCreateThread} id="form-message-thread-create">
             <div className="form-group">
-              <label className="form-label" htmlFor="receiverId">
-                Receiver ID
-              </label>
-              <input
-                id="receiverId"
-                name="receiverId"
-                type="number"
-                className="form-control"
-                value={formData.receiverId}
-                onChange={(event) =>
-                  setFormData((current) => ({
-                    ...current,
-                    receiverId: event.target.value,
-                  }))
-                }
-                required
-              />
+              {/* Recipient picker: search/select user instead of raw numeric ID */}
+              {/* UserPicker sets the receiver id (string) on selection */}
+              <label className="form-label">Recipient</label>
+              {/* Lazy load component to avoid adding bundle weight to non-client pages if needed */}
+              <div>
+                <UserPicker
+                  value={formData.receiverId}
+                  onChange={(val: string) => setFormData((current) => ({ ...current, receiverId: val }))}
+                />
+              </div>
             </div>
             <div className="form-group">
               <label className="form-label" htmlFor="threadTitle">
