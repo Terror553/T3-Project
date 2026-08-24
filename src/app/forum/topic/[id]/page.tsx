@@ -5,11 +5,7 @@ import { useParams } from "next/navigation";
 import React from "react";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/client/theme";
-import type {
-  ForumTopic,
-  ForumTopicFollow,
-  ForumUser,
-} from "~/server/types/forum";
+import type { ForumTopic, ForumUser } from "~/server/types/forum";
 import { formatDate } from "~/server/utils/dateUtils";
 import { replaceColor } from "~/utils/styleUtils";
 import { TopicReplyForm } from "~/components/topicReplyForm";
@@ -17,12 +13,126 @@ import { TopicReplyForm } from "~/components/topicReplyForm";
 export default function Topic() {
   const [loading, setLoading] = useState(true);
   const [topic, setTopic] = useState<ForumTopic | null>(null);
+  const [isFollowPending, setIsFollowPending] = useState(false);
+  const [isReactionPending, setIsReactionPending] = useState<number | null>(null);
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<ForumUser | null>(null);
 
+  const reactionOptions = [
+    { id: 1, emoji: "👍", label: "Like" },
+    { id: 2, emoji: "🎉", label: "Celebrate" },
+    { id: 3, emoji: "🔥", label: "Fire" },
+    { id: 4, emoji: "❤️", label: "Love" },
+    { id: 5, emoji: "😄", label: "Laugh" },
+  ];
+
+  const isFollowing = !!user && !!topic?.forum_topic_follow?.some((follow) => follow.userId === user.id);
+
   if (!id) {
     throw new Error("ID is undefined in Forum component");
+  }
+
+  async function handleToggleFollow() {
+    if (!topic || !user) {
+      return;
+    }
+
+    setIsFollowPending(true);
+
+    try {
+      const response = await fetch(`/api/forum/topic/${topic.id}/follow`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ topicId: topic.id }),
+      });
+
+      if (!response.ok) {
+        return;
+      }
+
+      setTopic((currentTopic) => {
+        if (!currentTopic) {
+          return currentTopic;
+        }
+
+        const existingFollows = currentTopic.forum_topic_follow ?? [];
+        const nextFollowed = !isFollowing;
+
+        return {
+          ...currentTopic,
+          forum_topic_follow: nextFollowed
+            ? [...existingFollows, { id: Date.now(), topicId: currentTopic.id, userId: user.id! }]
+            : existingFollows.filter((follow) => follow.userId !== user.id),
+        };
+      });
+    } finally {
+      setIsFollowPending(false);
+    }
+  }
+
+  async function handleToggleReaction(reactionId: number) {
+    if (!topic || !user) {
+      return;
+    }
+
+    setIsReactionPending(reactionId);
+
+    try {
+      const response = await fetch(`/api/forum/topic/${topic.id}/react`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ topicId: topic.id, reactionId }),
+      });
+
+      if (!response.ok) {
+        return;
+      }
+
+      setTopic((currentTopic) => {
+        if (!currentTopic) {
+          return currentTopic;
+        }
+
+        const existingReactions = currentTopic.forum_reactions ?? [];
+        const alreadyReacted = existingReactions.some(
+          (reaction) =>
+            reaction.authorId === user.id &&
+            reaction.forum_reaction_emojis?.id === reactionId,
+        );
+
+        const nextReactions = alreadyReacted
+          ? existingReactions.filter(
+              (reaction) =>
+                !(reaction.authorId === user.id && reaction.forum_reaction_emojis?.id === reactionId),
+            )
+          : [
+              ...existingReactions,
+              {
+                id: Date.now(),
+                authorId: user.id,
+                topicId: currentTopic.id,
+                forum_reaction_emojis: {
+                  id: reactionId,
+                  name: reactionOptions.find((option) => option.id === reactionId)?.label ?? "Reaction",
+                  emoji: reactionOptions.find((option) => option.id === reactionId)?.emoji ?? "👍",
+                  negative: 0,
+                },
+              },
+            ];
+
+        return {
+          ...currentTopic,
+          forum_reactions: nextReactions,
+        };
+      });
+    } finally {
+      setIsReactionPending(null);
+    }
   }
 
   useEffect(() => {
@@ -250,34 +360,48 @@ export default function Topic() {
                           </div>
                         )}
 
-                        <form action="?/followTopic" method="post">
-                          <input
-                            hidden
-                            defaultValue={topic.id}
-                            id="topicId"
-                            name="topicId"
-                          />
+                        {user && (
+                          <button
+                            type="button"
+                            className={`btn btn-sm ${isFollowing ? "btn-secondary" : "btn-primary"}`}
+                            onClick={handleToggleFollow}
+                            disabled={isFollowPending}
+                          >
+                            {isFollowPending
+                              ? "..."
+                              : isFollowing
+                                ? "Entfolgen"
+                                : "Folgen"}
+                          </button>
+                        )}
+                        <div className="d-flex flex-wrap gap-2 mt-2">
+                          {reactionOptions.map((reactionOption) => {
+                            const count =
+                              topic.forum_reactions?.filter(
+                                (reaction) =>
+                                  reaction.forum_reaction_emojis?.id === reactionOption.id,
+                              ).length ?? 0;
+                            const active =
+                              !!user &&
+                              !!topic.forum_reactions?.some(
+                                (reaction) =>
+                                  reaction.authorId === user.id &&
+                                  reaction.forum_reaction_emojis?.id === reactionOption.id,
+                              );
 
-                          {/* Use optional chaining ?. */}
-                          {user &&
-                          topic.forum_topic_follow?.find(
-                            (f: ForumTopicFollow) => f.userId === user.id, // Also corrected to use f.userId and strict equality ===
-                          ) ? (
-                            <button
-                              type="submit"
-                              className="btn btn-secondary btn-sm"
-                            >
-                              Entfolgen
-                            </button>
-                          ) : (
-                            <button
-                              type="submit"
-                              className="btn btn-primary btn-sm"
-                            >
-                              Folgen
-                            </button>
-                          )}
-                        </form>
+                            return (
+                              <button
+                                key={reactionOption.id}
+                                type="button"
+                                className={`btn btn-sm ${active ? "btn-outline-primary" : "btn-outline-secondary"}`}
+                                onClick={() => void handleToggleReaction(reactionOption.id)}
+                                disabled={isReactionPending !== null}
+                              >
+                                {reactionOption.emoji} {count}
+                              </button>
+                            );
+                          })}
+                        </div>
                         {!topic.locked && (
                           <Link
                             href="#post-reply"
