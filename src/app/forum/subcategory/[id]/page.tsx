@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/client/theme";
-import type { ForumSubcategory, ForumTopic } from "~/server/types/forum";
+import type { ForumSubcategory } from "~/server/types/forum";
 import { formatDate } from "~/server/utils/dateUtils";
 import { replaceColor } from "~/utils/styleUtils";
 

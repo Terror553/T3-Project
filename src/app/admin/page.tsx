@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "~/client/theme";
+import type { ForumUser } from "~/server/types/forum";
 
 export default function AdminPage() {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<ForumUser | null>(null);
   const [loading, setLoading] = useState(true);
   const { showLoadingBar, hideLoadingBar } = useTheme();
 
@@ -18,7 +19,7 @@ export default function AdminPage() {
         if (!res.ok) throw new Error("Unauthorized");
         const data = await res.json();
         setUser(data || null);
-      } catch (err) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);

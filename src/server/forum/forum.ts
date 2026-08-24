@@ -37,11 +37,12 @@ export async function getCategories() {
   }
 
   return Promise.all(
-    forum.map(async (category: any) => {
-      const subcategories = await getSubCategories(category.id);
+    forum.map(async (category: unknown) => {
+      const cat = category as ForumCategory;
+      const subcategories = await getSubCategories(cat.id);
 
       return {
-        ...category,
+        ...cat,
         forum_subcategories: subcategories,
       } as ForumCategory;
     }),
@@ -95,10 +96,21 @@ export async function getSubCategories(id: number | string) {
   }
 
   return Promise.all(
-    subcategories.map(async (subcategory: any) => {
+    subcategories.map(async (subcategory: unknown) => {
+      const sc = subcategory as unknown as ForumSubcategory & {
+        topics: Array<
+          ForumTopic & {
+            replies: Array<ForumTopicReply & { author: ForumUser }>;
+            author: ForumUser;
+          }
+        >;
+      };
       const topics = await Promise.all(
-          subcategory.topics.map(async (topic: any) => {
-                    const replies = topic.replies.map((reply: any) => ({
+        sc.topics.map(async (topic: ForumTopic & {
+          replies: Array<ForumTopicReply & { author: ForumUser }>;
+          author: ForumUser;
+        }) => {
+          const replies = topic.replies.map((reply) => ({
             ...reply,
             topicIdId: topic.id,
             forum_user: reply.author as ForumUser,
@@ -114,13 +126,14 @@ export async function getSubCategories(id: number | string) {
 
       const topicsCount = topics.length;
       const repliesCount = topics.reduce(
-        (acc: number, topic) => acc + topic.forum_topic_replies.length,
+        (acc: number, topic: ForumTopic & { forum_topic_replies: ForumTopicReply[] }) =>
+          acc + topic.forum_topic_replies.length,
         0,
       );
-      const latestEntry = await getLatestTopic(subcategory.id);
+      const latestEntry = await getLatestTopic(sc.id);
 
       return {
-        ...subcategory,
+        ...sc,
         forum_topics: topics,
         count: topicsCount,
         repliesCount,
@@ -161,9 +174,18 @@ export async function getSubCategory(id: number | string) {
     throw new Error(`Subcategory with id ${id} not found`);
   }
 
+  const subcategoryWithTopics = subcategory as unknown as ForumSubcategory & {
+    topics: Array<
+      ForumTopic & {
+        replies: Array<ForumTopicReply & { author: ForumUser }>;
+        author: ForumUser;
+      }
+    >;
+  };
+
   const topics = await Promise.all(
-      subcategory.topics.map(async (topic: any) => {
-        const replies = topic.replies.map((reply: any) => ({
+    subcategoryWithTopics.topics.map(async (topic) => {
+      const replies = topic.replies.map((reply) => ({
         ...reply,
         topicIdId: topic.id,
         forum_user: reply.author as ForumUser,
@@ -182,7 +204,8 @@ export async function getSubCategory(id: number | string) {
     forum_topics: topics,
     count: topics.length,
     repliesCount: topics.reduce(
-      (acc: number, topic) => acc + topic.forum_topic_replies.length,
+      (acc: number, topic: ForumTopic & { forum_topic_replies: ForumTopicReply[] }) =>
+        acc + topic.forum_topic_replies.length,
       0,
     ),
     latestEntry: await getLatestTopic(subcategory.id),
@@ -223,16 +246,22 @@ export async function getTopic(id: number | string) {
     throw new Error(`Topic with id ${id} not found`);
   }
 
-  const replies = topic.replies.map((reply: any) => ({
-    ...reply,
-    topicIdId: topic.id,
-    forum_user: reply.author as ForumUser,
-  })) as ForumTopicReply[];
+  const replies = topic.replies.map((reply: unknown) => {
+    const r = reply as ForumTopicReply & { author: ForumUser };
+    return {
+      ...r,
+      topicIdId: topic.id,
+      forum_user: r.author as ForumUser,
+    } as ForumTopicReply;
+  }) as ForumTopicReply[];
 
-  const reactions = topic.reactions.map((reaction: any) => ({
-    ...reaction,
-    forum_reaction_emojis: reaction.emoji as ForumReactionEmoji,
-  })) as ForumReaction[];
+  const reactions = topic.reactions.map((reaction) => {
+    const rr = reaction as unknown as { emoji: unknown };
+    return {
+      ...rr,
+      forum_reaction_emojis: rr.emoji as ForumReactionEmoji,
+    } as unknown as ForumReaction;
+  }) as ForumReaction[];
 
   return {
     ...topic,
@@ -286,16 +315,22 @@ export async function getLatestTopic(id: number | string) {
 
   const firstTopic = topics[0]!; // Assert that we have a topic since we checked length
 
-  const replies = firstTopic.replies.map((reply: any) => ({
-    ...reply,
-    topicIdId: firstTopic.id,
-    forum_user: reply.author as ForumUser,
-  })) as ForumTopicReply[];
+  const replies = firstTopic.replies.map((reply: unknown) => {
+    const r = reply as ForumTopicReply & { author: ForumUser };
+    return {
+      ...r,
+      topicIdId: firstTopic.id,
+      forum_user: r.author as ForumUser,
+    } as ForumTopicReply;
+  }) as ForumTopicReply[];
 
-  const reactions = firstTopic.reactions.map((reaction: any) => ({
-    ...reaction,
-    forum_reaction_emojis: reaction.emoji as ForumReactionEmoji,
-  })) as ForumReaction[];
+  const reactions = firstTopic.reactions.map((reaction) => {
+    const rr = reaction as unknown as { emoji: unknown };
+    return {
+      ...rr,
+      forum_reaction_emojis: rr.emoji as ForumReactionEmoji,
+    } as unknown as ForumReaction;
+  }) as ForumReaction[];
 
   return {
     ...firstTopic,

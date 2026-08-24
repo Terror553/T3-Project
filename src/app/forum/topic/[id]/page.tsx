@@ -889,7 +889,6 @@ export default function Topic() {
                         <div className="card-body">
                           <h5>Antworten</h5>
                           {/* TopicReplyForm handles submission and refresh */}
-                          {/* @ts-ignore */}
                           <TopicReplyForm topicId={topic.id} />
                         </div>
                       </div>
