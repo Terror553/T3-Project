@@ -7,16 +7,14 @@ import { FormProvider } from "./form/FormProvider";
 import { useNotification } from "~/client/notification";
 import { Button } from "~/components/ui";
 import { TextArea } from "./form/TextArea";
-import { messageSchema } from "~/lib/schemas/messageSchema";
-import { sendMessageReply } from "~/server/auth/actions/messageActions";
+import { replyMessageSchema } from "~/lib/schemas/messagingSchemas";
 import { useRouter } from "next/navigation";
 
-type MessageReplyValues = z.infer<typeof messageSchema>;
+type MessageReplyValues = z.infer<typeof replyMessageSchema>;
 
 const initialValues: MessageReplyValues = {
-  id: 0,
+  messageId: 0,
   message: "",
-  recieverId: 0,
 };
 
 interface MessageReplyFormProps {
@@ -32,13 +30,24 @@ export const MessageReplyForm = ({ id }: MessageReplyFormProps) => {
     try {
       setIsSubmitting(true);
 
-      data.id = id;
-      initialValues.id = id;
-      const result = await sendMessageReply(data);
+      data.messageId = id;
 
-      if (!result.success) {
+      const response = await fetch(`/api/messages/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: data.message }),
+      });
+
+      const result = (await response.json()) as {
+        success?: boolean;
+        error?: { message?: string; code?: string };
+      };
+
+      if (!response.ok || !result.success) {
         addNotification(
-          `Error creating topic, ${result.error?.message} (${result.error?.code})`,
+          `Error creating message reply, ${result.error?.message ?? "Unknown error"} (${result.error?.code ?? "UNKNOWN"})`,
           "error",
           5000,
         );
@@ -57,7 +66,6 @@ export const MessageReplyForm = ({ id }: MessageReplyFormProps) => {
         );
         return;
       }
-      console.log("Message reply created with ID:", result.data);
       router.refresh();
       addNotification(`Message sent successfully!`, "success", 5000);
     } catch (error) {
@@ -76,7 +84,7 @@ export const MessageReplyForm = ({ id }: MessageReplyFormProps) => {
 
   return (
     <FormProvider
-      schema={messageSchema}
+      schema={replyMessageSchema}
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
@@ -97,7 +105,7 @@ function MessageReplyInner({
   return (
     <form onSubmit={handleSubmit} id="form-message-reply">
       <TextArea labelHidden={true} label="Message" name="message" />
-      <input name="id" value={id} readOnly hidden={true} />
+      <input name="messageId" value={id} readOnly hidden={true} />
       <hr />
       <Button
         type="submit"

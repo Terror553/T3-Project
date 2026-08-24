@@ -15,7 +15,7 @@ export default function MessagesInbox() {
       try {
         showLoadingBar("messages");
         setLoading(true);
-        const res = await fetch("/api/user/messages");
+        const res = await fetch("/api/messages");
         if (!res.ok) throw new Error(`Failed fetching messages ${res.status}`);
         const data = (await res.json()) as ForumMessage[];
         setMessages(data || []);

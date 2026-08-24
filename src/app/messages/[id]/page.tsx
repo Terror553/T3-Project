@@ -17,7 +17,7 @@ export default function MessageThread() {
       try {
         showLoadingBar("message-thread");
         setLoading(true);
-        const res = await fetch(`/api/user/messages/${id}`);
+        const res = await fetch(`/api/messages/${id}`);
         if (!res.ok) throw new Error(`Failed to load message ${res.status}`);
         const data = (await res.json()) as ForumMessage;
         setMessage(data || null);
