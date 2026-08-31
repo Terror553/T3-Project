@@ -30,6 +30,39 @@ import {
 import { getCurrentUser } from "../auth/utils/currentUser";
 import { createSlug } from "../utils/forumUtils";
 
+function mapRepliesForTopic(topic: any) {
+  const replies = (topic.replies || []).map((reply: any) => ({
+    ...reply,
+    topicIdId: topic.id,
+    forum_user: reply.author as ForumUser,
+  })) as ForumTopicReply[];
+  return replies;
+}
+
+function mapReactionsForTopic(topic: any) {
+  const reactions = (topic.reactions || []).map((reaction: any) => {
+    const rr = reaction as unknown as { emoji: unknown };
+    return {
+      ...rr,
+      forum_reaction_emojis: rr.emoji as ForumReactionEmoji,
+    } as unknown as ForumReaction;
+  }) as ForumReaction[];
+  return reactions;
+}
+
+function enrichTopic(topic: any): ForumTopic {
+  const replies = mapRepliesForTopic(topic);
+  const reactions = mapReactionsForTopic(topic);
+  return {
+    ...topic,
+    forum_topic_replies: replies,
+    forum_reactions: reactions,
+    forum_user: topic.author as ForumUser,
+    count: replies.length,
+    latestReply: replies[replies.length - 1],
+  } as ForumTopic;
+}
+
 export async function getCategories() {
   const forum = await db.forumCategory.findMany();
   if (!forum) {
@@ -106,22 +139,7 @@ export async function getSubCategories(id: number | string) {
         >;
       };
       const topics = await Promise.all(
-        sc.topics.map(async (topic: ForumTopic & {
-          replies: Array<ForumTopicReply & { author: ForumUser }>;
-          author: ForumUser;
-        }) => {
-          const replies = topic.replies.map((reply) => ({
-            ...reply,
-            topicIdId: topic.id,
-            forum_user: reply.author as ForumUser,
-          })) as ForumTopicReply[];
-
-          return {
-            ...topic,
-            forum_topic_replies: replies,
-            forum_user: topic.author as ForumUser,
-          } as ForumTopic;
-        }),
+        sc.topics.map(async (topic: any) => enrichTopic(topic)),
       );
 
       const topicsCount = topics.length;
@@ -184,19 +202,7 @@ export async function getSubCategory(id: number | string) {
   };
 
   const topics = await Promise.all(
-    subcategoryWithTopics.topics.map(async (topic) => {
-      const replies = topic.replies.map((reply) => ({
-        ...reply,
-        topicIdId: topic.id,
-        forum_user: reply.author as ForumUser,
-      })) as ForumTopicReply[];
-
-      return {
-        ...topic,
-        forum_topic_replies: replies,
-        forum_user: topic.author as ForumUser,
-      } as ForumTopic;
-    }),
+    subcategoryWithTopics.topics.map(async (topic: any) => enrichTopic(topic)),
   );
 
   return {
@@ -246,31 +252,14 @@ export async function getTopic(id: number | string) {
     throw new Error(`Topic with id ${id} not found`);
   }
 
-  const replies = topic.replies.map((reply: unknown) => {
-    const r = reply as ForumTopicReply & { author: ForumUser };
-    return {
-      ...r,
-      topicIdId: topic.id,
-      forum_user: r.author as ForumUser,
-    } as ForumTopicReply;
-  }) as ForumTopicReply[];
-
-  const reactions = topic.reactions.map((reaction) => {
-    const rr = reaction as unknown as { emoji: unknown };
-    return {
-      ...rr,
-      forum_reaction_emojis: rr.emoji as ForumReactionEmoji,
-    } as unknown as ForumReaction;
-  }) as ForumReaction[];
-
+  // Use the shared enrichment helper to normalize topic shape
+  const enriched = enrichTopic(topic);
   return {
-    ...topic,
-    forum_topic_replies: replies,
-    forum_reactions: reactions,
+    ...enriched,
     forum_topic_follow: topic.follows,
     forum_user: topic.author as ForumUser,
-    count: replies.length,
-    latestReply: replies[replies.length - 1],
+    count: enriched.count,
+    latestReply: enriched.latestReply,
   } as ForumTopic;
 }
 
@@ -315,30 +304,12 @@ export async function getLatestTopic(id: number | string) {
 
   const firstTopic = topics[0]!; // Assert that we have a topic since we checked length
 
-  const replies = firstTopic.replies.map((reply: unknown) => {
-    const r = reply as ForumTopicReply & { author: ForumUser };
-    return {
-      ...r,
-      topicIdId: firstTopic.id,
-      forum_user: r.author as ForumUser,
-    } as ForumTopicReply;
-  }) as ForumTopicReply[];
-
-  const reactions = firstTopic.reactions.map((reaction) => {
-    const rr = reaction as unknown as { emoji: unknown };
-    return {
-      ...rr,
-      forum_reaction_emojis: rr.emoji as ForumReactionEmoji,
-    } as unknown as ForumReaction;
-  }) as ForumReaction[];
-
+  // Enrich the topic using the shared helper to keep mapping consistent
+  const enriched = enrichTopic(firstTopic);
   return {
     ...firstTopic,
-    forum_topic_replies: replies,
-    forum_reactions: reactions,
+    ...enriched,
     forum_user: firstTopic.author as ForumUser,
-    count: replies.length,
-    latestReply: replies[replies.length - 1],
   } as ForumTopic;
 }
 
