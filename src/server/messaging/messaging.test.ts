@@ -122,4 +122,81 @@ describe("messaging module", () => {
     expect(res.success).toBe(true);
     expect(res.data?.id).toBe(55);
   });
+
+  it("getInboxMessages returns mapped threads", async () => {
+    const now = new Date();
+    const user = { id: 1 };
+    const sender = { id: 1, username: "alice", avatarUrl: "/a.png", signature: "", createdAt: now, updatedAt: now };
+    const receiver = { id: 2, username: "bob", avatarUrl: "/b.png", signature: "", createdAt: now, updatedAt: now };
+
+    const { getCurrentUser } = await import("~/server/auth/utils/currentUser");
+    (getCurrentUser as any).mockResolvedValue(user);
+
+    const { db } = await import("~/server/db");
+    (db.forumMessage.findMany as any).mockResolvedValue([
+      {
+        id: 10,
+        createdAt: now,
+        message: "hello",
+        title: "Greeting",
+        seen: 0,
+        senderId: 1,
+        receiverId: 2,
+        sender,
+        receiver,
+        messageReplies: [
+          {
+            id: 100,
+            createdAt: now,
+            message: "reply",
+            seen: 0,
+            messageId: 10,
+            senderId: 1,
+            receiverId: 2,
+            sender,
+            receiver,
+          },
+        ],
+      },
+    ]);
+
+    const messaging = await import("~/server/messaging/messaging");
+    const inbox = await messaging.getInboxMessages();
+    expect(Array.isArray(inbox)).toBe(true);
+    expect(inbox.length).toBe(1);
+    expect(inbox[0].id).toBe(10);
+    expect(inbox[0].messageReplies.length).toBe(1);
+    expect(inbox[0].sender?.username).toBe("alice");
+  });
+
+  it("getMessageThread returns null when user is not participant", async () => {
+    const now = new Date();
+    const { getCurrentUser } = await import("~/server/auth/utils/currentUser");
+    (getCurrentUser as any).mockResolvedValue({ id: 5 });
+
+    const { db } = await import("~/server/db");
+    (db.forumMessage.findUnique as any).mockResolvedValue({ id: 11, senderId: 2, receiverId: 3 });
+
+    const messaging = await import("~/server/messaging/messaging");
+    const thread = await messaging.getMessageThread(11);
+    expect(thread).toBeNull();
+  });
+
+  it("getMessageThread returns thread when user is participant", async () => {
+    const now = new Date();
+    const sender = { id: 2, username: "charlie", avatarUrl: "/c.png", signature: "", createdAt: now };
+    const receiver = { id: 3, username: "dave", avatarUrl: "/d.png", signature: "", createdAt: now };
+
+    const { getCurrentUser } = await import("~/server/auth/utils/currentUser");
+    (getCurrentUser as any).mockResolvedValue({ id: 2 });
+
+    const { db } = await import("~/server/db");
+    (db.forumMessage.findUnique as any).mockResolvedValue({ id: 11, senderId: 2, receiverId: 3, sender, receiver, messageReplies: [], createdAt: now, message: "hi", title: "hey", seen: 0 });
+
+    const messaging = await import("~/server/messaging/messaging");
+    const thread = await messaging.getMessageThread(11);
+    expect(thread).not.toBeNull();
+    expect(thread?.id).toBe(11);
+    expect(thread?.sender?.username).toBe("charlie");
+  });
 });
