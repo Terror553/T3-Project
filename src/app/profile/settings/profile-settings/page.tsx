@@ -40,12 +40,51 @@ export default function Settings() {
       setPreview(null);
       return;
     }
+    // create data url preview quickly
     const reader = new FileReader();
     reader.onload = () => {
       setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
   }, [file]);
+
+  // Resize and center-crop image to square of maxSize (px)
+  async function resizeAndCropToSquare(file: File, maxSize = 512): Promise<Blob> {
+    return await new Promise<Blob>((resolve, reject) => {
+      const img = new Image();
+      img.onload = async () => {
+        try {
+          const w = img.width;
+          const h = img.height;
+          const side = Math.min(w, h);
+          const sx = Math.floor((w - side) / 2);
+          const sy = Math.floor((h - side) / 2);
+
+          const canvas = document.createElement("canvas");
+          canvas.width = maxSize;
+          canvas.height = maxSize;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) throw new Error("Canvas not supported");
+
+          ctx.drawImage(img, sx, sy, side, side, 0, 0, maxSize, maxSize);
+          canvas.toBlob((blob) => {
+            if (!blob) return reject(new Error("Failed to create blob"));
+            resolve(blob);
+          }, "image/jpeg", 0.9);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.onerror = () => reject(new Error("Failed to load image for resizing"));
+      // load from local file
+      const fr = new FileReader();
+      fr.onload = () => {
+        img.src = String(fr.result || "");
+      };
+      fr.onerror = () => reject(new Error("Failed to read file for resizing"));
+      fr.readAsDataURL(file);
+    });
+  }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     setMessage(null);
@@ -69,28 +108,41 @@ export default function Settings() {
     setLoading(true);
     setMessage(null);
     try {
-      // read base64 content without data: prefix
-      const base = await new Promise<string | null>((resolve, reject) => {
-        const r = new FileReader();
-        r.onload = () => {
-          const s = String(r.result || "");
-          const comma = s.indexOf(",");
-          resolve(comma >= 0 ? s.slice(comma + 1) : null);
-        };
-        r.onerror = () => reject(new Error("Failed to read file"));
-        r.readAsDataURL(file);
-      });
-      if (!base) throw new Error("Failed to encode file");
+      // Resize & crop to square; yields a Blob
+      const blob = await resizeAndCropToSquare(file, 512);
+      // Build FormData for multipart upload — use XHR to get progress
+      const fd = new FormData();
+      const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+      fd.append("file", blob, filename);
 
-      // Step 1: upload contents
-      const uplRes = await fetch("/api/uploads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filename: file.name, contentBase64: base }),
+      const urlForm = "/api/uploads/form";
+
+      const uploadResult = await new Promise<any>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", urlForm);
+        xhr.upload.onprogress = (ev) => {
+          if (ev.lengthComputable) {
+            const pct = Math.round((ev.loaded / ev.total) * 100);
+            setMessage(`Uploading... ${pct}%`);
+          }
+        };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const j = JSON.parse(xhr.responseText);
+              resolve(j);
+            } catch (err) {
+              reject(new Error("Invalid JSON response from upload"));
+            }
+          } else {
+            reject(new Error(`Upload failed with status ${xhr.status}`));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Upload failed (network error)"));
+        xhr.send(fd);
       });
-      if (!uplRes.ok) throw new Error("Upload failed");
-      const uplBody = await uplRes.json();
-      const url = uplBody?.url;
+
+      const url = uploadResult?.url;
       if (!url) throw new Error("Upload did not return url");
 
       // Step 2: save metadata and attach to avatar
@@ -98,11 +150,11 @@ export default function Settings() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          key: file.name,
+          key: filename,
           url,
-          fileName: file.name,
-          contentType: file.type,
-          size: file.size,
+          fileName: filename,
+          contentType: "image/jpeg",
+          size: blob.size,
           attachTo: { type: "avatar" },
         }),
       });
@@ -142,7 +194,23 @@ export default function Settings() {
 
               <div>
                 <label className="form-label" htmlFor="avatar-file">Upload new avatar</label>
-                <input id="avatar-file" type="file" accept="image/*" className="form-control" onChange={handleFileChange} />
+
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const f = e.dataTransfer?.files?.[0];
+                    if (f) {
+                      const inputEvent = { target: { files: [f] } } as unknown as React.ChangeEvent<HTMLInputElement>;
+                      handleFileChange(inputEvent);
+                    }
+                  }}
+                  style={{ border: "2px dashed #ddd", padding: 8, borderRadius: 6 }}
+                >
+                  <input id="avatar-file" type="file" accept="image/*" className="form-control" onChange={handleFileChange} />
+                  <div className="small text-muted mt-1">Or drag & drop an image here</div>
+                </div>
+
                 {preview && (
                   <div className="mt-2">
                     <div style={{ width: 96, height: 96, position: "relative" }}>
@@ -151,16 +219,17 @@ export default function Settings() {
                   </div>
                 )}
 
-                <div className="mt-3 d-flex gap-2">
+                <div className="mt-3 d-flex gap-2 align-items-center">
                   <button className="btn btn-primary" onClick={uploadAvatar} disabled={!file || loading}>
                     {loading ? "Uploading..." : "Upload avatar"}
                   </button>
                   <button className="btn btn-secondary" onClick={() => { setFile(null); setPreview(null); setMessage(null); }} disabled={loading}>
                     Cancel
                   </button>
+                  {loading && <div className="ms-3 small text-muted">{message ?? "Uploading..."}</div>}
                 </div>
 
-                {message && <div className="mt-2 text-muted small">{message}</div>}
+                {message && !loading && <div className="mt-2 text-muted small">{message}</div>}
               </div>
             </div>
 
