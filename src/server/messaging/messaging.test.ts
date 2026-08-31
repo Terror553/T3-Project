@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import DOMPurify from "isomorphic-dompurify";
 
 // Mock auth currentUser and db before importing the module under test
 vi.mock("~/server/auth/utils/currentUser", () => ({
@@ -198,5 +199,48 @@ describe("messaging module", () => {
     expect(thread).not.toBeNull();
     expect(thread?.id).toBe(11);
     expect(thread?.sender?.username).toBe("charlie");
+  });
+
+  it("sanitizes title and message when creating thread", async () => {
+    const { getCurrentUser } = await import("~/server/auth/utils/currentUser");
+    (getCurrentUser as any).mockResolvedValue({ id: 1 });
+
+    const { db } = await import("~/server/db");
+    (db.forumUser.findUnique as any).mockResolvedValue({ id: 2 });
+
+    let captured: any = null;
+    (db.forumMessage.create as any).mockImplementation(async (args: any) => {
+      captured = args;
+      return { id: 777 };
+    });
+
+    const messaging = await import("~/server/messaging/messaging");
+
+    const rawTitle = '<script>alert(1)</script>Hi';
+    const rawMessage = '<img src=x onerror=alert(1)>Hello';
+
+    const res = await messaging.createMessageThread({ receiverId: 2, title: rawTitle, message: rawMessage });
+    expect(res.success).toBe(true);
+    expect(res.data?.id).toBe(777);
+
+    const expectedTitle = DOMPurify.sanitize(rawTitle.trim());
+    const expectedMessage = DOMPurify.sanitize(rawMessage.trim());
+
+    expect(captured).not.toBeNull();
+    expect(captured.data.title).toBe(expectedTitle);
+    expect(captured.data.message).toBe(expectedMessage);
+  });
+
+  it("reply fails when thread has no receiver", async () => {
+    const { getCurrentUser } = await import("~/server/auth/utils/currentUser");
+    (getCurrentUser as any).mockResolvedValue({ id: 2 });
+
+    const { db } = await import("~/server/db");
+    (db.forumMessage.findUnique as any).mockResolvedValue({ id: 1, senderId: 2, receiverId: null });
+
+    const messaging = await import("~/server/messaging/messaging");
+    const res = await messaging.replyToMessageThread({ messageId: 1, message: "Reply" });
+    expect(res.success).toBe(false);
+    expect(res.error?.code).toBe("app/validation-error");
   });
 });
