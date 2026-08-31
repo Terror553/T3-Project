@@ -19,6 +19,10 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
   const [loading, setLoading] = useState(false);
   const debouncer = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  // stable id for aria attributes
+  const idRef = useRef<string>(`user-picker-${Math.random().toString(36).slice(2, 8)}`);
+  const listboxId = `${idRef.current}-listbox`;
 
   useEffect(() => {
     // when external value changes (id string), we don't change the input text.
@@ -46,9 +50,8 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
       setOpen(false);
       return;
     }
-
-    setLoading(true);
-    // Avoid passing an async function directly into setTimeout (ESLint rule warns)
+    setLoading(true);
+    // Debounced search
     debouncer.current = window.setTimeout(() => {
       const doSearch = async () => {
         try {
@@ -69,28 +72,40 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
       };
       void doSearch();
     }, 250);
-
-    return () => {
+    return () => {
       if (debouncer.current) window.clearTimeout(debouncer.current);
     };
   }, [query]);
-
-  const selectUser = useCallback((u: UserResult) => {
+  const selectUser = useCallback((u: UserResult) => {
     onChange(String(u.id));
     setQuery(u.username);
     setOpen(false);
     setHighlightedIndex(-1);
+    // return focus to the input so keyboard users remain in flow
+    inputRef.current?.focus();
   }, [onChange]);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!open || results.length === 0) return;
-
-    if (e.key === "ArrowDown") {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!open || results.length === 0) {
+      // If list is closed and user presses ArrowDown, open it (if results exist)
+      if (e.key === "ArrowDown" && results.length > 0) {
+        e.preventDefault();
+        setOpen(true);
+        setHighlightedIndex(0);
+      }
+      return;
+    }
+    if (e.key === "ArrowDown") {
       e.preventDefault();
-      setHighlightedIndex((prev) => Math.min(prev + 1, results.length - 1));
+      setHighlightedIndex((prev) => (prev >= results.length - 1 ? 0 : prev + 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlightedIndex((prev) => Math.max(prev - 1, 0));
+      setHighlightedIndex((prev) => (prev <= 0 ? results.length - 1 : prev - 1));
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setHighlightedIndex(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setHighlightedIndex(results.length - 1);
     } else if (e.key === "Enter") {
       e.preventDefault();
       const idx = highlightedIndex >= 0 ? highlightedIndex : 0;
@@ -98,21 +113,23 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
       if (item) selectUser(item);
     } else if (e.key === "Escape") {
       setOpen(false);
+      inputRef.current?.blur();
     }
   }, [open, results, highlightedIndex, selectUser]);
-
-  function clearSelection() {
+  function clearSelection() {
     onChange("");
     setQuery("");
     setResults([]);
     setHighlightedIndex(-1);
+    inputRef.current?.focus();
   }
-
-  return (
+  return (
     <div className="user-picker" ref={containerRef} style={{ position: "relative" }}>
-      <label className="form-label">{placeholder}</label>
+      <label className="form-label" htmlFor={`${idRef.current}-input`}>{placeholder}</label>
       <div style={{ display: "flex", gap: 8 }}>
         <input
+          id={`${idRef.current}-input`}
+          ref={inputRef}
           type="text"
           className="form-control"
           placeholder="Search by username..."
@@ -121,14 +138,18 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
           onFocus={() => query.trim().length > 0 && setOpen(true)}
           onKeyDown={handleKeyDown}
           aria-autocomplete="list"
+          aria-controls={open && results.length > 0 ? listboxId : undefined}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          aria-activedescendant={open && highlightedIndex >= 0 && results[highlightedIndex] ? `user-picker-option-${results[highlightedIndex].id}` : undefined}
         />
-        <button type="button" className="btn btn-outline-secondary" onClick={clearSelection} title="Clear selection">
+        <button type="button" className="btn btn-outline-secondary" onClick={clearSelection} aria-label="Clear selection">
           Clear
         </button>
       </div>
-
-      {open && results.length > 0 && (
+      {open && results.length > 0 && (
         <ul
+          id={listboxId}
           className="list-group"
           role="listbox"
           aria-label="User search results"
@@ -140,8 +161,10 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
               key={u.id}
               role="option"
               aria-selected={highlightedIndex === idx}
+              tabIndex={-1}
               className={`list-group-item list-group-item-action ${highlightedIndex === idx ? "active" : ""}`}
               onClick={() => selectUser(u)}
+              onMouseEnter={() => setHighlightedIndex(idx)}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Image src={u.avatarUrl ?? "/default.png"} alt={u.username} width={28} height={28} style={{ borderRadius: 12 }} />
@@ -154,8 +177,7 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
           ))}
         </ul>
       )}
-
-      {loading && <div className="small text-muted mt-1">Searching...</div>}
+      {loading && <div className="small text-muted mt-1">Searching...</div>}
     </div>
   );
 }
