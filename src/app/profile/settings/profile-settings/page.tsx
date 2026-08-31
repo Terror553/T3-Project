@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
+import Cropper from "react-easy-crop";
 
 type Settings = {
   theme?: string;
@@ -11,12 +12,59 @@ type Settings = {
   avatarUrl?: string;
 };
 
+// Helper: create an HTMLImageElement from a data URL
+function createImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = (err) => reject(err);
+    img.src = src;
+  });
+}
+
+// Helper: crop image from dataUrl using croppedAreaPixels and return blob resized to sizePx
+async function getCroppedImg(dataUrl: string, crop: { width: number; height: number; x: number; y: number }, sizePx = 512): Promise<Blob> {
+  const image = await createImage(dataUrl);
+  const canvas = document.createElement("canvas");
+  canvas.width = sizePx;
+  canvas.height = sizePx;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas not supported");
+
+  // crop.width/height correspond to source pixels from the image (react-easy-crop provides these)
+  // Draw the cropped region scaled to the output size
+  ctx.drawImage(
+    image,
+    crop.x,
+    crop.y,
+    crop.width,
+    crop.height,
+    0,
+    0,
+    sizePx,
+    sizePx,
+  );
+
+  return await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) return reject(new Error("Failed to create blob"));
+      resolve(blob);
+    }, "image/jpeg", 0.9);
+  });
+}
+
 export default function Settings() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  // Cropper state
+  const [showCropper, setShowCropper] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -44,47 +92,15 @@ export default function Settings() {
     const reader = new FileReader();
     reader.onload = () => {
       setPreview(reader.result as string);
+      // open cropper automatically
+      setShowCropper(true);
     };
     reader.readAsDataURL(file);
   }, [file]);
 
-  // Resize and center-crop image to square of maxSize (px)
-  async function resizeAndCropToSquare(file: File, maxSize = 512): Promise<Blob> {
-    return await new Promise<Blob>((resolve, reject) => {
-      const img = new Image();
-      img.onload = async () => {
-        try {
-          const w = img.width;
-          const h = img.height;
-          const side = Math.min(w, h);
-          const sx = Math.floor((w - side) / 2);
-          const sy = Math.floor((h - side) / 2);
-
-          const canvas = document.createElement("canvas");
-          canvas.width = maxSize;
-          canvas.height = maxSize;
-          const ctx = canvas.getContext("2d");
-          if (!ctx) throw new Error("Canvas not supported");
-
-          ctx.drawImage(img, sx, sy, side, side, 0, 0, maxSize, maxSize);
-          canvas.toBlob((blob) => {
-            if (!blob) return reject(new Error("Failed to create blob"));
-            resolve(blob);
-          }, "image/jpeg", 0.9);
-        } catch (err) {
-          reject(err);
-        }
-      };
-      img.onerror = () => reject(new Error("Failed to load image for resizing"));
-      // load from local file
-      const fr = new FileReader();
-      fr.onload = () => {
-        img.src = String(fr.result || "");
-      };
-      fr.onerror = () => reject(new Error("Failed to read file for resizing"));
-      fr.readAsDataURL(file);
-    });
-  }
+  const onCropComplete = useCallback((_: any, croppedPixels: any) => {
+    setCroppedAreaPixels(croppedPixels);
+  }, []);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     setMessage(null);
@@ -103,16 +119,16 @@ export default function Settings() {
     setFile(f);
   }
 
-  async function uploadAvatar() {
-    if (!file) return;
+  async function applyCropAndUpload() {
+    if (!preview || !croppedAreaPixels) return setMessage("No crop selected");
     setLoading(true);
     setMessage(null);
     try {
-      // Resize & crop to square; yields a Blob
-      const blob = await resizeAndCropToSquare(file, 512);
+      // get cropped image blob from the preview data URL using selected area
+      const blob = await getCroppedImg(preview, croppedAreaPixels, 512);
       // Build FormData for multipart upload — use XHR to get progress
       const fd = new FormData();
-      const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+      const filename = (file?.name ?? `avatar-${Date.now()}`).replace(/[^a-zA-Z0-9._-]/g, "-");
       fd.append("file", blob, filename);
 
       const urlForm = "/api/uploads/form";
@@ -166,8 +182,10 @@ export default function Settings() {
       const newAvatar = saved?.data?.avatarUrl ?? url;
       setSettings((s) => ({ ...(s ?? {}), avatarUrl: newAvatar }));
       setMessage("Avatar updated");
+      // reset states
       setFile(null);
       setPreview(null);
+      setShowCropper(false);
     } catch (err: any) {
       console.error("Avatar upload error", err);
       setMessage(String(err?.message ?? err));
@@ -216,11 +234,15 @@ export default function Settings() {
                     <div style={{ width: 96, height: 96, position: "relative" }}>
                       <Image src={preview} alt="preview" fill sizes="96px" style={{ objectFit: "cover", borderRadius: 8 }} />
                     </div>
+                    <div className="mt-2 d-flex gap-2">
+                      <button className="btn btn-sm btn-outline-secondary" onClick={() => setShowCropper(true)}>Edit crop</button>
+                      <button className="btn btn-sm btn-outline-secondary" onClick={() => { setFile(null); setPreview(null); setMessage(null); }}>Remove</button>
+                    </div>
                   </div>
                 )}
 
                 <div className="mt-3 d-flex gap-2 align-items-center">
-                  <button className="btn btn-primary" onClick={uploadAvatar} disabled={!file || loading}>
+                  <button className="btn btn-primary" onClick={applyCropAndUpload} disabled={!preview || loading}>
                     {loading ? "Uploading..." : "Upload avatar"}
                   </button>
                   <button className="btn btn-secondary" onClick={() => { setFile(null); setPreview(null); setMessage(null); }} disabled={loading}>
@@ -248,6 +270,34 @@ export default function Settings() {
               </div>
             </div>
           </div>
+
+          {/* Cropper modal */}
+          {showCropper && preview && (
+            <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+              <div style={{ width: 540, background: "#fff", padding: 16, borderRadius: 8 }}>
+                <div style={{ position: "relative", width: "100%", height: 400, background: "#000" }}>
+                  <Cropper
+                    image={preview}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1}
+                    onCropChange={(c) => setCrop(c)}
+                    onZoomChange={(z) => setZoom(z)}
+                    onCropComplete={onCropComplete}
+                  />
+                </div>
+                <div className="mt-3 d-flex gap-2 align-items-center">
+                  <label className="form-label mb-0">Zoom</label>
+                  <input type="range" min={1} max={3} step={0.01} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} />
+                  <div style={{ flex: 1 }} />
+                  <button className="btn btn-primary" onClick={async () => { setShowCropper(false); /* Apply is handled by upload button */ }}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
