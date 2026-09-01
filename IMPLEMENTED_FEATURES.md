@@ -69,7 +69,14 @@ Format: Feature title — short description. Key files/paths (absolute) referenc
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/profile/settings/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/settings/profile-settings/page.tsx
 
-13. Tests and Vitest configuration (selective)
+13. Admin category management foundation
+- Added access-controlled admin routes and a category management page for listing forum categories, creating categories, and creating subcategories under them.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/categories/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/categories/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/categories/[categoryId]/subcategories/route.ts
+
+14. Tests and Vitest configuration (selective)
 - Configured Vitest and added a set of server and component tests for forum and messaging features. (Note: test-runner typings required adjustments in some environments.)
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/vitest.config.ts
