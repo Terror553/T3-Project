@@ -81,7 +81,15 @@ Format: Feature title — short description. Key files/paths (absolute) referenc
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/vitest.config.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/vitest.setup.ts
-
+ 
+15. Admin role and reaction emoji management
+- Added admin-only management screens and API routes for listing and creating groups (roles) and forum reaction emojis, with team/highTeam access control gating both flows.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/roles/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/reactions/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/roles/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.ts
+ 
 ---------------
 How this file will be used going forward
 - After every implemented TO_DO item, this file will be updated with a new entry describing the feature, a brief summary of changes, and links to the main files changed.
