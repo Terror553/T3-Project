@@ -6,52 +6,54 @@ This document tracks unfinished features and modules across the codebase. It map
 
 ## 1. Forum Core Mutations
 
-_Severity: Critical | Completion: 40%_
+_Severity: Critical | Completion: 60%_
 
-**Context:** The forum is currently read-only. We have `getCategories`, `getSubCategories`, and `getTopic` in `src/server/forum/forum.ts`, but no way for users to create, edit, or delete content.
+**Context:** Forum mutation endpoints have been largely implemented. Topic and reply creation/editing/deletion are available via API routes and server actions. Full UI completion and error handling remain.
 
-- [ ] **Topic Creation & Management** (Partial)
-  - [ ] **API:** Implement POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
-  - [x] **Server Logic:** Add `createTopic`, `editTopic`, `deleteTopic` to `src/server/forum/forum.ts`.
-  - [x] **Validation:** Create Zod schemas in `src/lib/schemas/topicSchemas.ts`.
-  - [x] **UI/Client:** Build `topicCreationForm.tsx` utilizing `FormProvider`, `useFormManager`, and `sanitizeInput`.
-- [ ] **Topic Replies**
-  - **API:** Create `src/app/api/forum/topic/[id]/reply/route.ts`.
-  - **Server Logic:** Add `createReply`, `editReply`, `deleteReply` mapped to the `ForumTopicReply` model.
-  - **UI/Client:** Add a `ReplyForm.tsx` component to the bottom of the Topic view. Wrap submissions in `showLoadingBar` and handle errors with `addNotification`.
+- [x] **Topic Creation & Management** (Complete)
+  - [x] **API:** POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
+  - [x] **Server Logic:** `createTopic`, `editTopic`, `deleteTopic` implemented in `src/server/forum/forum.ts`.
+  - [x] **Validation:** Zod schemas in `src/lib/schemas/topicSchemas.ts`.
+  - [x] **UI/Client:** `topicCreationForm.tsx` component using `FormProvider`, `useFormManager`, and `sanitizeInput`.
+- [x] **Topic Replies** (Complete)
+  - [x] **API:** `src/app/api/forum/topic/[id]/reply/route.ts` implemented.
+  - [x] **Server Logic:** `createReply`, `editReply`, `deleteReply` mapped to `ForumTopicReply` model.
+  - [x] **UI/Client:** `topicReplyForm.tsx` component with `showLoadingBar` and error notifications.
 
 ---
 
 ## 2. Forum Interactions & Follows
 
-_Severity: Medium | Completion: 10%_
+_Severity: Medium | Completion: 35%_
 
-**Context:** Models for reactions (`ForumReaction`, `ForumTopicReaction`, `ForumTopicReplyReaction`) and following topics (`ForumTopicFollow`) exist in the schema but lack application logic.
+**Context:** Reaction and follow infrastructure have been implemented server-side. API endpoints exist but UI components and optimistic updates are still needed.
 
-- [ ] **Reactions System**
-  - **API:** Add `src/app/api/forum/topic/[id]/react/route.ts`.
-  - **Server Logic:** Build a toggle function (`addOrRemoveReaction`) in the forum module.
-  - **UI/Client:** Add a reaction component below topics and replies. Needs optimistic UI updates based on current user state.
-- [ ] **Topic Follows**
-  - **API:** Add `src/app/api/forum/topic/[id]/follow/route.ts` targeting `ForumTopicFollow`.
-  - **UI/Client:** Add a "Follow" button to the topic header.
+- [x] **Reactions System**
+  - [x] **API:** `src/app/api/forum/topic/[id]/react/route.ts` implemented.
+  - [x] **Server Logic:** Toggle function for reactions in forum module.
+  - [ ] **UI/Client:** Reaction component with optimistic UI updates based on current user state.
+- [x] **Topic Follows**
+  - [x] **API:** `src/app/api/forum/topic/[id]/follow/route.ts` targeting `ForumTopicFollow`.
+  - [ ] **UI/Client:** "Follow" button component on the topic header.
 
 ---
 
 ## 3. Private Messaging System
 
-_Severity: High | Completion: 25%_
+_Severity: High | Completion: 50%_
 
-**Context:** The `ForumMessage` and `ForumMessageReply` models exist in the database, and the feature is referenced in `DOC.md` (Section 23). A `messageReplyForm.tsx` component has been created, but there is no server module, types, or other UI for it.
+**Context:** Core messaging infrastructure implemented. API routes and UI pages exist, with server logic and database operations in place. Full feature completion remains.
 
-- [ ] **Messaging Core Module**
-  - [ ] **Data Types:** Create `src/server/types/messaging.ts` to transform Prisma messages into app models.
-  - [ ] **Server Logic:** Create `src/server/messaging/messaging.ts` for sending/receiving loops.
-- [ ] **Messaging API Routes**
-  - [ ] **API:** Implement `src/app/api/messages/route.ts` (GET inbox, POST new thread) and `src/app/api/messages/[id]/route.ts` (GET thread, POST reply).
+- [x] **Messaging Core Module**
+  - [x] **Data Types:** `src/server/types/messaging.ts` created for message type definitions.
+  - [x] **Server Logic:** `src/server/messaging/messaging.ts` implements messaging operations.
+- [x] **Messaging API Routes**
+  - [x] **API:** `src/app/api/messages/route.ts` (GET inbox, POST new messages).
+  - [x] **API:** `src/app/api/messages/[id]/route.ts` (GET thread, POST reply).
 - [x] **Messaging UI (Partial)**
-  - [x] **UI/Client:** The `src/components/messageReplyForm.tsx` component has been created for replying to messages.
-  - [ ] **Page:** Build `src/app/messages/page.tsx` containing an inbox view and thread renderer.
+  - [x] **UI/Client:** `src/components/messageReplyForm.tsx` component for replying to messages.
+  - [x] **Pages:** `src/app/messages/page.tsx` (inbox view) and `src/app/messages/[id]/page.tsx` (thread view).
+  - [ ] **Enhancement:** Implement compose new message dialog and thread viewing improvements.
 
 ---
 
@@ -86,16 +88,22 @@ _Severity: Medium | Completion: 50%_
 
 ## 6. Admin Panel & Moderation Tools
 
-_Severity: Medium | Completion: 0%_
+_Severity: Medium | Completion: 45%_
 
-**Context:** Essential for a functional forum. Missing entirely. Mentioned in Section 23.
+**Context:** A comprehensive admin panel has been implemented with role-based access control. Core infrastructure is in place; full feature implementations are pending.
 
-- [ ] **Admin Dashboard Foundation**
-  - **Page:** Create `src/app/admin/page.tsx`. Guard it strictly using role/team checks (`getCurrentUser()`).
-- [ ] **Forum Category Management**
-  - **Logic:** Admin actions for creating, editing, and archiving `ForumCategory` and `ForumSubcategory`.
-- [ ] **Emoji & Role Management**
-  - **Logic:** UI for adding rows to `ForumReactionEmoji` and modifying user roles.
+- [x] **Admin Dashboard Foundation**
+  - [x] **Page:** Created `src/app/admin/page.tsx` with role/team checks via `getCurrentUser()`.
+  - [x] **Authorization:** Role-based access control implemented; redirects unauthorized users.
+- [x] **Forum Category Management**
+  - [x] **Page:** `src/app/admin/categories/page.tsx` implemented.
+  - [x] **API:** GET/POST handlers in `src/app/api/admin/categories/route.ts`.
+  - [x] **API:** Subcategory management at `src/app/api/admin/categories/[categoryId]/subcategories/route.ts`.
+  - [ ] **UI/Logic:** Full edit/archive/delete workflows and forms.
+- [x] **Emoji & Role Management**
+  - [x] **Pages:** Created `src/app/admin/reactions/page.tsx` and `src/app/admin/roles/page.tsx`.
+  - [x] **API:** `src/app/api/admin/reactions/route.ts` and `src/app/api/admin/roles/route.ts` for managing reactions and roles.
+  - [ ] **UI/Logic:** Full form implementations for creating and editing reactions/roles.
 
 ---
 
@@ -148,20 +156,23 @@ _Severity: Low | Completion: 0%_
 
 ## 10. File Uploads & CDN
 
-_Severity: High | Completion: 60%_
+_Severity: High | Completion: 70%_
 
-**Context:** The backend has a dynamic upload route at `src/app/api/upload/[path]/route.ts` to generate pre-signed URLs for S3 uploads. The reusable client component now lives in `src/components/uploadForm.tsx` and is wired into the shared form manager, while `src/components/uploadTest.tsx` remains as a compatibility re-export. The missing piece is still persistence and a real product flow that stores uploads against application data.
+**Context:** The backend upload infrastructure is largely complete with local file storage. File processing and database integration with various models is in progress. S3 pre-signed URLs are available for direct uploads.
 
 - [x] **API Route for Pre-signed URLs**
-  - [x] **API:** Implement `src/app/api/upload/[path]/route.ts` to generate pre-signed URLs for S3 uploads.
+  - [x] **API:** `src/app/api/upload/[path]/route.ts` implemented.
+  - [x] **API:** `src/app/api/uploads/route.ts` for general file upload management.
+  - [x] **API:** `src/app/api/uploads/form/route.ts` for upload form configuration.
 - [x] **File Upload Component**
-  - [x] **UI/Client:** Create a reusable `UploadForm.tsx` component that allows users to select a file and configure the preview title/aspect ratio through props.
-  - [x] **Client Logic (Partial):** The upload flow now lives in `src/components/uploadForm.tsx` and uses `FormProvider`, `useFormManager`, and `setFieldValue` for the file input.
-- [ ] **Database Integration**
-  - [ ] **Server Logic:** Create a new server action or API endpoint that saves the returned S3 key to the database, associating it with the relevant model (e.g., `User`, `ForumPostAttachment`).
-  - [ ] **Prisma Schema:** Add a model to store uploaded file metadata, for example, `FileUpload` with fields like `id`, `key`, `url`, `fileName`, `contentType`, `size`, and a relation to the user who uploaded it.
-- [ ] **Frontend Integration Example**
-  - [ ] **UI/Client:** Integrate the `UploadForm.tsx` component into a feature, for example, allowing users to upload a profile picture on their settings page.
+  - [x] **UI/Client:** `UploadForm.tsx` component with configurable title and aspect ratio.
+  - [x] **Client Logic:** Uses `FormProvider`, `useFormManager`, and `setFieldValue`.
+- [x] **Storage Adapter**
+  - [x] **Server Logic:** `src/server/storage/storage.ts` implements local file storage adapter.
+  - [x] **Server Logic:** `src/app/api/upload/save/route.ts` handles file persistence.
+- [ ] **Database Integration (Advanced)**
+  - [ ] **Server Logic:** Connect S3 keys to application models (User avatars, forum attachments, etc.).
+  - [ ] **Prisma Schema:** Add file metadata models if needed for tracking uploads.
 
 ---
 
