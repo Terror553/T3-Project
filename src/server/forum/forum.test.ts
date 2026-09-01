@@ -202,4 +202,84 @@ describe("forum module", () => {
     expect(resUnfollow.success).toBe(true);
     expect(resUnfollow.data?.followed).toBe(false);
   });
+
+  it("getSubCategory enriches topic counts and latestEntry from the refactored fetch path", async () => {
+    const { db } = await import("~/server/db");
+
+    const author = {
+      id: 7,
+      username: "Alice",
+      avatarUrl: "/alice.png",
+      bannerUrl: "",
+      signature: "",
+      createdAt: new Date("2026-01-01T00:00:00.000Z"),
+      updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+      group: null,
+    };
+
+    const topic = {
+      id: 21,
+      title: "Forum topic",
+      content: "Hello",
+      status: 1,
+      createdAt: new Date("2026-01-02T00:00:00.000Z"),
+      updatedAt: new Date("2026-01-02T00:00:00.000Z"),
+      locked: 0,
+      pinned: 0,
+      authorId: 7,
+      subcategoryId: 5,
+      slug: "forum-topic",
+      hidden: 0,
+      author,
+      replies: [
+        {
+          id: 99,
+          createdAt: new Date("2026-01-03T00:00:00.000Z"),
+          content: "Reply <strong>text</strong>",
+          updatedAt: new Date("2026-01-03T00:00:00.000Z"),
+          author,
+          topicIdId: 21,
+        },
+      ],
+      reactions: [
+        {
+          id: 41,
+          authorId: 7,
+          topicId: 21,
+          emoji: {
+            id: 1,
+            name: "Like",
+            emoji: "👍",
+            negative: 0,
+          },
+        },
+      ],
+      follows: [],
+    };
+
+    (db.forumSubcategory as any) = {
+      findFirst: vi.fn().mockResolvedValue({
+        id: 5,
+        name: "General",
+        description: "General chat",
+        status: 1,
+        createdAt: new Date("2026-01-01T00:00:00.000Z"),
+        updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+        categoryId: 10,
+        slug: "general",
+        topics: [topic],
+      }),
+    };
+    (db.forumTopic.findMany as any).mockResolvedValue([topic]);
+
+    const forum = await import("~/server/forum/forum");
+    const result = await forum.getSubCategory(5);
+
+    expect(result.count).toBe(1);
+    expect(result.repliesCount).toBe(1);
+    expect(result.forum_topics).toHaveLength(1);
+    expect(result.latestEntry?.id).toBe(21);
+    expect(result.forum_topics[0]?.forum_user.username).toBe("Alice");
+    expect(result.forum_topics[0]?.forum_reactions).toHaveLength(1);
+  });
 });
