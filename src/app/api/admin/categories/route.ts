@@ -51,3 +51,61 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const user = await getCurrentUser();
+    if (!user || !(user.group?.team || user.group?.highTeam)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const payload = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const id = Number(payload.id ?? "");
+    const name = String(payload.name ?? "").trim();
+
+    if (!Number.isFinite(id) || id <= 0) {
+      return NextResponse.json({ error: "Category id is invalid" }, { status: 400 });
+    }
+
+    if (!name) {
+      return NextResponse.json({ error: "Category name is required" }, { status: 400 });
+    }
+
+    const category = await db.forumCategory.update({
+      where: { id },
+      data: { name },
+    });
+
+    return NextResponse.json(category, { status: 200 });
+  } catch (error) {
+    console.error("Failed to update admin category", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const user = await getCurrentUser();
+    if (!user || !(user.group?.team || user.group?.highTeam)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const payload = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const id = Number(payload.id ?? "");
+
+    if (!Number.isFinite(id) || id <= 0) {
+      return NextResponse.json({ error: "Category id is invalid" }, { status: 400 });
+    }
+
+    const subcategories = await db.forumSubcategory.count({ where: { categoryId: id } });
+    if (subcategories > 0) {
+      return NextResponse.json({ error: "Category is not empty" }, { status: 409 });
+    }
+
+    await db.forumCategory.delete({ where: { id } });
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error("Failed to delete admin category", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}

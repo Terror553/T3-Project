@@ -19,6 +19,13 @@ export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategory, setNewCategory] = useState("");
   const [newSubcategory, setNewSubcategory] = useState<Record<number, { name: string; description: string }>>({});
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+  const [categoryDraft, setCategoryDraft] = useState("");
+  const [editingSubcategoryId, setEditingSubcategoryId] = useState<number | null>(null);
+  const [subcategoryDraft, setSubcategoryDraft] = useState<{ name: string; description: string }>({
+    name: "",
+    description: "",
+  });
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -113,6 +120,103 @@ export default function AdminCategoriesPage() {
     void refreshCategories();
   }
 
+  async function handleDeleteCategory(categoryId: number) {
+    const confirmed = window.confirm("Delete this category? This requires it to be empty.");
+    if (!confirmed) return;
+
+    const res = await fetch("/api/admin/categories", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: categoryId }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      setMessage(`Failed to delete category: ${body}`);
+      return;
+    }
+
+    setMessage("Category deleted");
+    setEditingCategoryId(null);
+    void refreshCategories();
+  }
+
+  async function handleUpdateCategory(categoryId: number) {
+    const trimmed = categoryDraft.trim();
+    if (!trimmed) {
+      setMessage("Category name is required");
+      return;
+    }
+
+    const res = await fetch("/api/admin/categories", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: categoryId, name: trimmed }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      setMessage(`Failed to update category: ${body}`);
+      return;
+    }
+
+    setEditingCategoryId(null);
+    setCategoryDraft("");
+    setMessage("Category updated");
+    void refreshCategories();
+  }
+
+  async function handleDeleteSubcategory(categoryId: number, subcategoryId: number) {
+    const confirmed = window.confirm("Delete this subcategory? This requires it to be empty.");
+    if (!confirmed) return;
+
+    const res = await fetch(`/api/admin/categories/${categoryId}/subcategories`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: subcategoryId }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      setMessage(`Failed to delete subcategory: ${body}`);
+      return;
+    }
+
+    setEditingSubcategoryId(null);
+    setSubcategoryDraft({ name: "", description: "" });
+    setMessage("Subcategory deleted");
+    void refreshCategories();
+  }
+
+  async function handleUpdateSubcategory(categoryId: number, subcategoryId: number) {
+    const name = subcategoryDraft.name.trim();
+    if (!name) {
+      setMessage("Subcategory name is required");
+      return;
+    }
+
+    const res = await fetch(`/api/admin/categories/${categoryId}/subcategories`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: subcategoryId,
+        name,
+        description: subcategoryDraft.description.trim(),
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      setMessage(`Failed to update subcategory: ${body}`);
+      return;
+    }
+
+    setEditingSubcategoryId(null);
+    setSubcategoryDraft({ name: "", description: "" });
+    setMessage("Subcategory updated");
+    void refreshCategories();
+  }
+
   if (loading) return <p>Loading admin category management...</p>;
   if (!isAdmin) return <p>Access denied</p>;
 
@@ -142,8 +246,52 @@ export default function AdminCategoriesPage() {
         {categories.map((category) => (
           <div className="col-lg-6" key={category.id}>
             <div className="card h-100">
-              <div className="card-header">
-                <strong>{category.name}</strong>
+              <div className="card-header d-flex justify-content-between align-items-center">
+                {editingCategoryId === category.id ? (
+                  <input
+                    className="form-control"
+                    value={categoryDraft}
+                    onChange={(e) => setCategoryDraft(e.target.value)}
+                  />
+                ) : (
+                  <strong>{category.name}</strong>
+                )}
+                <div className="btn-group btn-group-sm">
+                  {editingCategoryId === category.id ? (
+                    <>
+                      <button className="btn btn-success" onClick={() => void handleUpdateCategory(category.id)}>
+                        Save
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary"
+                        onClick={() => {
+                          setEditingCategoryId(null);
+                          setCategoryDraft("");
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="btn btn-outline-primary"
+                        onClick={() => {
+                          setEditingCategoryId(category.id);
+                          setCategoryDraft(category.name);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => void handleDeleteCategory(category.id)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
               <div className="card-body">
                 {category.subcategories.length === 0 ? (
@@ -152,8 +300,67 @@ export default function AdminCategoriesPage() {
                   <ul className="list-group list-group-flush mb-3">
                     {category.subcategories.map((subcategory) => (
                       <li className="list-group-item" key={subcategory.id}>
-                        <div className="fw-semibold">{subcategory.name}</div>
-                        <small className="text-muted">{subcategory.description || "No description"}</small>
+                        {editingSubcategoryId === subcategory.id ? (
+                          <div className="d-grid gap-2">
+                            <input
+                              className="form-control"
+                              value={subcategoryDraft.name}
+                              onChange={(e) => setSubcategoryDraft((prev) => ({ ...prev, name: e.target.value }))}
+                            />
+                            <textarea
+                              className="form-control"
+                              rows={2}
+                              value={subcategoryDraft.description}
+                              onChange={(e) =>
+                                setSubcategoryDraft((prev) => ({ ...prev, description: e.target.value }))
+                              }
+                            />
+                            <div className="btn-group btn-group-sm">
+                              <button
+                                className="btn btn-success"
+                                onClick={() => void handleUpdateSubcategory(category.id, subcategory.id)}
+                              >
+                                Save
+                              </button>
+                              <button
+                                className="btn btn-outline-secondary"
+                                onClick={() => {
+                                  setEditingSubcategoryId(null);
+                                  setSubcategoryDraft({ name: "", description: "" });
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="d-flex justify-content-between align-items-start gap-2">
+                            <div>
+                              <div className="fw-semibold">{subcategory.name}</div>
+                              <small className="text-muted">{subcategory.description || "No description"}</small>
+                            </div>
+                            <div className="btn-group btn-group-sm">
+                              <button
+                                className="btn btn-outline-primary"
+                                onClick={() => {
+                                  setEditingSubcategoryId(subcategory.id);
+                                  setSubcategoryDraft({
+                                    name: subcategory.name,
+                                    description: subcategory.description,
+                                  });
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="btn btn-outline-danger"
+                                onClick={() => void handleDeleteSubcategory(category.id, subcategory.id)}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </li>
                     ))}
                   </ul>

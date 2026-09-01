@@ -8,6 +8,7 @@
 - A structured execution plan has been created in `PLAN_FOR_TO_DO.md` to drive the remaining backlog in priority order.
 - Forum topic interaction coverage and admin category authorization tests are both validated and recorded in the implementation log.
 - Profile settings route validation is now covered with Vitest for unauthenticated access, default values, invalid payload rejection, and persisted updates.
+- The admin category management flow now includes rename and delete actions for both categories and subcategories, along with the matching API handlers.
 
 ## Prioritized execution order
 1. Forum Core Mutations and forum interactions/follows.
@@ -21,4 +22,4 @@
 9. File uploads and CDN persistence integration.
 
 ## Next work item
-- Continue through the remaining testing backlog with the next highest-value validation pass: file-upload and messaging route coverage, then the dashboard/game integration checks once the remaining core flows are stable.
+- Continue through the remaining admin moderation polish and then move to the dashboard/game integrations once the category workflows are fully stable.
