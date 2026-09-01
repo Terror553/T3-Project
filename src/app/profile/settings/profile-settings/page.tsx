@@ -15,9 +15,9 @@ type Settings = {
 // Helper: create an HTMLImageElement from a data URL
 function createImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    const img = new Image();
+    const img = new globalThis.Image();
     img.onload = () => resolve(img);
-    img.onerror = (err) => reject(err);
+    img.onerror = (err: any) => reject(err);
     img.src = src;
   });
 }
@@ -102,7 +102,41 @@ export default function Settings() {
     setCroppedAreaPixels(croppedPixels);
   }, []);
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const [appliedBlob, setAppliedBlob] = useState<Blob | null>(null);
+    const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+
+    // Apply crop to preview immediately and prepare a downloadable blob
+    async function applyCropToPreview() {
+      if (!preview || !croppedAreaPixels) {
+        setMessage("No crop available");
+        return;
+      }
+      try {
+        const blob = await getCroppedImg(preview, croppedAreaPixels, 512);
+        // create data URL for preview
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = String(reader.result || "");
+          setPreview(dataUrl);
+        };
+        reader.readAsDataURL(blob);
+
+        // create object URL for download
+        if (downloadUrl) {
+          URL.revokeObjectURL(downloadUrl);
+        }
+        const objUrl = URL.createObjectURL(blob);
+        setDownloadUrl(objUrl);
+        setAppliedBlob(blob);
+        setShowCropper(false);
+        setMessage("Crop applied — preview updated");
+      } catch (err) {
+        console.error("Failed to apply crop", err);
+        setMessage("Failed to apply crop");
+      }
+    }
+
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     setMessage(null);
     const f = e.target.files?.[0] ?? null;
     if (!f) return setFile(null);
@@ -124,8 +158,14 @@ export default function Settings() {
     setLoading(true);
     setMessage(null);
     try {
-      // get cropped image blob from the preview data URL using selected area
-      const blob = await getCroppedImg(preview, croppedAreaPixels, 512);
+      // if a crop was already applied, prefer that blob
+      let blob: Blob;
+      if (appliedBlob) {
+        blob = appliedBlob;
+      } else {
+        // get cropped image blob from the preview data URL using selected area
+        blob = await getCroppedImg(preview, croppedAreaPixels, 512);
+      }
       // Build FormData for multipart upload — use XHR to get progress
       const fd = new FormData();
       const filename = (file?.name ?? `avatar-${Date.now()}`).replace(/[^a-zA-Z0-9._-]/g, "-");
@@ -186,6 +226,11 @@ export default function Settings() {
       setFile(null);
       setPreview(null);
       setShowCropper(false);
+      setAppliedBlob(null);
+      if (downloadUrl) {
+        URL.revokeObjectURL(downloadUrl);
+        setDownloadUrl(null);
+      }
     } catch (err: any) {
       console.error("Avatar upload error", err);
       setMessage(String(err?.message ?? err));
@@ -236,7 +281,10 @@ export default function Settings() {
                     </div>
                     <div className="mt-2 d-flex gap-2">
                       <button className="btn btn-sm btn-outline-secondary" onClick={() => setShowCropper(true)}>Edit crop</button>
-                      <button className="btn btn-sm btn-outline-secondary" onClick={() => { setFile(null); setPreview(null); setMessage(null); }}>Remove</button>
+                      <button className="btn btn-sm btn-outline-secondary" onClick={() => { setFile(null); setPreview(null); setMessage(null); setAppliedBlob(null); if (downloadUrl) { URL.revokeObjectURL(downloadUrl); setDownloadUrl(null); } }}>Remove</button>
+                      {downloadUrl && (
+                        <a href={downloadUrl} download="avatar.jpg" className="btn btn-sm btn-outline-primary">Download</a>
+                      )}
                     </div>
                   </div>
                 )}
@@ -290,9 +338,12 @@ export default function Settings() {
                   <label className="form-label mb-0">Zoom</label>
                   <input type="range" min={1} max={3} step={0.01} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} />
                   <div style={{ flex: 1 }} />
-                  <button className="btn btn-primary" onClick={async () => { setShowCropper(false); /* Apply is handled by upload button */ }}>
-                    Close
+                <button className="btn btn-primary" onClick={applyCropToPreview} disabled={!croppedAreaPixels}>
+                  Apply crop
                   </button>
+                <button className="btn btn-secondary" onClick={() => { setShowCropper(false); }}>
+                  Close
+                </button>
                 </div>
               </div>
             </div>
