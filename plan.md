@@ -7,6 +7,7 @@
 - Runtime blocker resolved: the server-side sanitizer dependency mismatch was fixed by aligning the jsdom version with the one required by isomorphic-dompurify, and the forum API now responds successfully on GET /api/forum.
 - A structured execution plan has been created in `PLAN_FOR_TO_DO.md` to drive the remaining backlog in priority order.
 - Forum topic interaction coverage and admin category authorization tests are both validated and recorded in the implementation log.
+- Profile settings route validation is now covered with Vitest for unauthenticated access, default values, invalid payload rejection, and persisted updates.
 
 ## Prioritized execution order
 1. Forum Core Mutations and forum interactions/follows.
@@ -20,4 +21,4 @@
 9. File uploads and CDN persistence integration.
 
 ## Next work item
-- Continue through the remaining testing backlog: next in sequence is the admin moderation and messaging coverage pass, followed by settings and file-upload validation once the role checks are stable.
+- Continue through the remaining testing backlog with the next highest-value validation pass: file-upload and messaging route coverage, then the dashboard/game integration checks once the remaining core flows are stable.
