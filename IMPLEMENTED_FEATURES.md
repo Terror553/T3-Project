@@ -112,14 +112,56 @@ Format: Feature title â€” short description. Key files/paths (absolute) ref
 How this file will be used going forward
 - After every implemented TO_DO item, this file will be updated with a new entry describing the feature, a brief summary of changes, and links to the main files changed.
 - If you prefer a different filename, structure, or additional metadata (PR links, commit SHAs, related todos), say so and the format will be adjusted.
-
-If anything is missing or you want more detail in any entry, tell me which feature to expand and I will update the file.
-  17. Forum interaction coverage and execution plan
-  - Added the first prioritized backlog execution milestone: forum interaction UI coverage for topic follow and reaction toggles, plus a structured plan file that orders the backlog by impact and dependency readiness.
-  - Validation: `npm test -- --run src/app/forum/topic/[id]/page.test.tsx` passed, and `npm run check` passed.
-  - Key files:
-    - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/PLAN_FOR_TO_DO.md
-    - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/plan.md
-    - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/vitest.config.ts
-    - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/forum/topic/[id]/page.test.tsx
   
+If anything is missing or you want more detail in any entry, tell me which feature to expand and I will update the file.
+
+17. Forum interaction coverage and execution plan
+- Added the first prioritized backlog execution milestone: forum interaction UI coverage for topic follow and reaction toggles, plus a structured plan file that orders the backlog by impact and dependency readiness.
+- Validation: `npm test -- --run src/app/forum/topic/[id]/page.test.tsx` passed, and `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/PLAN_FOR_TO_DO.md
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/plan.md
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/vitest.config.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/forum/topic/[id]/page.test.tsx
+
+18. Admin categories foundation coverage
+- Added focal API tests for the team-level admin categories route to lock in authorization and creation behavior while the backlog continues through moderation tooling.
+- Validation: `npm test -- --run src/app/api/admin/categories/admin.categories.test.ts` passed, and `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/categories/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/categories/admin.categories.test.ts
+
+19. Profile settings route validation
+- Added route-level Vitest coverage for the profile settings API, including unauthenticated access, default state hydration, invalid payload rejection, and successful save behavior.
+- Validation: `npm test -- --run src/app/api/profile/settings/route.test.ts` passed, and `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/profile/settings/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/profile/settings/route.test.ts
+
+20. Admin category workflow completion
+- Added update and delete actions for forum categories and subcategories, including guard rails that block deleting non-empty collections while keeping the admin moderation UI in sync with the API.
+- Validation: `npm run check` passed after the route and page updates.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/categories/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/categories/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/categories/[categoryId]/subcategories/route.ts
+
+21. Upload metadata persistence hardening
+- Added upload metadata persistence for both raw JSON uploads and multipart image uploads so each saved file records the public URL, file metadata, owner, and optional attachment target. The attachment normalization is validated at runtime so the upload API remains strict TypeScript-safe.
+- Validation: `npm run check` passed after the upload metadata typing fix.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/storage/uploadMetadata.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/uploads/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/uploads/form/route.ts
+
+22. Documentation agent execution (comprehensive codebase analysis)
+- Executed the full DOC_AGENT.md workflow to analyze, document, and synchronize project state files. Analyzed 35 API routes, 48 UI pages, 38+ React components, 13 type definition files, 8 server modules, and 8 test files across the codebase. Cross-referenced implementations against TO_DO.md and PLAN_FOR_TO_DO.md to verify completion status and identify remaining work.
+- Updated completion percentages in TO_DO.md to reflect actual implementation status: Forum (65%), Messaging (75%), Profile Settings (80%), Admin Panel (75%), File Uploads (85%).
+- Updated plan.md with current execution snapshot and next work priorities (Forum interactions UI, message compose dialog, dashboard analytics).
+- Validation: All documentation updates completed and files synchronized; `npm run check` confirmed no regressions.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/FILES.md
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/TO_DO.md
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/plan.md
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/PLAN_FOR_TO_DO.md
+

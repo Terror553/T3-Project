@@ -6,9 +6,9 @@ This document tracks unfinished features and modules across the codebase. It map
 
 ## 1. Forum Core Mutations
 
-_Severity: Critical | Completion: 60%_
+_Severity: Critical | Completion: 65%_
 
-**Context:** Forum mutation endpoints have been largely implemented. Topic and reply creation/editing/deletion are available via API routes and server actions. Full UI completion and error handling remain.
+**Context:** Forum mutation endpoints have been largely implemented. Topic and reply creation/editing/deletion are available via API routes and server actions. Reaction and follow APIs are complete but UI components are still needed.
 
 - [x] **Topic Creation & Management** (Complete)
   - [x] **API:** POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
@@ -19,41 +19,46 @@ _Severity: Critical | Completion: 60%_
   - [x] **API:** `src/app/api/forum/topic/[id]/reply/route.ts` implemented.
   - [x] **Server Logic:** `createReply`, `editReply`, `deleteReply` mapped to `ForumTopicReply` model.
   - [x] **UI/Client:** `topicReplyForm.tsx` component with `showLoadingBar` and error notifications.
+- [ ] **Reactions & Follows UI** (Partial - APIs exist, UI needed)
+  - [x] **API:** `src/app/api/forum/topic/[id]/react/route.ts` fully implemented.
+  - [x] **API:** `src/app/api/forum/topic/[id]/follow/route.ts` fully implemented.
+  - [ ] **UI/Client:** Reaction component with optimistic UI updates based on current user state - **PENDING**.
+  - [ ] **UI/Client:** "Follow" button component on the topic header - **PENDING**.
 
 ---
 
 ## 2. Forum Interactions & Follows
 
-_Severity: Medium | Completion: 35%_
+_Severity: Medium | Completion: 50%_
 
-**Context:** Reaction and follow infrastructure have been implemented server-side. API endpoints exist but UI components and optimistic updates are still needed.
+**Context:** Reaction and follow infrastructure have been fully implemented server-side. API endpoints exist but UI components for selecting reactions and following topics are still needed for full feature completion.
 
 - [x] **Reactions System**
-  - [x] **API:** `src/app/api/forum/topic/[id]/react/route.ts` implemented.
-  - [x] **Server Logic:** Toggle function for reactions in forum module.
-  - [ ] **UI/Client:** Reaction component with optimistic UI updates based on current user state.
+  - [x] **API:** `src/app/api/forum/topic/[id]/react/route.ts` implemented with full toggle logic.
+  - [x] **Server Logic:** Toggle function for reactions in forum module with optimistic client-side patterns.
+  - [ ] **UI/Client:** Reaction selector component with visual feedback - **PENDING**.
 - [x] **Topic Follows**
   - [x] **API:** `src/app/api/forum/topic/[id]/follow/route.ts` targeting `ForumTopicFollow`.
-  - [ ] **UI/Client:** "Follow" button component on the topic header.
+  - [ ] **UI/Client:** "Follow" button component on the topic header - **PENDING**.
 
 ---
 
 ## 3. Private Messaging System
 
-_Severity: High | Completion: 50%_
+_Severity: High | Completion: 75%_
 
-**Context:** Core messaging infrastructure implemented. API routes and UI pages exist, with server logic and database operations in place. Full feature completion remains.
+**Context:** Core messaging infrastructure fully implemented with API routes and UI pages. Server logic, database operations, and thread viewing are in place. Message compose new dialog is the main remaining feature.
 
 - [x] **Messaging Core Module**
   - [x] **Data Types:** `src/server/types/messaging.ts` created for message type definitions.
-  - [x] **Server Logic:** `src/server/messaging/messaging.ts` implements messaging operations.
+  - [x] **Server Logic:** `src/server/messaging/messaging.ts` implements all messaging operations.
 - [x] **Messaging API Routes**
   - [x] **API:** `src/app/api/messages/route.ts` (GET inbox, POST new messages).
   - [x] **API:** `src/app/api/messages/[id]/route.ts` (GET thread, POST reply).
-- [x] **Messaging UI (Partial)**
+- [x] **Messaging UI (Mostly Complete)**
   - [x] **UI/Client:** `src/components/messageReplyForm.tsx` component for replying to messages.
   - [x] **Pages:** `src/app/messages/page.tsx` (inbox view) and `src/app/messages/[id]/page.tsx` (thread view).
-  - [ ] **Enhancement:** Implement compose new message dialog and thread viewing improvements.
+  - [ ] **Enhancement:** Implement compose new message dialog - **PENDING**.
 
 ---
 
@@ -74,36 +79,49 @@ _Severity: Low | Completion: 10%_
 
 ## 5. User Settings & Extended Profile
 
-_Severity: Medium | Completion: 50%_
+_Severity: Medium | Completion: 80%_
 
-**Context:** The `Profile` schema types exist (`profile.ts`, `settings.ts`, `user-data.ts`). Base login/registration works (via server actions), but users cannot edit their internal settings.
+**Context:** Avatar upload, client-side crop functionality, and user preference persistence are now fully implemented. Settings pages exist for profile configuration, theme preferences, and password management.
 
 - [x] **Change Password**
   - [x] **Server Action:** Build out the missing "change password" server action described in `DOC.md` Section 14.2.
   - [x] **UI/Client:** Added `ChangePasswordForm.tsx` via `src/app/profile/settings/change-password/page.tsx`.
-- [ ] **Extended User Preferences**
-  - **API/Server:** Expose GET/PUT routes for adjusting theme, timezone, etc., utilizing `src/server/types/settings.ts`.
+- [x] **Avatar Upload & Crop**
+  - [x] **UI/Client:** `src/app/profile/settings/profile-settings/page.tsx` with drag-and-drop, react-easy-crop, multipart progress.
+  - [x] **Server Logic:** Upload metadata persistence in `src/app/api/upload/save/route.ts`.
+  - [x] **Storage:** Local file adapter in `src/server/storage/storage.ts` with public URL serving.
+- [x] **User Preferences Persistence**
+  - [x] **API/Server:** GET/PUT routes for theme, timezone, notifications in `src/app/api/profile/settings/route.ts`.
+  - [x] **Storage:** JSON file-backed persistence (no DB migration needed).
+- [ ] **Extended User Preferences UI**
+  - [ ] **API/Server:** Settings already exposed, but advanced preference panel UI is pending.
 
 ---
 
 ## 6. Admin Panel & Moderation Tools
 
-_Severity: Medium | Completion: 45%_
+_Severity: Medium | Completion: 75%_
 
-**Context:** A comprehensive admin panel has been implemented with role-based access control. Core infrastructure is in place; full feature implementations are pending.
+**Context:** A comprehensive admin panel has been implemented with role-based access control. Core infrastructure including category management, role management, and emoji management are complete. Advanced moderation features remain.
 
 - [x] **Admin Dashboard Foundation**
   - [x] **Page:** Created `src/app/admin/page.tsx` with role/team checks via `getCurrentUser()`.
   - [x] **Authorization:** Role-based access control implemented; redirects unauthorized users.
 - [x] **Forum Category Management**
   - [x] **Page:** `src/app/admin/categories/page.tsx` implemented.
-  - [x] **API:** GET/POST handlers in `src/app/api/admin/categories/route.ts`.
+  - [x] **API:** GET/POST/PUT/DELETE handlers in `src/app/api/admin/categories/route.ts`.
   - [x] **API:** Subcategory management at `src/app/api/admin/categories/[categoryId]/subcategories/route.ts`.
-  - [ ] **UI/Logic:** Full edit/archive/delete workflows and forms.
-- [x] **Emoji & Role Management**
-  - [x] **Pages:** Created `src/app/admin/reactions/page.tsx` and `src/app/admin/roles/page.tsx`.
-  - [x] **API:** `src/app/api/admin/reactions/route.ts` and `src/app/api/admin/roles/route.ts` for managing reactions and roles.
-  - [ ] **UI/Logic:** Full form implementations for creating and editing reactions/roles.
+  - [x] **UI/Logic:** Full edit/archive/delete workflows and forms.
+- [x] **Role Management**
+  - [x] **Page:** Created `src/app/admin/roles/page.tsx` for managing user groups/roles.
+  - [x] **API:** `src/app/api/admin/roles/route.ts` for creating and listing roles.
+  - [x] **Authorization:** Team-level access control (highTeam required).
+- [x] **Emoji & Reaction Management**
+  - [x] **Page:** Created `src/app/admin/reactions/page.tsx` for managing forum reaction emojis.
+  - [x] **API:** `src/app/api/admin/reactions/route.ts` for managing reactions.
+  - [x] **Authorization:** Team-level access control.
+- [ ] **Advanced Moderation**
+  - [ ] **User Bans/Reports:** Pending implementation for user punishment and report management.
 
 ---
 
@@ -156,23 +174,25 @@ _Severity: Low | Completion: 0%_
 
 ## 10. File Uploads & CDN
 
-_Severity: High | Completion: 70%_
+_Severity: High | Completion: 85%_
 
-**Context:** The backend upload infrastructure is largely complete with local file storage. File processing and database integration with various models is in progress. S3 pre-signed URLs are available for direct uploads.
+**Context:** The backend upload infrastructure is complete with local file storage, metadata persistence, and progress tracking. S3 pre-signed URLs are available for future cloud migration. Database-backed file metadata is now hardened with strict type safety.
 
 - [x] **API Route for Pre-signed URLs**
-  - [x] **API:** `src/app/api/upload/[path]/route.ts` implemented.
-  - [x] **API:** `src/app/api/uploads/route.ts` for general file upload management.
-  - [x] **API:** `src/app/api/uploads/form/route.ts` for upload form configuration.
+  - [x] **API:** `src/app/api/upload/[path]/route.ts` implemented for file serving.
+  - [x] **API:** `src/app/api/uploads/route.ts` for JSON file upload.
+  - [x] **API:** `src/app/api/uploads/form/route.ts` for multipart form uploads (5MB limit, progress support).
 - [x] **File Upload Component**
   - [x] **UI/Client:** `UploadForm.tsx` component with configurable title and aspect ratio.
   - [x] **Client Logic:** Uses `FormProvider`, `useFormManager`, and `setFieldValue`.
+  - [x] **Enhancements:** Multipart progress tracking, client-side image cropping, aspect ratio enforcement.
 - [x] **Storage Adapter**
-  - [x] **Server Logic:** `src/server/storage/storage.ts` implements local file storage adapter.
-  - [x] **Server Logic:** `src/app/api/upload/save/route.ts` handles file persistence.
-- [ ] **Database Integration (Advanced)**
-  - [ ] **Server Logic:** Connect S3 keys to application models (User avatars, forum attachments, etc.).
-  - [ ] **Prisma Schema:** Add file metadata models if needed for tracking uploads.
+  - [x] **Server Logic:** `src/server/storage/storage.ts` implements local file storage adapter with public URLs.
+  - [x] **Server Logic:** `src/app/api/upload/save/route.ts` handles file persistence with metadata.
+  - [x] **Validation:** Upload metadata strictly typed and validated at runtime.
+- [ ] **S3/CDN Migration**
+  - [ ] **Server Logic:** Connect S3 keys to application models when ready to migrate from local storage.
+  - [ ] **Configuration:** Env-based storage adapter switching (local vs. S3).
 
 ---
 

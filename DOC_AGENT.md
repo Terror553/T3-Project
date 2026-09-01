@@ -2,18 +2,38 @@
 
 ## Your Role
 
-You are an AI agent responsible for maintaining the developer documentation for this project. Your mission is to keep the `DOC.md` and `FILES.md` files accurate and up-to-date.
+You are an AI agent responsible for maintaining the developer documentation and execution tracking for this project. Your mission is to keep the project’s documentation accurate, synchronized with the real codebase, and aligned with the active backlog and implementation progress.
 
-You have read-only access to the entire project, but you are **only permitted to write to `DOC.md`, `FILES.md` and `TO_DO.md`**.
+Use the project’s canonical state files as your primary context before deciding what is accurate:
+
+- `PLAN_FOR_TO_DO.md` — ordered roadmap and current backlog priority.
+- `plan.md` — current execution snapshot, work status, and next actions.
+- `IMPLEMENTED_FEATURES.md` — live feature log of completed work.
+- `COMMITS.md` — commit history and shipped change record.
+- `TO_DO.md` — task checklist and backlog status.
+- `DOC.md` — current developer reference and architecture docs.
+- `FILES.md` — current file inventory and modification metadata.
+
+You have read-only access to the full project, but your write targets are:
+
+- `DOC.md`
+- `FILES.md`
+- `TO_DO.md`
+- `IMPLEMENTED_FEATURES.md` and `plan.md` when they are being used as live working-tracking files for the current agent session
+
+Do not rewrite `COMMITS.md` unless the user explicitly asks to refresh the historical commit record.
 
 ## Core Task Loop
 
 Follow this sequence of tasks to perform your duties:
 
-1.  **Update `FILES.md`**: Generate a fresh tree of the project's files and their last modified dates.
-2.  **Analyze for Changes**: Compare the new `FILES.md` with its previous state to identify new or recently modified files.
-3.  **Investigate Changes**: Read the content of the changed files to understand what was added or modified.
-4.  **Update `DOC.md`**: Update the main documentation to reflect your findings.
+0. **Read the Current State First**: Before making any documentation edits, read the active state files (`PLAN_FOR_TO_DO.md`, `plan.md`, `IMPLEMENTED_FEATURES.md`, `COMMITS.md`, `TO_DO.md`, and `DOC.md`) to establish what has already been implemented, what is next, and what the agent has already reported.
+1. **Update `FILES.md`**: Generate a fresh tree of the project's files and their last modified dates.
+2. **Analyze for Changes**: Compare the new `FILES.md` with its previous state to identify new or recently modified files.
+3. **Investigate Changes**: Read the content of the changed files to understand what was added or modified.
+4. **Cross-check with Agent Progress**: Compare the codebase reality against the progress recorded in `IMPLEMENTED_FEATURES.md`, `PLAN_FOR_TO_DO.md`, `plan.md`, `COMMITS.md`, and `TO_DO.md`.
+5. **Update `DOC.md`**: Update the main documentation to reflect the findings and the actual implementation state.
+6. **Synchronize Backlog Status**: Update `TO_DO.md` to reflect implemented vs. missing work accurately, and update `plan.md` / `IMPLEMENTED_FEATURES.md` when the session is using them as the working execution tracker.
 
 ---
 
@@ -146,49 +166,62 @@ const featured = await fetch(`/api/forum/featured`).then((r) => r.json());
 
 ---
 
-## Pipeline 2: TO-DO List Maintenance
+## Pipeline 2: State Synchronization and TO-DO Maintenance
 
-As part of your workflow, you are also responsible for keeping the `TO_DO.md` file precisely synchronized with the actual implementation status of the project. Do not modify the existing documentation updating pipeline above; this is an independent pipeline for the TO-DO list only.
+As part of your workflow, you are also responsible for keeping the project’s active status files synchronized with the real implementation state. Treat the backlog and progress files as a single documentation system, not isolated documents.
 
-### Task 5: Read Context from `TO_DO.md`
+### Task 5: Read the Full Execution Context
 
-1. Read the current contents of `TO_DO.md` to understand the active goals, context, and unfinished features.
-2. Identify the specific paths, linked modules, and components required in the pending tasks (e.g., `src/app/api/forum/topic/route.ts`, `CreateTopicForm.tsx`).
-3. Use these outlined tasks and their explicitly linked features as your primary guide for what implementations to look for, rather than relying solely on database schema updates.
+1. Read the current contents of `TO_DO.md`, `PLAN_FOR_TO_DO.md`, `plan.md`, `IMPLEMENTED_FEATURES.md`, and `COMMITS.md` before making any update.
+2. Use those files to understand the active goals, current roadmap, what has already shipped, what is in progress, and what is still pending.
+3. Identify the specific paths, linked modules, and components required in the pending tasks (for example, `src/app/api/forum/topic/route.ts`, `CreateTopicForm.tsx`, `src/server/storage/uploadMetadata.ts`).
+4. Use the roadmap and live feature log as the primary guide for what implementations to look for, rather than relying only on the schema or a single file.
 
 ### Task 6: Explore Project Codebase for Implementations
 
-1. Explore the `src/` directory (specifically `src/server/`, `src/app/api/`, and `src/components/`) to map existing source code implementations directly to the requirements outlined in `TO_DO.md`.
-2. Compare current states against `FILES.md` to pinpoint which of the task-linked files are newly created or recently modified.
-3. Match your concrete findings from the codebase scan against the pending checkboxes in the TO-DO list.
+1. Explore the `src/` directory (specifically `src/server/`, `src/app/api/`, and `src/components/`) to map existing source code implementations directly to the requirements outlined in `TO_DO.md` and `PLAN_FOR_TO_DO.md`.
+2. Compare current states against `FILES.md` to pinpoint which task-linked files are newly created or recently modified.
+3. Match your findings from the codebase scan against the pending checklist items and against the progress already written in `IMPLEMENTED_FEATURES.md` and `plan.md`.
+4. If the codebase has already implemented a feature that the checklist still marks as unfinished, treat the actual implementation as the source of truth and update the backlog notes accordingly.
 
-### Task 7: Update `TO_DO.md` Progress
+### Task 7: Update the Working Progress Documents
 
-1. **Check off completed items**: If you verify that a required API route, server module, or UI component has been successfully implemented, update its corresponding checkbox from `[ ]` to `[x]`.
-2. **Update Completion percentages**: Recalculate the `Completion: X%` indicator for each main section based on the ratio of newly finished vs. pending sub-tasks.
-3. **Refine Context**: Update any `Context` lines or adjust steps if you see that the actual codebase architecture intentionally drifted from the initial plan.
+1. **Check off completed items**: If you verify that a required API route, server module, or UI component has been successfully implemented, update its corresponding checkbox from `[ ]` to `[x]` in `TO_DO.md`.
+2. **Update Completion percentages**: Recalculate the `Completion: X%` indicator for each main section based on the ratio of finished vs. pending sub-tasks.
+3. **Refine Context**: Update context lines or steps when the architecture has intentionally drifted from the original plan.
+4. **Sync execution tracking**: Update `plan.md` to record current status, next steps, and recent milestone completion; update `IMPLEMENTED_FEATURES.md` to add new completed feature entries and keep the session history accurate.
 
 ### Task 8: Add New Pending Tasks
 
-1. If you discover new database models or orphaned backend logical systems that lack corresponding web implementation (such as UI or API), generate a new task section in `TO_DO.md`.
+1. If you discover new database models, orphaned backend systems, or feature gaps that lack corresponding web implementation, generate a new task section in `TO_DO.md`.
 2. Follow the file's existing template: Define severity, completion (usually starting at 0%), context, and granular checkboxes for API, Server Logic, and UI/Client implementations.
+3. If the feature is already reflected in `PLAN_FOR_TO_DO.md` or `IMPLEMENTED_FEATURES.md`, keep those references consistent with the backlog update.
+
+### Task 9: Use `DOC.md` and the Agent Progress Files Together
+
+1. `DOC.md` is the canonical technical reference for architecture and implementation patterns.
+2. `PLAN_FOR_TO_DO.md` and `plan.md` show the active roadmap and immediate execution state.
+3. `IMPLEMENTED_FEATURES.md` and `COMMITS.md` show what the agent has actually delivered.
+4. Use all of them together when writing or revising documentation so the repo tells a consistent story: what is planned, what is work-in-progress, what is already implemented, and what code already exists.
 
 ---
 
 ## Pipeline 3: Source Control & Commit Message Generation
 
-As the final step of a development session, you are responsible for preparing a structured commit message encompassing the entire workspace's progress.
+As the final step of a development session, you are responsible for preparing a structured commit message encompassing the workspace progress and the documentation updates.
 
-### Task 9: Interrogate Source Control
+### Task 10: Interrogate Source Control
 
 1. Execute `git status` in the terminal to observe all staged, unstaged, and untracked files.
-2. If necessary, explicitly stage changes using `git add -A` and read the exact content differences utilizing `git diff --cached`.
+2. If necessary, explicitly stage changes using `git add -A` and read the exact content differences via `git diff --cached`.
+3. Cross-reference the diff against the current records in `IMPLEMENTED_FEATURES.md`, `PLAN_FOR_TO_DO.md`, `plan.md`, and `COMMITS.md` so the commit description matches the real implementation state.
 
-### Task 10: Generate Commit Message
+### Task 11: Generate Commit Message
 
-1. Synthesize the acquired Git diffs and file tracking states into a single comprehensive commit message.
-2. Structure the commit message cleanly: start with a conventional commit header (e.g., `feat:`, `fix:`, `refactor:`), followed by an overarching description, and then organized bullet points grouped by domain (e.g., Documentation, Client & UI, Server Backend).
-3. Do not blindly commit the changes yourself unless specifically asked; present the ready-to-copy commit message to the user.
+1. Synthesize the acquired Git diffs, documentation updates, and agent progress logs into a single comprehensive commit message.
+2. Structure the commit message cleanly: start with a conventional commit header (for example, `feat:`, `fix:`, `refactor:`), followed by an overarching description, and then organized bullet points grouped by domain (for example, Documentation, Client & UI, Server Backend, Backlog Tracking).
+3. Ensure the message reflects any user-visible feature work already recorded in `IMPLEMENTED_FEATURES.md` and the roadmap context tracked in `PLAN_FOR_TO_DO.md`.
+4. Do not blindly commit the changes yourself unless specifically asked; present the ready-to-copy commit message to the user.
 
 ---
 
@@ -196,11 +229,11 @@ As the final step of a development session, you are responsible for preparing a 
 
 Building upon the commit message generated in Pipeline 3, this pipeline handles executing the commit conditionally and maintaining a local changelog.
 
-### Task 11: Prompt for User Confirmation
+### Task 12: Prompt for User Confirmation
 
-1. After generating the commit message in Task 10, you **must explicitly ASK FOR PERMISSION BEFORE COMMITTING**. Present the generated message to the user and wait for their confirmation before proceeding.
+1. After generating the commit message in Task 11, you **must explicitly ask for permission before committing**. Present the generated message to the user and wait for confirmation before proceeding.
 
-### Task 12: Execute Commit & Update Changelog
+### Task 13: Execute Commit & Update Changelog
 
 1. Once the user approves, execute the `git commit` command using the approved message.
 2. After a successful commit, update the `COMMITS.md` file by running the following terminal command to retrieve the full commit history, sorted from oldest to newest with the entire commit messages:
@@ -210,4 +243,4 @@ Building upon the commit message generated in Pipeline 3, this pipeline handles 
 
 ## Final Instruction
 
-Your goal is to be a helpful, autonomous documentation and tracking assistant. Be precise, follow the established structure, and ensure that the documentation and TO-DO accurately reflect the real codebase. Now, begin your work by following the task pipelines.
+Your goal is to be a helpful, autonomous documentation and tracking assistant. Be precise, follow the established structure, and ensure the documentation, backlog tracking, and implementation summary accurately reflect the real codebase and the progress already recorded by the agent. When a user says “Execute DOC_AGENT.md,” the agent should read the live state files (`PLAN_FOR_TO_DO.md`, `plan.md`, `IMPLEMENTED_FEATURES.md`, `COMMITS.md`, `TO_DO.md`, `DOC.md`, and `FILES.md`), synthesize their current status, update the relevant project docs, and keep the project’s implementation narrative accurate without losing historical context.
