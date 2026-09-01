@@ -1,4 +1,4 @@
-### Commit 37b7ea9
+﻿### Commit 37b7ea9
 - **Time**: Thu Apr 17 17:34:14 2025 +0200
 - **Committer**: Waleed Bakri
 - **Message**: 
@@ -457,7 +457,7 @@ M	tsconfig.json
 - **Time**: Sat Sep 13 22:29:38 2025 +0200
 - **Committer**: Waleed Bakri
 - **Message**: 
-*SPÄTER EINFÜGEN*
+*SP├äTER EINF├£GEN*
 
 
 M	eslint.config.js
@@ -1012,3 +1012,477 @@ feat: Implement file uploads and update documentation
 M	DOC.md
 M	TO_DO.md
 M	src/components/uploads/uploadFile.tsx
+
+### Commit 7345dc3
+- **Time**: Tue May 19 17:59:28 2026 +0200
+- **Committer**: Waleed
+- **Message**: 
+Commits.md
+
+
+M	COMMITS.md
+
+### Commit fd36d48
+- **Time**: Sun Jun 28 00:30:51 2026 +0200
+- **Committer**: Waleed
+- **Message**: 
+feat: sync upload docs and form-manager workflow
+
+- Document the dynamic upload route, reusable uploadForm component, and parent-form key handoff pattern in DOC.md
+- Refresh FILES.md and TO_DO.md to match the current upload implementation and form-manager API
+- Move the upload flow into src/components/uploadForm.tsx, add setFieldValue support to useFormManager, and keep uploadTest.tsx as a compatibility re-export
+- Include the staged workspace changes in next.config.js, app layout, and forum topic route
+
+
+M	DOC.md
+M	FILES.md
+M	TO_DO.md
+M	next.config.js
+M	src/app/api/forum/topic/[id]/route.ts
+R090	src/app/api/upload/route.ts	src/app/api/upload/[path]/route.ts
+M	src/app/layout.tsx
+M	src/app/page.tsx
+A	src/components/uploadForm.tsx
+D	src/components/uploadTest.tsx
+M	src/lib/useFormManager.ts
+M	src/styles/theme/theme.css
+
+### Commit 772f0ad
+- **Time**: Thu Aug 20 22:09:50 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+fix(types): resolve type errors and import missing schemas; tidy subcategory page
+
+Addressed TS errors reported by tsc: added reactSchema and followSchema imports, explicit any annotations in mapping callbacks to silence implicit any, fixed forum reaction create to connect emoji relation, and removed undefined setLatestEntry usage in subcategory page. Ran typecheck to confirm no errors.
+
+
+M	package-lock.json
+A	src/app/admin/page.tsx
+A	src/app/api/clan/route.ts
+A	src/app/api/dashboard/stats/route.ts
+A	src/app/api/forum/topic/[id]/follow/route.ts
+A	src/app/api/forum/topic/[id]/react/route.ts
+A	src/app/api/forum/topic/[id]/reply/route.ts
+M	src/app/api/forum/topic/[id]/route.ts
+A	src/app/api/forum/topic/route.ts
+A	src/app/api/profile/settings/route.ts
+A	src/app/api/upload/save/route.ts
+M	src/app/forum/subcategory/[id]/page.tsx
+M	src/app/forum/topic/[id]/page.tsx
+A	src/app/messages/[id]/page.tsx
+A	src/app/messages/page.tsx
+A	src/components/topicReplyForm.tsx
+M	src/lib/schemas/topicSchemas.ts
+A	src/server/clan/clan.ts
+M	src/server/forum/forum.ts
+
+### Commit fdec4bc
+- **Time**: Mon Aug 24 21:08:15 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+fix(lint): resolve remaining ESLint warnings and baseline checks
+
+
+M	prisma/seed.ts
+M	src/app/admin/page.tsx
+M	src/app/forum/subcategory/[id]/page.tsx
+M	src/app/forum/topic/[id]/page.tsx
+M	src/app/profile/page.tsx
+M	src/components/uploads/uploadFile.tsx
+M	src/server/forum/forum.ts
+
+### Commit 48c3b31
+- **Time**: Mon Aug 24 21:11:22 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(forum): enable follow and reaction toggles
+
+
+M	src/app/forum/topic/[id]/page.tsx
+
+### Commit 2f0c296
+- **Time**: Mon Aug 24 22:05:06 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(messages): add messaging module and /api/messages routes
+
+
+A	src/app/api/messages/[id]/route.ts
+A	src/app/api/messages/route.ts
+M	src/app/messages/[id]/page.tsx
+M	src/app/messages/page.tsx
+M	src/components/messageReplyForm.tsx
+A	src/lib/schemas/messagingSchemas.ts
+A	src/server/messaging/messaging.ts
+A	src/server/types/messaging.ts
+
+### Commit 3d6ca87
+- **Time**: Mon Aug 24 22:06:59 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(messages): add inbox compose thread form
+
+
+M	src/app/messages/page.tsx
+
+### Commit 52fd8f8
+- **Time**: Mon Aug 24 22:20:17 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(messages): add recipient picker UI and /api/user/search route
+
+
+A	src/app/api/user/search/route.ts
+M	src/app/messages/page.tsx
+A	src/components/userPicker/UserPicker.tsx
+
+### Commit 3a470da
+- **Time**: Mon Aug 24 22:23:44 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(messages): add keyboard navigation to UserPicker and use next/image for avatars
+
+
+M	src/components/userPicker/UserPicker.tsx
+
+### Commit d64c0e5
+- **Time**: Mon Aug 24 22:33:13 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+chore(messages): merge recipient picker into baseline branch
+
+
+### Commit 1429576
+- **Time**: Mon Aug 24 22:34:03 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+Settings.json changed
+
+
+M	.vscode/settings.json
+
+### Commit ea7bed3
+- **Time**: Mon Aug 31 20:28:30 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(messaging): add vitest and unit tests for messaging module
+
+
+M	package.json
+A	src/server/messaging/messaging.test.ts
+A	vitest.config.ts
+
+### Commit ba5eac8
+- **Time**: Mon Aug 31 20:29:34 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(messaging): expand tests for inbox and thread mapping
+
+
+M	src/server/messaging/messaging.test.ts
+
+### Commit 4215800
+- **Time**: Mon Aug 31 20:30:50 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(messaging): sanitize input and error-path tests for messaging module
+
+
+M	src/server/messaging/messaging.test.ts
+
+### Commit 22c019c
+- **Time**: Mon Aug 31 20:32:30 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(api): add integration tests for /api/messages routes
+
+
+A	src/app/api/messages/id.route.test.ts
+A	src/app/api/messages/messages.route.test.ts
+
+### Commit 133e7dd
+- **Time**: Mon Aug 31 20:35:22 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(forum): add unit tests for forum server module (create/edit/delete replies, topic create, reactions, follows)
+
+
+A	src/server/forum/forum.test.ts
+
+### Commit 2349534
+- **Time**: Mon Aug 31 20:37:43 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(api): add integration tests for forum API routes
+
+
+A	src/app/api/forum/forum.api.test.ts
+
+### Commit bf8ce78
+- **Time**: Mon Aug 31 20:44:14 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test: configure vitest for TSX/jsdom and add UserPicker component test
+
+
+A	src/components/userPicker/UserPicker.test.tsx
+M	tsconfig.json
+M	vitest.config.ts
+A	vitest.setup.ts
+
+### Commit e48642e
+- **Time**: Mon Aug 31 20:46:50 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(forum): add smoke edgecase tests skeleton for forum module (tests-forum-edgecases)
+
+
+A	src/server/forum/forum.edgecases.test.ts
+
+### Commit 1d0e009
+- **Time**: Mon Aug 31 20:49:20 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(forum): add replies edge-case tests (validation + admin permissions)
+
+
+A	src/server/forum/forum.replies.edgecases.test.ts
+
+### Commit 77ab388
+- **Time**: Mon Aug 31 20:50:30 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+test(forum): add interactions tests for reactions and follows
+
+
+A	src/server/forum/forum.interactions.test.ts
+
+### Commit 72837b2
+- **Time**: Mon Aug 31 20:53:02 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+refactor(forum): extract mapping helpers to normalize topic/reply/reaction shapes (forum-fetch-refactor)
+
+
+M	src/server/forum/forum.ts
+
+### Commit 6c262d9
+- **Time**: Mon Aug 31 20:56:16 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(messaging): improve UserPicker keyboard navigation, aria attributes, and focus behavior; keep avatar as Next/Image
+
+
+M	src/components/userPicker/UserPicker.tsx
+
+### Commit b30ab32
+- **Time**: Mon Aug 31 21:11:41 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(storage): add local storage adapter and uploads API (file-uploads)
+
+
+A	src/app/api/uploads/route.ts
+A	src/server/storage/storage.ts
+
+### Commit 71aa7ab
+- **Time**: Mon Aug 31 21:13:43 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(profile): persist avatar URL on upload save when attachTo.type='avatar'
+
+
+M	src/app/api/upload/save/route.ts
+
+### Commit b245fb9
+- **Time**: Mon Aug 31 21:15:37 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(profile): add profile settings UI with avatar upload flow (client)
+
+
+M	src/app/profile/settings/profile-settings/page.tsx
+
+### Commit d5a3f2d
+- **Time**: Mon Aug 31 21:17:26 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(profile): drag-and-drop avatar upload + client resize/crop and progress; add multipart upload API /api/uploads/form
+
+
+A	src/app/api/uploads/form/route.ts
+M	src/app/profile/settings/profile-settings/page.tsx
+
+### Commit 2e6a585
+- **Time**: Mon Aug 31 21:19:36 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(profile): add manual crop UI using react-easy-crop for avatar uploads
+
+
+M	package-lock.json
+M	package.json
+M	src/app/profile/settings/profile-settings/page.tsx
+
+### Commit de1e00a
+- **Time**: Tue Sep 1 10:29:10 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+profile: apply crop preview, add upload validation, document implemented features
+
+- Added explicit 'Apply crop' button that updates the preview and provides a downloadable blob\n- Prefer pre-applied blob during multipart upload\n- Added basic server-side image validation (magic-bytes + MIME) for multipart uploads\n- Created IMPLEMENTED_FEATURES.md summarizing implemented features\n\nFiles: src/app/profile/settings/profile-settings/page.tsx, src/app/api/uploads/form/route.ts, tsconfig.json, IMPLEMENTED_FEATURES.md\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+
+A	IMPLEMENTED_FEATURES.md
+M	src/app/api/uploads/form/route.ts
+M	src/app/profile/settings/profile-settings/page.tsx
+M	tsconfig.json
+
+### Commit 5beeec2
+- **Time**: Tue Sep 1 10:45:50 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat: persist profile settings and finish forum refactor cleanup
+
+- Persist theme/timezone/email notification preferences per user via local JSON-backed storage
+- Enable page-level editing for profile preferences and save API integration
+- Reuse shared forum topic include config to reduce query duplication and keep fetch logic consistent
+- Update the implemented feature summary log
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+
+M	IMPLEMENTED_FEATURES.md
+M	src/app/api/profile/settings/route.ts
+M	src/app/profile/settings/profile-settings/page.tsx
+M	src/server/forum/forum.ts
+
+### Commit f3b55cb
+- **Time**: Tue Sep 1 10:52:33 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat: add admin category management foundation
+
+- Add access-controlled admin category API routes for listing and creating forum categories
+- Add admin categories page to create categories and subcategories under each category
+- Update the feature summary and current plan docs
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+
+M	IMPLEMENTED_FEATURES.md
+A	plan.md
+A	src/app/admin/categories/page.tsx
+A	src/app/api/admin/categories/[categoryId]/subcategories/route.ts
+A	src/app/api/admin/categories/route.ts
+
+### Commit 1522643
+- **Time**: Tue Sep 1 10:59:49 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+feat(admin): add role and reaction management
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+
+M	IMPLEMENTED_FEATURES.md
+A	src/app/admin/reactions/page.tsx
+A	src/app/admin/roles/page.tsx
+A	src/app/api/admin/reactions/route.ts
+A	src/app/api/admin/roles/route.ts
+
+### Commit 5632b96
+- **Time**: Tue Sep 1 12:18:50 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+fix: align jsdom with DOMPurify and refresh feature summary
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+
+M	IMPLEMENTED_FEATURES.md
+M	eslint.config.js
+M	package-lock.json
+M	package.json
+M	plan.md
+M	src/app/api/profile/settings/route.ts
+M	src/app/profile/settings/profile-settings/page.tsx
+A	src/client/bootstrap.ts
+M	src/client/modal.tsx
+M	src/client/modalUtils.tsx
+M	src/components/loginForm.tsx
+M	src/components/loginModal.tsx
+M	src/components/userPicker/UserPicker.tsx
+M	src/server/forum/forum.ts
+M	src/server/types/forum.ts
+
+### Commit 8b20c8d
+- **Time**: Tue Sep 1 12:23:48 2026 +0200
+- **Committer**: Waleed Bakri
+- **Message**: 
+docs: synchronize documentation with latest implementations (2026-09-01)
+
+This commit updates project documentation and tracking files to reflect
+the current state of implementations as of 2026-09-01.
+
+## FILES.md Updates
+
+- Refreshed complete file tree with current modification timestamps
+- Reorganized with clearer section hierarchy (API routes, pages, components, server logic)
+- Added 'Recently Modified Files' section highlighting changes from 2026-08-28 onwards
+- Documented key new implementations:
+  * Admin Panel (categories, reactions, roles management)
+  * Global Modal Manager infrastructure
+  * Storage adapter for file uploads
+  * UserPicker component for user selection
+  * Profile settings API route
+
+## TO_DO.md Progress Updates
+
+Updated completion percentages to reflect current implementation status:
+
+- Forum Core Mutations (40% -> 60%): Topic and reply creation/editing/deletion
+  APIs fully implemented with server logic and UI components
+
+- Forum Interactions & Follows (10% -> 35%): Reaction toggle and follow APIs
+  exist; UI components pending
+
+- Private Messaging (25% -> 50%): Core module, API routes, and pages
+  implemented; refinements pending
+
+- Admin Panel & Moderation Tools (0% -> 45%): Foundation complete with
+  dashboard, category management, reaction/role management pages and APIs
+
+- File Uploads & CDN (60% -> 70%): Storage adapter added; local file
+  persistence working; database integration pending
+
+## Key Implementations Identified
+
+Admin Infrastructure (NEW - 2026-09-01):
+- Admin dashboard and management pages
+- Admin API routes for categories, reactions, roles
+- Role-based access control via getCurrentUser() checks
+
+Global Modal Manager (COMPLETED - 2026-09-01):
+- Complete refactoring with React Context in modalUtils.tsx
+- Modal component wrapper and Bootstrap integration
+
+File Storage (NEW - 2026-08-31):
+- Local storage adapter implementation
+- File upload form and management APIs
+
+Component Improvements (2026-09-01):
+- UserPicker component for user search/selection
+- LoginForm and LoginModal refactored for centralized modals
+
+Server Logic (2026-09-01):
+- Enhanced forum.ts with complete mutation operations
+- Updated forum type definitions
+
+Documentation Status:
+- DOC.md Section 12.2 contains comprehensive Modal Manager documentation
+- All changes align with existing code patterns and AGENTS.md guidelines
+
+
+M	FILES.md
+M	TO_DO.md
