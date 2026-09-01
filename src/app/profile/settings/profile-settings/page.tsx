@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import Cropper from "react-easy-crop";
+import Cropper, { type Area } from "react-easy-crop";
 
 type Settings = {
   theme?: string;
@@ -17,13 +17,17 @@ function createImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new globalThis.Image();
     img.onload = () => resolve(img);
-    img.onerror = (err: any) => reject(err);
+    img.onerror = () => reject(new Error("Failed to load image"));
     img.src = src;
   });
 }
 
 // Helper: crop image from dataUrl using croppedAreaPixels and return blob resized to sizePx
-async function getCroppedImg(dataUrl: string, crop: { width: number; height: number; x: number; y: number }, sizePx = 512): Promise<Blob> {
+async function getCroppedImg(
+  dataUrl: string,
+  crop: { width: number; height: number; x: number; y: number },
+  sizePx = 512,
+): Promise<Blob> {
   const image = await createImage(dataUrl);
   const canvas = document.createElement("canvas");
   canvas.width = sizePx;
@@ -64,7 +68,7 @@ export default function Settings() {
   const [showCropper, setShowCropper] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   async function savePreferences() {
     if (!settings) return;
@@ -123,7 +127,7 @@ export default function Settings() {
     reader.readAsDataURL(file);
   }, [file]);
 
-  const onCropComplete = useCallback((_: any, croppedPixels: any) => {
+  const onCropComplete = useCallback((_area: Area, croppedPixels: Area) => {
     setCroppedAreaPixels(croppedPixels);
   }, []);
 
@@ -198,7 +202,11 @@ export default function Settings() {
 
       const urlForm = "/api/uploads/form";
 
-      const uploadResult = await new Promise<any>((resolve, reject) => {
+      type UploadResult = {
+        url?: string;
+      };
+
+      const uploadResult = await new Promise<UploadResult>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", urlForm);
         xhr.upload.onprogress = (ev) => {
@@ -210,9 +218,9 @@ export default function Settings() {
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
             try {
-              const j = JSON.parse(xhr.responseText);
-              resolve(j);
-            } catch (err) {
+              const json = JSON.parse(xhr.responseText) as UploadResult;
+              resolve(json);
+            } catch {
               reject(new Error("Invalid JSON response from upload"));
             }
           } else {
@@ -256,9 +264,10 @@ export default function Settings() {
         URL.revokeObjectURL(downloadUrl);
         setDownloadUrl(null);
       }
-    } catch (err: any) {
-      console.error("Avatar upload error", err);
-      setMessage(String(err?.message ?? err));
+    } catch (error: unknown) {
+      console.error("Avatar upload error", error);
+      const message = error instanceof Error ? error.message : "Unknown avatar upload error";
+      setMessage(message);
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useNotification } from "~/client/notification";
+import type { BootstrapWindow } from "~/client/bootstrap";
 import { signIn } from "~/server/auth/actions/signIn";
 import type { signInSchema } from "~/server/auth/authSchemas";
 
@@ -43,13 +44,11 @@ export const LoginModal = () => {
     }
 
     const modalElement = document.getElementById("modal-login");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (modalElement && (window as any).bootstrap?.Modal) {
+    const bootstrapWindow = window as BootstrapWindow;
+    if (modalElement && bootstrapWindow.bootstrap?.Modal) {
       const modalInstance =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).bootstrap.Modal.getInstance(modalElement) ??
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        new (window as any).bootstrap.Modal(modalElement);
+        bootstrapWindow.bootstrap.Modal.getInstance(modalElement) ??
+        new bootstrapWindow.bootstrap.Modal(modalElement);
       modalInstance.hide();
       document.body.classList.remove("modal-open");
       document.body.style.overflow = "";

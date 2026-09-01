@@ -51,7 +51,7 @@ export interface ForumUser {
     gradient: number;
     start: string | null;
     end: string | null;
-  };
+  } | null;
   password?: string; // Should only be available in specific server contexts
   salt?: string; // Should only be available in specific server contexts
 }

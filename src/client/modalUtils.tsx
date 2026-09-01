@@ -8,6 +8,10 @@ import React, {
   useCallback,
   useId,
 } from "react";
+import type {
+  BootstrapModalInstance,
+  BootstrapWindow,
+} from "~/client/bootstrap";
 
 export interface ModalOptions {
   title?: string;
@@ -42,8 +46,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [modalConfig, setModalConfig] = useState<ModalOptions | null>(null);
 
   const modalRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const modalInstanceRef = useRef<any>(null);
+  const modalInstanceRef = useRef<BootstrapModalInstance | null>(null);
 
   const onShowRef = useRef<(() => void) | undefined>(undefined);
   const onHideRef = useRef<(() => void) | undefined>(undefined);
@@ -55,21 +58,14 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   // Initialize Bootstrap Modal instance and events
   useEffect(() => {
     const modalElement = modalRef.current;
+    const bootstrapWindow = window as BootstrapWindow;
+    const ModalConstructor = bootstrapWindow.bootstrap?.Modal;
 
-    if (
-      modalElement &&
-      typeof window !== "undefined" &&
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).bootstrap?.Modal
-    ) {
+    if (modalElement && typeof window !== "undefined" && ModalConstructor) {
       if (!modalInstanceRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        modalInstanceRef.current = new (window as any).bootstrap.Modal(
-          modalElement,
-          {
-            keyboard: true,
-          },
-        );
+        modalInstanceRef.current = new ModalConstructor(modalElement, {
+          keyboard: true,
+        });
       }
 
       const handleShown = () => {
@@ -113,18 +109,12 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     setTimeout(() => {
       // Fallback initialization if useEffect missed it (e.g. late Bootstrap load)
       const modalElement = modalRef.current;
-      if (
-        !modalInstanceRef.current &&
-        modalElement &&
-        typeof window !== "undefined" &&
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).bootstrap?.Modal
-      ) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        modalInstanceRef.current = new (window as any).bootstrap.Modal(
-          modalElement,
-          { keyboard: true },
-        );
+      const bootstrapWindow = window as BootstrapWindow;
+      const ModalConstructor = bootstrapWindow.bootstrap?.Modal;
+      if (!modalInstanceRef.current && modalElement && typeof window !== "undefined" && ModalConstructor) {
+        modalInstanceRef.current = new ModalConstructor(modalElement, {
+          keyboard: true,
+        });
       }
 
       if (

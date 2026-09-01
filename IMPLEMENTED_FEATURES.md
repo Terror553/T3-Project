@@ -89,7 +89,25 @@ Format: Feature title — short description. Key files/paths (absolute) referenc
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/reactions/page.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/roles/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.ts
- 
+
+16. Type-safety cleanup and strict typing pass
+- Removed remaining explicit any usage from production code, tightened the shared forum relation typing to match Prisma shapes, and resolved the bootstrap modal typing and profile-settings validation issues so the repository passes the strict TS and ESLint checks together.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/types/forum.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/forum/forum.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/client/bootstrap.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/client/modal.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/client/modalUtils.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/profile/settings/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/settings/profile-settings/page.tsx
+
+17. Forum sanitizer runtime dependency fix
+- Resolved the runtime forum API crash caused by a jsdom/isomorphic-dompurify version mismatch. Pinned jsdom to the compatible version required by the sanitizer so Next.js can load the server-side DOMPurify bundle without the missing stylesheet error.
+- Validation: npm run check passed, and GET /api/forum returned HTTP 200 after the dependency fix.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/package.json
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/package-lock.json
+  
 ---------------
 How this file will be used going forward
 - After every implemented TO_DO item, this file will be updated with a new entry describing the feature, a brief summary of changes, and links to the main files changed.

@@ -30,36 +30,67 @@ import {
 import { getCurrentUser } from "../auth/utils/currentUser";
 import { createSlug } from "../utils/forumUtils";
 
-function mapRepliesForTopic(topic: any) {
-  const replies = (topic.replies || []).map((reply: any) => ({
+type TopicWithRelations = {
+  id: number;
+  title: string;
+  content: string;
+  status: number;
+  createdAt: Date;
+  updatedAt: Date;
+  locked: number;
+  pinned: number;
+  authorId: number | null;
+  subcategoryId: number | null;
+  slug: string | null;
+  hidden: number;
+  author?: Partial<ForumUser> | null;
+  replies?: Array<{
+    id: number;
+    createdAt: Date;
+    content: string;
+    updatedAt?: Date | null;
+    author?: Partial<ForumUser> | null;
+    topicIdId?: number | null;
+    [key: string]: unknown;
+  }>;
+  reactions?: Array<{
+    id: number;
+    authorId?: number | null;
+    topicId?: number | null;
+    emoji?: Partial<ForumReactionEmoji> | null;
+    author?: Partial<ForumUser> | null;
+    [key: string]: unknown;
+  }>;
+  follows?: Array<{ id: number; userId?: number | null; topicId?: number | null }>;
+};
+
+function mapRepliesForTopic(topic: TopicWithRelations) {
+  const replies = (topic.replies ?? []).map((reply) => ({
     ...reply,
     topicIdId: topic.id,
-    forum_user: reply.author as ForumUser,
+    forum_user: reply.author ?? null,
   })) as ForumTopicReply[];
   return replies;
 }
 
-function mapReactionsForTopic(topic: any) {
-  const reactions = (topic.reactions || []).map((reaction: any) => {
-    const rr = reaction as unknown as { emoji: unknown };
-    return {
-      ...rr,
-      forum_reaction_emojis: rr.emoji as ForumReactionEmoji,
-    } as unknown as ForumReaction;
-  }) as ForumReaction[];
+function mapReactionsForTopic(topic: TopicWithRelations) {
+  const reactions = (topic.reactions ?? []).map((reaction) => ({
+    ...reaction,
+    forum_reaction_emojis: reaction.emoji ?? null,
+  })) as ForumReaction[];
   return reactions;
 }
 
-function enrichTopic(topic: any): ForumTopic {
+function enrichTopic(topic: TopicWithRelations): ForumTopic {
   const replies = mapRepliesForTopic(topic);
   const reactions = mapReactionsForTopic(topic);
   return {
     ...topic,
     forum_topic_replies: replies,
     forum_reactions: reactions,
-    forum_user: topic.author as unknown as ForumUser,
+    forum_user: topic.author ?? null,
     count: replies.length,
-    latestReply: replies[replies.length - 1],
+    latestReply: replies[replies.length - 1] ?? null,
   } as ForumTopic;
 }
 
@@ -129,7 +160,7 @@ export async function getSubCategories(id: number | string) {
     where: { category: where },
     include: {
       topics: {
-        include: topicInclude as any,
+        include: topicInclude,
       },
     },
   });
@@ -141,16 +172,9 @@ export async function getSubCategories(id: number | string) {
   return Promise.all(
     subcategories.map(async (subcategory: unknown) => {
       const sc = subcategory as unknown as ForumSubcategory & {
-        topics: Array<
-          ForumTopic & {
-            replies: Array<ForumTopicReply & { author: ForumUser }>;
-            author: ForumUser;
-          }
-        >;
+        topics: TopicWithRelations[];
       };
-      const topics = await Promise.all(
-        sc.topics.map(async (topic: any) => enrichTopic(topic)),
-      );
+      const topics = await Promise.all(sc.topics.map(async (topic) => enrichTopic(topic)));
 
       const topicsCount = topics.length;
       const repliesCount = topics.reduce(
@@ -178,7 +202,7 @@ export async function getSubCategory(id: number | string) {
     where,
     include: {
       topics: {
-        include: topicInclude as any,
+        include: topicInclude,
       },
     },
   });
@@ -188,16 +212,11 @@ export async function getSubCategory(id: number | string) {
   }
 
   const subcategoryWithTopics = subcategory as unknown as ForumSubcategory & {
-    topics: Array<
-      ForumTopic & {
-        replies: Array<ForumTopicReply & { author: ForumUser }>;
-        author: ForumUser;
-      }
-    >;
+    topics: TopicWithRelations[];
   };
 
   const topics = await Promise.all(
-    subcategoryWithTopics.topics.map(async (topic: any) => enrichTopic(topic)),
+    subcategoryWithTopics.topics.map(async (topic) => enrichTopic(topic)),
   );
 
   return {
@@ -218,7 +237,7 @@ export async function getTopic(id: number | string) {
 
   const topic = await db.forumTopic.findFirst({
     where,
-    include: topicInclude as any,
+    include: topicInclude,
   });
 
   if (!topic) {
@@ -243,7 +262,7 @@ export async function getLatestTopic(id: number | string) {
     where: {
       subcategory: where,
     },
-    include: topicInclude as any,
+    include: topicInclude,
     orderBy: {
       createdAt: "desc",
     },

@@ -137,6 +137,7 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query.trim().length > 0 && setOpen(true)}
           onKeyDown={handleKeyDown}
+          role="combobox"
           aria-autocomplete="list"
           aria-controls={open && results.length > 0 ? listboxId : undefined}
           aria-expanded={open}

@@ -1,5 +1,9 @@
 "use client";
 import React, { useCallback, useRef, useState, useEffect, useId } from "react";
+import type {
+  BootstrapModalInstance,
+  BootstrapWindow,
+} from "~/client/bootstrap";
 
 export interface ModalOptions {
   title?: string;
@@ -45,8 +49,7 @@ export function useModal(initialOptions?: ModalOptions): UseModalResult {
   const onShowRef = useRef<(() => void) | undefined>(initialOptions?.onShow);
   const onHideRef = useRef<(() => void) | undefined>(initialOptions?.onHide);
   const modalRef = useRef<HTMLDivElement>(null); // Ref for the modal DOM element
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const modalInstanceRef = useRef<any>(null); // Ref for the Bootstrap Modal instance
+  const modalInstanceRef = useRef<BootstrapModalInstance | null>(null); // Ref for the Bootstrap Modal instance
 
   // Generate a unique ID for accessibility and targeting
   const modalId = useId();
@@ -54,19 +57,16 @@ export function useModal(initialOptions?: ModalOptions): UseModalResult {
 
   // Effect to initialize and manage the Bootstrap Modal instance and events
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (modalRef.current && (window as any).bootstrap?.Modal) {
+    const bootstrapWindow = window as BootstrapWindow;
+    const ModalConstructor = bootstrapWindow.bootstrap?.Modal;
+    if (modalRef.current && ModalConstructor) {
       // Initialize Bootstrap Modal instance if it doesn't exist
       if (!modalInstanceRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        modalInstanceRef.current = new (window as any).bootstrap.Modal(
-          modalRef.current,
-          {
-            // Pass options like keyboard, backdrop based on state/props
-            keyboard: !staticBackdrop, // Allow closing with Esc unless static
-            // backdrop: staticBackdrop ? 'static' : true // Handled by data-bs-backdrop
-          },
-        );
+        modalInstanceRef.current = new ModalConstructor(modalRef.current, {
+          // Pass options like keyboard, backdrop based on state/props
+          keyboard: !staticBackdrop, // Allow closing with Esc unless static
+          // backdrop: staticBackdrop ? 'static' : true // Handled by data-bs-backdrop
+        });
       }
 
       // --- Event Listeners for Synchronization ---
@@ -125,20 +125,13 @@ export function useModal(initialOptions?: ModalOptions): UseModalResult {
       if (options?.onHide) onHideRef.current = options.onHide;
 
       // Ensure instance exists (might be needed if effect hasn't run yet)
-      if (
-        modalRef.current &&
-        !modalInstanceRef.current &&
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).bootstrap?.Modal
-      ) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        modalInstanceRef.current = new (window as any).bootstrap.Modal(
-          modalRef.current,
-          {
-            keyboard: !(options?.staticBackdrop ?? staticBackdrop),
-            // backdrop: (options?.staticBackdrop ?? staticBackdrop) ? 'static' : true
-          },
-        );
+      const bootstrapWindow = window as BootstrapWindow;
+      const ModalConstructor = bootstrapWindow.bootstrap?.Modal;
+      if (modalRef.current && !modalInstanceRef.current && ModalConstructor) {
+        modalInstanceRef.current = new ModalConstructor(modalRef.current, {
+          keyboard: !(options?.staticBackdrop ?? staticBackdrop),
+          // backdrop: (options?.staticBackdrop ?? staticBackdrop) ? 'static' : true
+        });
       }
 
       // Use Bootstrap API to show

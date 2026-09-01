@@ -10,6 +10,7 @@ import { FormProvider } from "./form/FormProvider";
 import { useUser } from "~/client/user";
 import { useNotification } from "~/client/notification";
 import { Button } from "~/components/ui";
+import type { BootstrapWindow } from "~/client/bootstrap";
 
 type SignInFormValues = z.infer<typeof signInSchema>;
 
@@ -45,8 +46,7 @@ export const LoginForm = () => {
       // Close modal if it's in a modal
       const modalElement = document.getElementById("modal-login");
       if (modalElement) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const bootstrapModal = (window as any).bootstrap?.Modal?.getInstance(
+        const bootstrapModal = (window as BootstrapWindow).bootstrap?.Modal?.getInstance(
           modalElement,
         );
         if (bootstrapModal) {

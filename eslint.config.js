@@ -18,6 +18,10 @@ const main = [
       ".idea/**/*",
       "dist/**/*",
       "next-env.d.ts",
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/*.spec.ts",
+      "**/*.spec.tsx",
     ],
   },
 
