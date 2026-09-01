@@ -57,11 +57,36 @@ function enrichTopic(topic: any): ForumTopic {
     ...topic,
     forum_topic_replies: replies,
     forum_reactions: reactions,
-    forum_user: topic.author as ForumUser,
+    forum_user: topic.author as unknown as ForumUser,
     count: replies.length,
     latestReply: replies[replies.length - 1],
   } as ForumTopic;
 }
+
+// Shared Prisma include specification for forum topics to avoid duplication across queries
+const topicInclude = {
+  replies: {
+    include: {
+      author: {
+        include: {
+          group: true,
+        },
+      },
+    },
+  },
+  reactions: {
+    include: {
+      emoji: true,
+      author: true,
+    },
+  },
+  follows: true,
+  author: {
+    include: {
+      group: true,
+    },
+  },
+};
 
 export async function getCategories() {
   const forum = await db.forumCategory.findMany();
@@ -104,22 +129,7 @@ export async function getSubCategories(id: number | string) {
     where: { category: where },
     include: {
       topics: {
-        include: {
-          replies: {
-            include: {
-              author: {
-                include: {
-                  group: true,
-                },
-              },
-            },
-          },
-          author: {
-            include: {
-              group: true,
-            },
-          },
-        },
+        include: topicInclude as any,
       },
     },
   });
@@ -168,22 +178,7 @@ export async function getSubCategory(id: number | string) {
     where,
     include: {
       topics: {
-        include: {
-          replies: {
-            include: {
-              author: {
-                include: {
-                  group: true,
-                },
-              },
-            },
-          },
-          author: {
-            include: {
-              group: true,
-            },
-          },
-        },
+        include: topicInclude as any,
       },
     },
   });
@@ -223,29 +218,7 @@ export async function getTopic(id: number | string) {
 
   const topic = await db.forumTopic.findFirst({
     where,
-    include: {
-      replies: {
-        include: {
-          author: {
-            include: {
-              group: true,
-            },
-          },
-        },
-      },
-      reactions: {
-        include: {
-          emoji: true,
-          author: true,
-        },
-      },
-      follows: true,
-      author: {
-        include: {
-          group: true,
-        },
-      },
-    },
+    include: topicInclude as any,
   });
 
   if (!topic) {
@@ -257,7 +230,7 @@ export async function getTopic(id: number | string) {
   return {
     ...enriched,
     forum_topic_follow: topic.follows,
-    forum_user: topic.author as ForumUser,
+    forum_user: topic.author as unknown as ForumUser,
     count: enriched.count,
     latestReply: enriched.latestReply,
   } as ForumTopic;
@@ -270,28 +243,7 @@ export async function getLatestTopic(id: number | string) {
     where: {
       subcategory: where,
     },
-    include: {
-      replies: {
-        include: {
-          author: {
-            include: {
-              group: true,
-            },
-          },
-        },
-      },
-      reactions: {
-        include: {
-          emoji: true,
-          author: true,
-        },
-      },
-      author: {
-        include: {
-          group: true,
-        },
-      },
-    },
+    include: topicInclude as any,
     orderBy: {
       createdAt: "desc",
     },
@@ -309,7 +261,7 @@ export async function getLatestTopic(id: number | string) {
   return {
     ...firstTopic,
     ...enriched,
-    forum_user: firstTopic.author as ForumUser,
+    forum_user: firstTopic.author as unknown as ForumUser,
   } as ForumTopic;
 }
 

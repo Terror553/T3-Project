@@ -58,7 +58,18 @@ Format: Feature title — short description. Key files/paths (absolute) referenc
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/settings/profile-settings/page.tsx
 
-11. Tests and Vitest configuration (selective)
+11. Forum fetch refactor cleanup
+- Consolidated repeated Prisma include blocks into a shared topicInclude constant and reused it across category, subcategory, topic, and latest-topic queries. This reduces duplication and keeps the forum data-shaping logic consistent.
+- Key file:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/forum/forum.ts
+
+12. Profile preferences persistence
+- Added real per-user preference persistence for theme, timezone, and email notifications, backed by JSON files stored under the project data directory so the settings form can save values without a Prisma migration.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/profile/settings/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/settings/profile-settings/page.tsx
+
+13. Tests and Vitest configuration (selective)
 - Configured Vitest and added a set of server and component tests for forum and messaging features. (Note: test-runner typings required adjustments in some environments.)
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/vitest.config.ts

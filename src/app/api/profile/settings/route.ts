@@ -1,22 +1,55 @@
+import { promises as fs } from "fs";
+import path from "path";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "~/server/auth/utils/currentUser";
+
+const DEFAULT_SETTINGS = {
+  theme: "light",
+  timezone: "UTC",
+  emailNotifications: true,
+};
+
+const SETTINGS_DIR = path.join(process.cwd(), "data", "profile-settings");
+
+async function readUserSettings(userId: number) {
+  const filePath = path.join(SETTINGS_DIR, `${userId}.json`);
+
+  try {
+    const raw = await fs.readFile(filePath, "utf8");
+    const value = JSON.parse(raw) as Record<string, unknown>;
+    return {
+      ...DEFAULT_SETTINGS,
+      ...value,
+    };
+  } catch (error: any) {
+    if (error?.code !== "ENOENT") {
+      console.error(`Failed to read settings for user ${userId}:`, error);
+    }
+    return { ...DEFAULT_SETTINGS };
+  }
+}
+
+async function writeUserSettings(userId: number, value: Record<string, unknown>) {
+  await fs.mkdir(SETTINGS_DIR, { recursive: true });
+  const filePath = path.join(SETTINGS_DIR, `${userId}.json`);
+  await fs.writeFile(filePath, JSON.stringify(value, null, 2), "utf8");
+}
 
 export async function GET() {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
-    // Return a small settings object. Persisted storage for these prefs is not yet implemented.
-    const settings = {
-      theme: "light",
-      timezone: "UTC",
-      emailNotifications: true,
-      // include some user info to help the client
-      username: user.username,
-      avatarUrl: user.avatarUrl,
-    };
+    const settings = await readUserSettings(user.id);
 
-    return NextResponse.json(settings, { status: 200 });
+    return NextResponse.json(
+      {
+        ...settings,
+        username: user.username,
+        avatarUrl: user.avatarUrl,
+      },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error fetching profile settings:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
@@ -30,17 +63,29 @@ export async function PUT(request: Request) {
 
     const payload = (await request.json()) as Record<string, unknown>;
 
-    // For now, we accept and validate a small set of keys and return success.
-    // Persisting to the database requires a schema change and migration.
-    const acceptedKeys = ["theme", "timezone", "emailNotifications"];
-    const update: Record<string, unknown> = {};
-    for (const k of acceptedKeys) {
-      if (k in payload) update[k] = payload[k];
+    const acceptedKeys = ["theme", "timezone", "emailNotifications"] as const;
+    const nextSettings = await readUserSettings(user.id);
+
+    for (const key of acceptedKeys) {
+      if (!(key in payload)) continue;
+      const value = payload[key];
+
+      if (key === "theme" && typeof value !== "string") {
+        return NextResponse.json({ error: "Theme must be a string" }, { status: 400 });
+      }
+      if (key === "timezone" && typeof value !== "string") {
+        return NextResponse.json({ error: "Timezone must be a string" }, { status: 400 });
+      }
+      if (key === "emailNotifications" && typeof value !== "boolean") {
+        return NextResponse.json({ error: "Email notifications must be a boolean" }, { status: 400 });
+      }
+
+      nextSettings[key] = value as never;
     }
 
-    console.info(`Profile settings update for user ${user.id}:`, update);
+    await writeUserSettings(user.id, nextSettings);
 
-    return NextResponse.json({ success: true, updated: update }, { status: 200 });
+    return NextResponse.json({ success: true, updated: nextSettings }, { status: 200 });
   } catch (error) {
     console.error("Error updating profile settings:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

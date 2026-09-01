@@ -66,6 +66,31 @@ export default function Settings() {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
+  async function savePreferences() {
+    if (!settings) return;
+    try {
+      const res = await fetch("/api/profile/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          theme: settings.theme ?? "light",
+          timezone: settings.timezone ?? "UTC",
+          emailNotifications: settings.emailNotifications ?? true,
+        }),
+      });
+
+      if (!res.ok) {
+        const body = await res.text();
+        throw new Error(`Failed to save preferences: ${res.status} ${body}`);
+      }
+
+      setMessage("Preferences saved");
+    } catch (err) {
+      console.error("Failed to save preferences", err);
+      setMessage("Failed to save preferences");
+    }
+  }
+
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -306,15 +331,42 @@ export default function Settings() {
             <div className="col-md-8">
               <div>
                 <h5>Preferences</h5>
-                <p className="text-muted">Theme, timezone and notifications are configured here (not persisted in this iteration).</p>
+                <p className="text-muted">Theme, timezone and notification preferences are saved per-user.</p>
                 <div className="mb-3">
                   <label className="form-label">Theme</label>
-                  <input className="form-control" value={settings?.theme ?? "light"} readOnly />
+                  <select
+                    className="form-select"
+                    value={settings?.theme ?? "light"}
+                    onChange={(e) => setSettings((s) => ({ ...(s ?? {}), theme: e.target.value }))}
+                  >
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="system">System</option>
+                  </select>
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Timezone</label>
-                  <input className="form-control" value={settings?.timezone ?? "UTC"} readOnly />
+                  <input
+                    className="form-control"
+                    value={settings?.timezone ?? "UTC"}
+                    onChange={(e) => setSettings((s) => ({ ...(s ?? {}), timezone: e.target.value }))}
+                  />
                 </div>
+                <div className="form-check mb-3">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="emailNotifications"
+                    checked={settings?.emailNotifications ?? true}
+                    onChange={(e) => setSettings((s) => ({ ...(s ?? {}), emailNotifications: e.target.checked }))}
+                  />
+                  <label className="form-check-label" htmlFor="emailNotifications">
+                    Email notifications enabled
+                  </label>
+                </div>
+                <button className="btn btn-primary" onClick={savePreferences} disabled={!settings}>
+                  Save preferences
+                </button>
               </div>
             </div>
           </div>
