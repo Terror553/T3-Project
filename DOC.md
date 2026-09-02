@@ -194,6 +194,7 @@ Important behavior:
 - `ForumTopicReply`
 - `Group`
 - `WikiCategory`, `WikiSubCategory`
+- `UploadMetadata` — durable file records containing the stored filename, content type, size, public URL, storage path, owner, and optional attachment target.
 
 Many models are mapped to existing DB table names via `@@map(...)`, so keep map names intact unless doing a deliberate migration.
 
@@ -210,6 +211,11 @@ For deployment migration application:
 ```bash
 npm run db:migrate
 ```
+
+Upload metadata is introduced by `prisma/migrations/20260902215000_add_upload_metadata/migration.sql`.
+Apply this migration through the deployment workflow before enabling database-backed upload persistence.
+Do not use `prisma migrate reset` against an existing environment because it drops all data; this repository's
+development database may report drift when the migration history does not describe its pre-existing tables.
 
 For quick schema sync (use with care):
 
