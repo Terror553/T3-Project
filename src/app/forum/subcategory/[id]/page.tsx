@@ -11,6 +11,7 @@ import { replaceColor } from "~/utils/styleUtils";
 export default function Subcategory() {
   const [loading, setLoading] = useState(true);
   const [subCategory, setSubCategory] = useState<ForumSubcategory>();
+  const [error, setError] = useState<string | null>(null);
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const { id } = useParams<{ id: string }>();
 
@@ -25,6 +26,7 @@ export default function Subcategory() {
 
         showLoadingBar("loadingBarName");
         setLoading(true);
+        setError(null);
 
         const [subCategoryRes] = await Promise.all([
           fetch(`/api/forum/subcategory/${id}`),
@@ -46,9 +48,10 @@ export default function Subcategory() {
         hideLoadingBar("loadingBarName");
       } catch (err) {
         setSubCategory(undefined);
+        setError("Unable to load this forum section. Please try again.");
+        console.error("Error loading forum subcategory", err);
         setLoading(false);
         hideLoadingBar("loadingBarName");
-        throw new Error(err as string);
       }
     }
 
@@ -86,6 +89,8 @@ export default function Subcategory() {
       </div>
       {loading ? (
         <p>Loading...</p>
+      ) : error ? (
+        <div className="alert alert-warning">{error}</div>
       ) : (
         <>
           {subCategory !== undefined ? (
