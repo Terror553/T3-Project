@@ -195,51 +195,34 @@ export default function Settings() {
         // get cropped image blob from the preview data URL using selected area
         blob = await getCroppedImg(preview, croppedAreaPixels, 512);
       }
-      // Build FormData for multipart upload — use XHR to get progress
-      const fd = new FormData();
       const filename = (file?.name ?? `avatar-${Date.now()}`).replace(/[^a-zA-Z0-9._-]/g, "-");
-      fd.append("file", blob, filename);
-
-      const urlForm = "/api/uploads/form";
-
-      type UploadResult = {
-        url?: string;
-      };
-
-      const uploadResult = await new Promise<UploadResult>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", urlForm);
-        xhr.upload.onprogress = (ev) => {
-          if (ev.lengthComputable) {
-            const pct = Math.round((ev.loaded / ev.total) * 100);
-            setMessage(`Uploading... ${pct}%`);
-          }
-        };
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-              const json = JSON.parse(xhr.responseText) as UploadResult;
-              resolve(json);
-            } catch {
-              reject(new Error("Invalid JSON response from upload"));
-            }
-          } else {
-            reject(new Error(`Upload failed with status ${xhr.status}`));
-          }
-        };
-        xhr.onerror = () => reject(new Error("Upload failed (network error)"));
-        xhr.send(fd);
+      const signedResponse = await fetch("/api/upload/uploads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: filename, contentType: "image/jpeg" }),
       });
+      if (!signedResponse.ok) {
+        throw new Error(`Failed to prepare upload: ${signedResponse.status}`);
+      }
+      const signed = (await signedResponse.json()) as { url?: string; key?: string };
+      if (!signed.url || !signed.key) throw new Error("Upload service returned an invalid URL");
 
-      const url = uploadResult?.url;
-      if (!url) throw new Error("Upload did not return url");
+      setMessage("Uploading...");
+      const uploadResponse = await fetch(signed.url, {
+        method: "PUT",
+        headers: { "Content-Type": "image/jpeg" },
+        body: blob,
+      });
+      if (!uploadResponse.ok) throw new Error(`Upload failed: ${uploadResponse.status}`);
+
+      const url = signed.url.split("?")[0];
 
       // Step 2: save metadata and attach to avatar
       const saveRes = await fetch("/api/upload/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          key: filename,
+          key: signed.key,
           url,
           fileName: filename,
           contentType: "image/jpeg",
