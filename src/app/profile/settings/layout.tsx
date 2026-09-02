@@ -46,6 +46,12 @@ export default function ProfileSettings({
             fullLink: "/profile/settings/followed-topics",
             icon: "",
           },
+          {
+            id: 7,
+            name: "Minecraft Verification",
+            fullLink: "/profile/settings/verification",
+            icon: "",
+          },
         ],
       }}
     >

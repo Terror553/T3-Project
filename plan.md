@@ -9,7 +9,7 @@
 - Comprehensive test suite (8 test files) added with Vitest for forum, messaging, admin, and profile routes.
 - Forum reaction and follow APIs and topic UI are implemented.
 - Private messaging compose and thread UX are implemented with the shared modal manager.
-- Dashboard overview and clan viewer UI are now implemented.
+- Dashboard overview, clan viewer, and account verification UI are now implemented.
 
 ## Recently Completed Features (Session 3 Snapshot)
 1. **Avatar Upload with Client-Side Crop** - Full react-easy-crop integration, multipart progress, server-side persistence
@@ -27,12 +27,12 @@
 4. ✅ Admin moderation flows and policy checks (categories, roles, reactions complete; user bans pending).
 5. ✅ Global modal manager (complete and regression-protected).
 6. ✅ Dashboard analytics overview (additional analytics views remain).
-7. ⏳ Minecraft account verification (clan viewer implemented).
+7. ✅ Minecraft account verification UI and code generation (in-game plugin consumption remains).
 8. ⏳ Forum data-fetch refactor after the main forum flow is stable (optimization task).
 9. ✅ File uploads and CDN persistence (local storage complete, S3 migration pending).
 
 ## Next work item
-**Account verification and advanced moderation**: implement the remaining user-facing verification flow and moderation report/ban screens, then complete the forum data-fetch refactor and upload database integration.
+**Advanced moderation**: implement report/ban screens, then complete the forum data-fetch refactor and upload database integration.
 
 After forum interactions, prioritize:
 - Account verification and clan/player linking

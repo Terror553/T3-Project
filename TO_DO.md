@@ -64,7 +64,7 @@ _Severity: High | Completion: 75%_
 
 ## 4. Minecraft Integration & Clans
 
-_Severity: Low | Completion: 10%_
+_Severity: Low | Completion: 60%_
 
 **Context:** Prisma models (`Clan`, `EnderChest`, `Cooldown`) and Type interfaces (`src/server/types/clan.ts`, `minecraft.ts`, `verification.ts`) exist, meaning game-server sync is planned but missing web implementation.
 
@@ -72,8 +72,9 @@ _Severity: Low | Completion: 10%_
   - [x] **API/Logic:** `src/server/clan/clan.ts` provides typed GET access to the `Clan` table.
   - [x] **API Route:** Exposed at `src/app/api/clan/route.ts`.
   - [x] **Page:** `src/app/clans/page.tsx` renders loading, empty, error, and responsive clan cards.
-- [ ] **Account Verification System**
-  - **API/Logic:** Flesh out a verification flow using `src/server/types/verification.ts`. This links in-game UUIDs to `ForumUser` accounts.
+- [x] **Account Verification System**
+  - [x] **API/Logic:** Added authenticated verification-code generation and status access using `ForumVerification`.
+  - [x] **UI/Client:** Added profile settings UI with code display, regeneration, and navigation entry.
 
 ---
 
