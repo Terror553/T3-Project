@@ -1,5 +1,4 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { db } from "~/server/db";
 
 export type UploadAttachmentTarget = {
   type: string;
@@ -13,31 +12,38 @@ export type UploadMetadata = {
   size: number;
   publicUrl: string;
   storagePath: string;
-  ownerUserId?: number | null;
-  attachTo?: UploadAttachmentTarget | null;
+  ownerUserId: number | null;
+  attachTo: UploadAttachmentTarget | null;
   createdAt: string;
 };
 
-const STORAGE_DIR = path.join(process.cwd(), "data", "uploads");
-const METADATA_FILE = path.join(STORAGE_DIR, "index.json");
+type UploadMetadataRecord = {
+  id: string;
+  fileName: string;
+  contentType: string;
+  size: number;
+  publicUrl: string;
+  storagePath: string;
+  ownerUserId: number | null;
+  attachToType: string | null;
+  attachToId: number | null;
+  createdAt: Date;
+};
 
-async function readMetadataIndex(): Promise<Record<string, UploadMetadata>> {
-  try {
-    const raw = await fs.readFile(METADATA_FILE, "utf8");
-    const parsed = JSON.parse(raw) as Partial<Record<string, UploadMetadata>>;
-    return parsed && typeof parsed === "object" ? (parsed as Record<string, UploadMetadata>) : {};
-  } catch (error: unknown) {
-    const maybeNodeError = error as { code?: string };
-    if (maybeNodeError.code !== "ENOENT") {
-      console.error("Failed to read upload metadata index:", error);
-    }
-    return {};
-  }
-}
-
-async function writeMetadataIndex(index: Record<string, UploadMetadata>) {
-  await fs.mkdir(STORAGE_DIR, { recursive: true });
-  await fs.writeFile(METADATA_FILE, JSON.stringify(index, null, 2), "utf8");
+function mapUploadMetadata(record: UploadMetadataRecord): UploadMetadata {
+  return {
+    id: record.id,
+    fileName: record.fileName,
+    contentType: record.contentType,
+    size: record.size,
+    publicUrl: record.publicUrl,
+    storagePath: record.storagePath,
+    ownerUserId: record.ownerUserId,
+    attachTo: record.attachToType
+      ? { type: record.attachToType, id: record.attachToId }
+      : null,
+    createdAt: record.createdAt.toISOString(),
+  };
 }
 
 export async function saveUploadMetadata(input: {
@@ -49,32 +55,27 @@ export async function saveUploadMetadata(input: {
   ownerUserId?: number | null;
   attachTo?: UploadAttachmentTarget | null;
 }): Promise<UploadMetadata> {
-  const index = await readMetadataIndex();
-  const id = `upload-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const metadata: UploadMetadata = {
-    id,
-    fileName: input.fileName,
-    contentType: input.contentType,
-    size: input.size,
-    publicUrl: input.publicUrl,
-    storagePath: input.storagePath,
-    ownerUserId: input.ownerUserId ?? null,
-    attachTo: input.attachTo ?? null,
-    createdAt: new Date().toISOString(),
-  };
+  const record = await db.uploadMetadata.create({
+    data: {
+      fileName: input.fileName,
+      contentType: input.contentType,
+      size: input.size,
+      publicUrl: input.publicUrl,
+      storagePath: input.storagePath,
+      ownerUserId: input.ownerUserId ?? null,
+      attachToType: input.attachTo?.type ?? null,
+      attachToId: input.attachTo?.id ?? null,
+    },
+  });
 
-  index[metadata.id] = metadata;
-  await writeMetadataIndex(index);
-  return metadata;
+  return mapUploadMetadata(record);
 }
 
 export async function listUploadMetadata(ownerUserId?: number | null): Promise<UploadMetadata[]> {
-  const index = await readMetadataIndex();
-  const entries = Object.values(index);
+  const records = await db.uploadMetadata.findMany({
+    where: ownerUserId == null ? undefined : { ownerUserId },
+    orderBy: { createdAt: "desc" },
+  });
 
-  if (ownerUserId == null) {
-    return entries;
-  }
-
-  return entries.filter((entry) => entry.ownerUserId === ownerUserId);
+  return records.map((record) => mapUploadMetadata(record));
 }

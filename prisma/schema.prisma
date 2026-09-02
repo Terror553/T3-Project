@@ -19,6 +19,24 @@ model Clan {
     @@map("clans")
 }
 
+model UploadMetadata {
+    id            String      @id @default(cuid())
+    fileName      String      @db.Text
+    contentType   String      @db.Text
+    size          Int
+    publicUrl     String      @db.Text
+    storagePath   String      @db.Text
+    ownerUserId   Int?
+    attachToType  String?     @db.VarChar(100)
+    attachToId    Int?
+    createdAt     DateTime    @default(now()) @db.DateTime(6)
+    owner         ForumUser?  @relation(fields: [ownerUserId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+    @@index([ownerUserId])
+    @@index([attachToType, attachToId])
+    @@map("upload_metadata")
+}
+
 model ConsoleLog {
     id      Int    @id @default(autoincrement())
     message String @db.Text
@@ -280,6 +298,7 @@ model ForumUser {
     profileWallReplies     ProfileWallReply[]
     wikiCategories         WikiCategory[]
     wikiSubCategories      WikiSubCategory[]
+    uploadMetadata         UploadMetadata[]
 
     @@unique([username(length: 255), password(length: 255), salt(length: 255), email(length: 255), userAuthToken(length: 255)])
     @@index([roleId], map: "FK_0fd7d07d475155bfb73b59a0b64")

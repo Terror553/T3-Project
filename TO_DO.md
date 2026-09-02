@@ -176,7 +176,7 @@ _Severity: Low | Completion: 0%_
 
 ## 10. File Uploads & CDN
 
-_Severity: High | Completion: 85%_
+_Severity: High | Completion: 90%_
 
 **Context:** The backend upload infrastructure is complete with local file storage, metadata persistence, and progress tracking. S3 pre-signed URLs are available for future cloud migration. Database-backed file metadata is now hardened with strict type safety.
 
@@ -192,7 +192,10 @@ _Severity: High | Completion: 85%_
   - [x] **Server Logic:** `src/server/storage/storage.ts` implements local file storage adapter with public URLs.
   - [x] **Server Logic:** `src/app/api/upload/save/route.ts` handles file persistence with metadata.
   - [x] **Validation:** Upload metadata strictly typed and validated at runtime.
-- [ ] **S3/CDN Migration**
+  - [x] **Database Integration**
+    - [x] **Server Logic:** Persist upload metadata and attachment targets through the storage module.
+    - [x] **Prisma Schema:** Added the `UploadMetadata` model and deployment migration.
+  - [ ] **S3/CDN Migration**
   - [ ] **Server Logic:** Connect S3 keys to application models when ready to migrate from local storage.
   - [ ] **Configuration:** Env-based storage adapter switching (local vs. S3).
 
