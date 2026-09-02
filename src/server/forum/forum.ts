@@ -228,7 +228,9 @@ export async function getSubCategory(id: number | string) {
         acc + topic.forum_topic_replies.length,
       0,
     ),
-    latestEntry: await getLatestTopic(subcategory.id),
+    latestEntry: [...topics].sort(
+      (left, right) => right.createdAt.getTime() - left.createdAt.getTime(),
+    )[0] ?? null,
   } as ForumSubcategory;
 }
 

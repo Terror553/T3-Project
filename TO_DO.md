@@ -147,7 +147,7 @@ _Severity: Medium | Completion: 100%_
 
 ## 8. Dashboard Analytics & Game Server Integration
 
-_Severity: Low | Completion: 0%_
+_Severity: Low | Completion: 70%_
 
 **Context:** The new `/dashboard` routes structure provides overview, analytics, and settings. However, it needs integration with the Minecraft server stats and user activity models (e.g. `Job`, `UserJob`, `McServerSetting`).
 
@@ -166,11 +166,11 @@ _Severity: Low | Completion: 0%_
 
 **Context:** `src/app/forum/subcategory/[id]/page.tsx` uses a dense manual `useEffect` hook to fetch data. It creates a network waterfall (fetching the subcategory, waiting, then fetching the latest topic) and duplicates loading/error state boilerplate. This should be unified or moved to the server.
 
-- [ ] **Unify Database Query**
-  - **Server Logic:** Update `src/server/forum/forum.ts` to return the `latestEntry` directly as a relation when fetching a subcategory in a single Prisma query.
-- [ ] **Refactor React Logic**
-  - **UI/Client:** Convert `subcategory/[id]/page.tsx` directly into a React Server Component (fetching data server-side to skip internal API fetches) OR extract the states into a unified `useSubcategory(id)` hook matching the pattern seen in `useForum.ts`.
-  - **Cleanup:** Remove the internal `/api/forum/latest-topic/[id]` endpoint once the data is unified in the subcategory query.
+- [x] **Unify Database Query**
+  - [x] **Server Logic:** `src/server/forum/forum.ts` now derives `latestEntry` from the already-loaded topic relation without a second latest-topic query.
+- [x] **Refactor React Logic**
+  - [x] **UI/Client:** `subcategory/[id]/page.tsx` uses the unified subcategory payload and now surfaces fetch failures as a visible warning state.
+  - [ ] **Cleanup:** Remove the internal `/api/forum/latest-topic/[id]` endpoint once compatibility consumers are retired.
 
 ---
 
