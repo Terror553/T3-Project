@@ -6,7 +6,7 @@
 - User preferences (theme, timezone, notifications) persist via JSON file storage without requiring DB migrations.
 - Admin panel is substantially complete with category management, role management, and emoji reaction management.
 - All production code has been cleaned to strict TypeScript with zero `any` types.
-- Comprehensive test suite (8 test files) added with Vitest for forum, messaging, admin, and profile routes.
+- Comprehensive test suite expanded with Vitest for forum, messaging, admin, profile, upload metadata, and clan server flows.
 - Forum reaction and follow APIs and topic UI are implemented.
 - Private messaging compose and thread UX are implemented with the shared modal manager.
 - Dashboard overview, clan viewer, account verification UI, advanced moderation, and forum subcategory query consolidation are now implemented.
@@ -32,9 +32,8 @@
 9. ✅ File uploads and CDN persistence (local storage complete, S3 migration pending).
 
 ## Next work item
-**Remaining validation and platform work**: apply the upload migration in the deployment database, add focused tests for remaining routes, finish S3/CDN adapter switching, and reconcile the status documents before finalizing the backlog.
+**Remaining validation and platform work**: apply the upload migration in the deployment database, add focused tests for remaining routes, implement report submission, and reconcile the status documents before finalizing the backlog. Storage-provider switching is intentionally out of scope because MinIO is already configured through the existing S3 client.
 
 After forum interactions, prioritize:
-- S3/CDN adapter switching
 - Report submission and moderation workflow
 - Focused validation tests for the remaining API and UI milestones
