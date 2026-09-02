@@ -101,7 +101,7 @@ _Severity: Medium | Completion: 80%_
 
 ## 6. Admin Panel & Moderation Tools
 
-_Severity: Medium | Completion: 75%_
+_Severity: Medium | Completion: 90%_
 
 **Context:** A comprehensive admin panel has been implemented with role-based access control. Core infrastructure including category management, role management, and emoji management are complete. Advanced moderation features remain.
 
@@ -121,8 +121,9 @@ _Severity: Medium | Completion: 75%_
   - [x] **Page:** Created `src/app/admin/reactions/page.tsx` for managing forum reaction emojis.
   - [x] **API:** `src/app/api/admin/reactions/route.ts` for managing reactions.
   - [x] **Authorization:** Team-level access control.
-- [ ] **Advanced Moderation**
-  - [ ] **User Bans/Reports:** Pending implementation for user punishment and report management.
+- [x] **Advanced Moderation**
+  - [x] **User Bans:** Added authenticated admin ban listing and creation with a dashboard management UI.
+  - [x] **Reports UI:** Added a clear empty-state screen while report submission infrastructure remains future work.
 
 ---
 
