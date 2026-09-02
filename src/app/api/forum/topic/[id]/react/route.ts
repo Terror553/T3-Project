@@ -4,8 +4,8 @@ import { toggleTopicReaction } from "~/server/forum/forum";
 export async function POST(request: Request) {
   try {
     const url = new URL(request.url);
-    const topicId = Number(url.pathname.split("/").slice(-3, -2)[0]);
     const body = (await request.json()) as Record<string, unknown>;
+    const topicId = body.topicId ?? url.searchParams.get("topicId") ?? null;
 
     const result = await toggleTopicReaction({
       ...(body as Record<string, unknown>),

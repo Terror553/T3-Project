@@ -1,17 +1,19 @@
 ﻿# Project Plan
 
 ## Current status
+
 - Forum read flows are stabilized and refactored.
 - Profile settings and avatar upload flow are implemented with client-side cropping (react-easy-crop) and multipart progress.
 - User preferences (theme, timezone, notifications) persist via JSON file storage without requiring DB migrations.
-- Admin panel is substantially complete with category management, role management, and emoji reaction management.
+- Admin panel is substantially complete with category management, role management, emoji reaction management, and ban listing/creation; report submission remains pending.
 - All production code has been cleaned to strict TypeScript with zero `any` types.
-- Comprehensive test suite expanded with Vitest for forum, messaging, admin, profile, upload metadata, and clan server flows.
+- Focused Vitest coverage exists for forum, messaging, admin, profile, upload metadata, and clan server flows.
 - Forum reaction and follow APIs and topic UI are implemented.
 - Private messaging compose and thread UX are implemented with the shared modal manager.
 - Dashboard overview, clan viewer, account verification UI, advanced moderation, and forum subcategory query consolidation are now implemented.
 
 ## Recently Completed Features (Session 3 Snapshot)
+
 1. **Avatar Upload with Client-Side Crop** - Full react-easy-crop integration, multipart progress, server-side persistence
 2. **Profile Preferences Persistence** - JSON-backed storage for theme, timezone, notifications
 3. **UserPicker Component** - Debounced user search for messaging with ARIA accessibility
@@ -21,6 +23,7 @@
 7. **Upload Metadata Hardening** - Strict TypeScript-validated file metadata persistence
 
 ## Prioritized execution order
+
 1. ✅ Forum Core Mutations and forum interactions/follows.
 2. ✅ Private messaging system, including compose and thread UX.
 3. ✅ User settings and extended profile preferences (avatar + preferences done, extended UI pending).
@@ -32,8 +35,7 @@
 9. ✅ File uploads and CDN persistence (local storage complete, S3 migration pending).
 
 ## Next work item
-**Remaining validation and platform work**: apply the upload migration in the deployment database, add focused tests for remaining routes, implement report submission, and reconcile the status documents before finalizing the backlog. Storage-provider switching is intentionally out of scope because MinIO is already configured through the existing S3 client.
 
-After forum interactions, prioritize:
-- Report submission and moderation workflow
-- Focused validation tests for the remaining API and UI milestones
+**Remaining validation and platform work**: apply the upload migration in the deployment database, add focused tests for remaining routes, and implement report submission. Storage-provider switching is intentionally out of scope because the current local adapter and configured S3 client already cover the supported deployment paths.
+
+Prioritize report submission and moderation workflow, followed by focused validation tests for the remaining API and UI milestones.

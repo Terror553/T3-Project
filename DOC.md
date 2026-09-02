@@ -365,15 +365,17 @@ export default function MyComponent() {
 
 ## 10. File Uploads
 
-This project includes a feature for uploading files to an S3 bucket. The implementation is split between a client-side component for handling the file selection and upload, and a server-side API route for generating a pre-signed URL.
+The upload system supports local storage for the current deployment and retains an S3 client for a future provider migration. The current profile flow uploads files to the local adapter, persists a durable metadata record, and then attaches the saved public URL to the owning profile.
 
-### 10.1 S3 Client Configuration
+### 10.1 Storage Providers
 
-The S3 client is configured in `src/server/s3.ts`. It uses the `aws-sdk/client-s3` package to create an S3 client instance. The configuration includes the S3 region, endpoint, and credentials, which are loaded from environment variables.
+The S3 client is configured in `src/server/s3.ts` with region, endpoint, and credentials from environment variables. It remains available for future cloud migration. The active local adapter in `src/server/storage/storage.ts` writes files beneath `public/uploads` and returns a public `/uploads/...` URL.
+
+`src/server/storage/uploadMetadata.ts` persists the file name, content type, byte size, public URL, storage path, owner ID, optional attachment target, and creation time through Prisma. `saveUploadMetadata` creates a record and normalizes the database timestamp to an ISO string; `listUploadMetadata` optionally filters records by owner and orders newest first. The `UploadMetadata` model and deployment migration are defined in `prisma/schema.prisma` and `prisma/migrations/20260902215000_add_upload_metadata/migration.sql`.
 
 ### 10.2 API Route for Pre-signed URLs
 
-The API route at `src/app/api/upload/[path]/route.ts` is responsible for generating a pre-signed URL that allows the client to upload a file directly to the S3 bucket. The dynamic `[path]` segment controls the bucket or logical upload target, while the request body still provides the file metadata needed to sign the upload.
+The legacy API route at `src/app/api/upload/[path]/route.ts` generates an S3 pre-signed upload URL. The current local upload routes are `src/app/api/uploads/route.ts` for JSON/base64-style uploads and `src/app/api/uploads/form/route.ts` for multipart uploads. The multipart route enforces the five-megabyte limit and returns progress-compatible responses. `src/app/api/upload/save/route.ts` validates metadata and saves the database record, including optional attachment information.
 
 - **HTTP Method**: `POST`
 - **Request Body**:
@@ -395,7 +397,7 @@ The `key` is a unique identifier for the uploaded file, which can be saved in th
 
 ### 10.3 Client-side Upload Component
 
-The reusable `src/components/uploadForm.tsx` component provides a form for selecting a file and uploading it. It is wired into the shared `FormProvider` / `useFormManager` stack so the file lives inside managed form state instead of ad hoc component state. The legacy `src/components/uploadTest.tsx` file remains as a compatibility re-export, so existing imports continue to work while the real implementation lives in `uploadForm.tsx`.
+The reusable `src/components/uploadForm.tsx` component provides a form for selecting a file and uploading it. It is wired into the shared `FormProvider` / `useFormManager` stack so the file lives inside managed form state instead of ad hoc component state.
 
 It performs the following steps:
 
@@ -403,7 +405,7 @@ It performs the following steps:
 2.  **Create a preview URL**: The component derives a temporary object URL from the selected `File` and revokes it when the selection changes or the component unmounts.
 3.  **Normalize the preview ratio**: The `aspectRatio` prop accepts ratios like `16x9` or `1x1` and converts them into a CSS `aspect-ratio` value for the preview container.
 4.  **Request a pre-signed URL**: On submit, it sends a `POST` request to the `/api/upload/[path]` route with the file name and content type.
-5.  **Upload the file**: It uses the received pre-signed URL to upload the file directly to the S3 bucket using a `PUT` request.
+5.  **Persist metadata**: The upload response is passed to `/api/upload/save`, which records ownership and attachment information through Prisma.
 6.  **Notify the user**: Success and failure feedback is shown through the global notification system.
 
 ### 10.4 Usage Example
@@ -425,9 +427,13 @@ export default function MyPage() {
 
 The `title` prop controls the card header and the upload request label, while `aspectRatio` controls the preview frame shape. Both are optional and fall back to sensible defaults when omitted.
 
-### 10.5 Passing the Uploaded Key Into Another Form
+### 10.5 Profile Avatar Flow
 
-The current `UploadForm` is a self-contained uploader: it owns its own `FormProvider`, renders its own `<form>`, and only completes the upload after the S3 pre-signed flow returns `data.key`. That means you should not try to nest it directly inside another `<form>` element such as the register form. Instead, use the uploaded key as a handoff value between the uploader and the parent form.
+`src/app/profile/settings/profile-settings/page.tsx` validates image selection, supports drag-and-drop, opens a `react-easy-crop` editor, applies a square crop client-side, uploads the resulting blob with multipart progress, and calls the save endpoint with `attachTo: { type: "avatar" }`. The save route updates `ForumUser.avatarUrl` for the authenticated owner. The crop preview URL is revoked when replaced so temporary browser object URLs do not accumulate.
+
+### 10.6 Passing the Uploaded Key Into Another Form
+
+The current `UploadForm` is a self-contained uploader: it owns its own `FormProvider`, renders its own `<form>`, and completes its legacy S3 flow after receiving `data.key`. Do not nest it directly inside another `<form>` element. Instead, use the uploaded key as a handoff value between the uploader and the parent form.
 
 The recommended pattern is:
 
@@ -775,15 +781,11 @@ Current behavior:
 
 ### 14.4 Admin Dashboard
 
-A new, comprehensive admin dashboard has been added under `src/app/dashboard`.
+A new admin area has been added under `src/app/admin`, while the broader dashboard remains under `src/app/dashboard`.
 
 - **Layout**: `src/app/dashboard/layout.tsx` defines the new nested navigation structure.
-- **Pages**: Numerous placeholder pages have been created for features like:
-  - Configuration (General, Navigation, Privacy, etc.)
-  - User Management (Users, Punishments, Reports)
-  - Store (Configuration, Products, Payments, etc.)
-  - Forum (Settings, Forums, Labels)
-- **Purpose**: This provides the foundation for building out administrative functionalities. Each page is a starting point for implementing the respective feature.
+- **Pages**: `src/app/admin/page.tsx` provides the admin landing page; category, role, and reaction management pages provide the implemented moderation tools. The dashboard also contains user-management views for punishments and reports.
+- **Authorization**: Admin API routes resolve the current user and enforce team or high-team access before database mutations. Ban listing and creation are available through `src/app/api/admin/bans/route.ts`; report submission is not yet implemented and the reports page deliberately shows an empty state.
 
 ### 14.5 Private Messaging Feature
 
@@ -792,15 +794,16 @@ A private messaging system has been implemented, allowing users to send and rece
 Core files:
 
 - **Pages**:
-  - `src/app/profile/settings/messaging/page.tsx`: Lists all messages for the current user.
-  - `src/app/profile/settings/messaging/[id]/page.tsx`: Displays a single message thread, including replies.
+  - `src/app/messages/page.tsx`: Loads the inbox and opens the compose form through the global modal manager.
+  - `src/app/messages/[id]/page.tsx`: Displays a message thread and refreshes it after a reply.
 - **API Routes**:
-  - `src/app/api/user/messages/route.ts`: Fetches all messages for the logged-in user.
-  - `src/app/api/user/messages/[id]/route.ts`: Fetches a single message by its ID.
+  - `src/app/api/messages/route.ts`: Gets the inbox and creates new threads.
+  - `src/app/api/messages/[id]/route.ts`: Gets a thread and creates replies.
 - **Server Actions**:
   - `src/server/auth/actions/messageActions.ts`: Contains the `sendMessageReply` action for replying to messages.
 - **Components**:
   - `src/components/messageReplyForm.tsx`: The form used for sending replies.
+  - `src/components/userPicker/UserPicker.tsx`: Debounced, keyboard-accessible recipient search used by compose.
 - **Schemas and Types**:
   - `src/lib/schemas/messageSchema.ts`: Zod schema for validating message content.
   - `src/server/types/forum.ts`: Contains the `ForumMessage` and `ForumMessageReply` types.
@@ -809,11 +812,12 @@ Core files:
 
 **Flow for Replying to a Message:**
 
-1.  The user views a message at `src/app/profile/settings/messaging/[id]/page.tsx`.
-2.  The `MessageReplyForm` component is displayed, which uses a `FormProvider` with the `messageSchema`.
-3.  Upon submission, the form calls the `sendMessageReply` server action.
-4.  The server action validates the input, sanitizes the message content, and creates a new `ForumMessageReply` record in the database.
-5.  The page is refreshed to show the new reply.
+1.  The user opens the inbox at `src/app/messages/page.tsx`.
+2.  The compose action opens a shared modal containing `UserPicker`, title, and message fields.
+3.  The client validates receiver ID, title, and message with `createMessageThreadSchema` before calling `POST /api/messages`.
+4.  The user views a message at `src/app/messages/[id]/page.tsx`.
+5.  The `MessageReplyForm` component validates and submits a reply to the thread route.
+6.  The page reloads the thread after success and reports failures through the notification context.
 
 ---
 
@@ -1470,10 +1474,38 @@ const subcategory = await fetch(`/api/forum/subcategory/${id}`).then((r) =>
   r.json(),
 );
 const topic = await fetch(`/api/forum/topic/${id}`).then((r) => r.json());
-const latest = await fetch(`/api/forum/latest-topic/${id}`).then((r) =>
+const follow = await fetch(`/api/forum/topic/${id}/follow`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ topicId: id }),
+}).then((r) => r.json());
+const reaction = await fetch(`/api/forum/topic/${id}/react`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ topicId: Number(id), reactionId: 1 }),
+}).then((r) => r.json());
+```
+
+The subcategory response now includes its latest topic derived from the loaded topic relation; the removed internal latest-topic endpoint should not be used by new clients. The topic page uses the follow and reaction endpoints after loading the current user, disables duplicate in-flight actions, and updates its local topic state after successful toggles.
+
+#### Messaging, dashboard, clan, verification, and uploads APIs
+
+```ts
+const inbox = await fetch("/api/messages").then((r) => r.json());
+const thread = await fetch(`/api/messages/${messageId}`).then((r) => r.json());
+const stats = await fetch("/api/dashboard/stats").then((r) => r.json());
+const clans = await fetch("/api/clan").then((r) => r.json());
+const verification = await fetch("/api/profile/verification").then((r) =>
   r.json(),
 );
+const upload = await fetch("/api/uploads", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ fileName, contentType, data }),
+}).then((r) => r.json());
 ```
+
+The protected messaging and verification routes require the authenticated session. Upload responses can be passed to `POST /api/upload/save` with `ownerUserId` and an optional `attachTo` target; the save route validates the target before persisting `UploadMetadata`.
 
 #### Wiki API
 

@@ -6,9 +6,9 @@ This document tracks unfinished features and modules across the codebase. It map
 
 ## 1. Forum Core Mutations
 
-_Severity: Critical | Completion: 65%_
+_Severity: Critical | Completion: 100%_
 
-**Context:** Forum mutation endpoints have been largely implemented. Topic and reply creation/editing/deletion are available via API routes and server actions. Reaction and follow APIs are complete but UI components are still needed.
+**Context:** Forum mutation endpoints and topic interaction controls are implemented. Topic and reply creation/editing/deletion, reactions, and follows are available through API routes and the topic UI.
 
 - [x] **Topic Creation & Management** (Complete)
   - [x] **API:** POST/PUT/DELETE handlers in `src/app/api/forum/topic/route.ts` and `[id]/route.ts`.
@@ -19,35 +19,35 @@ _Severity: Critical | Completion: 65%_
   - [x] **API:** `src/app/api/forum/topic/[id]/reply/route.ts` implemented.
   - [x] **Server Logic:** `createReply`, `editReply`, `deleteReply` mapped to `ForumTopicReply` model.
   - [x] **UI/Client:** `topicReplyForm.tsx` component with `showLoadingBar` and error notifications.
-- [ ] **Reactions & Follows UI** (Partial - APIs exist, UI needed)
+- [x] **Reactions & Follows UI** (Complete)
   - [x] **API:** `src/app/api/forum/topic/[id]/react/route.ts` fully implemented.
   - [x] **API:** `src/app/api/forum/topic/[id]/follow/route.ts` fully implemented.
-  - [ ] **UI/Client:** Reaction component with optimistic UI updates based on current user state - **PENDING**.
-  - [ ] **UI/Client:** "Follow" button component on the topic header - **PENDING**.
+  - [x] **UI/Client:** Topic page reaction selector with counts, active-user state, and local updates.
+  - [x] **UI/Client:** Follow button on the topic header with pending-state handling.
 
 ---
 
 ## 2. Forum Interactions & Follows
 
-_Severity: Medium | Completion: 50%_
+_Severity: Medium | Completion: 100%_
 
-**Context:** Reaction and follow infrastructure have been fully implemented server-side. API endpoints exist but UI components for selecting reactions and following topics are still needed for full feature completion.
+**Context:** Reaction and follow infrastructure is implemented server-side and integrated into the topic page with current-user feedback and pending-state handling.
 
 - [x] **Reactions System**
   - [x] **API:** `src/app/api/forum/topic/[id]/react/route.ts` implemented with full toggle logic.
   - [x] **Server Logic:** Toggle function for reactions in forum module with optimistic client-side patterns.
-  - [ ] **UI/Client:** Reaction selector component with visual feedback - **PENDING**.
+  - [x] **UI/Client:** Topic-page reaction selector with visual feedback and counts.
 - [x] **Topic Follows**
   - [x] **API:** `src/app/api/forum/topic/[id]/follow/route.ts` targeting `ForumTopicFollow`.
-  - [ ] **UI/Client:** "Follow" button component on the topic header - **PENDING**.
+  - [x] **UI/Client:** Follow button component on the topic header.
 
 ---
 
 ## 3. Private Messaging System
 
-_Severity: High | Completion: 75%_
+_Severity: High | Completion: 100%_
 
-**Context:** Core messaging infrastructure fully implemented with API routes and UI pages. Server logic, database operations, and thread viewing are in place. Message compose new dialog is the main remaining feature.
+**Context:** Messaging infrastructure, inbox/thread pages, reply flow, recipient picker, and compose dialog are implemented.
 
 - [x] **Messaging Core Module**
   - [x] **Data Types:** `src/server/types/messaging.ts` created for message type definitions.
@@ -58,15 +58,15 @@ _Severity: High | Completion: 75%_
 - [x] **Messaging UI (Mostly Complete)**
   - [x] **UI/Client:** `src/components/messageReplyForm.tsx` component for replying to messages.
   - [x] **Pages:** `src/app/messages/page.tsx` (inbox view) and `src/app/messages/[id]/page.tsx` (thread view).
-  - [ ] **Enhancement:** Implement compose new message dialog - **PENDING**.
+  - [x] **Enhancement:** Compose new message dialog through the shared modal manager.
 
 ---
 
 ## 4. Minecraft Integration & Clans
 
-_Severity: Low | Completion: 60%_
+_Severity: Low | Completion: 100%_
 
-**Context:** Prisma models (`Clan`, `EnderChest`, `Cooldown`) and Type interfaces (`src/server/types/clan.ts`, `minecraft.ts`, `verification.ts`) exist, meaning game-server sync is planned but missing web implementation.
+**Context:** Clan browsing and account verification web flows are implemented; in-game plugin consumption and broader game-server synchronization remain outside this checklist.
 
 - [x] **Clan Viewer**
   - [x] **API/Logic:** `src/server/clan/clan.ts` provides typed GET access to the `Clan` table.
@@ -149,10 +149,10 @@ _Severity: Medium | Completion: 100%_
 
 _Severity: Low | Completion: 70%_
 
-**Context:** The new `/dashboard` routes structure provides overview, analytics, and settings. However, it needs integration with the Minecraft server stats and user activity models (e.g. `Job`, `UserJob`, `McServerSetting`).
+**Context:** The dashboard overview and `/api/dashboard/stats` endpoint are implemented with typed community activity cards. Detailed analytics views and profile-wall integration remain pending.
 
-- [ ] **Dashboard Data Endpoints**
-  - [ ] **API:** Fetch analytics data in `/api/dashboard/stats/route.ts` bridging `ConsoleLog` or user metrics.
+- [x] **Dashboard Data Endpoints**
+  - [x] **API:** Fetch typed community statistics in `/api/dashboard/stats/route.ts`.
   - [ ] **UI/Client:** Refine the `/dashboard/analytics` view with actual data components.
 - [ ] **Profile Wall**
   - **Data Types/Server:** Hook up `ProfileWall` and `ProfileWallReply` models to `profile.ts`.
@@ -162,9 +162,9 @@ _Severity: Low | Completion: 70%_
 
 ## 9. Refactor Forum Data Fetching (Subcategory / Topic Views)
 
-_Severity: Low | Completion: 0%_
+_Severity: Low | Completion: 100%_
 
-**Context:** `src/app/forum/subcategory/[id]/page.tsx` uses a dense manual `useEffect` hook to fetch data. It creates a network waterfall (fetching the subcategory, waiting, then fetching the latest topic) and duplicates loading/error state boilerplate. This should be unified or moved to the server.
+**Context:** The subcategory response derives its latest topic from the already-loaded relation, and the page uses that unified payload with a visible fetch-failure state.
 
 - [x] **Unify Database Query**
   - [x] **Server Logic:** `src/server/forum/forum.ts` now derives `latestEntry` from the already-loaded topic relation without a second latest-topic query.
@@ -178,7 +178,7 @@ _Severity: Low | Completion: 0%_
 
 _Severity: High | Completion: 90%_
 
-**Context:** The backend upload infrastructure is complete with local file storage, metadata persistence, and progress tracking. S3 pre-signed URLs are available for future cloud migration. Database-backed file metadata is now hardened with strict type safety.
+**Context:** The backend upload infrastructure is complete with local file storage, Prisma metadata persistence, attachment targets, and progress tracking. S3/CDN provider switching is intentionally deferred because the current deployment uses the existing configured client and local adapter.
 
 - [x] **API Route for Pre-signed URLs**
   - [x] **API:** `src/app/api/upload/[path]/route.ts` implemented for file serving.

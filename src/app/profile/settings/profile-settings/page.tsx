@@ -50,10 +50,14 @@ async function getCroppedImg(
   );
 
   return await new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((blob) => {
-      if (!blob) return reject(new Error("Failed to create blob"));
-      resolve(blob);
-    }, "image/jpeg", 0.9);
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) return reject(new Error("Failed to create blob"));
+        resolve(blob);
+      },
+      "image/jpeg",
+      0.9,
+    );
   });
 }
 
@@ -131,41 +135,41 @@ export default function Settings() {
     setCroppedAreaPixels(croppedPixels);
   }, []);
 
-    const [appliedBlob, setAppliedBlob] = useState<Blob | null>(null);
-    const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [appliedBlob, setAppliedBlob] = useState<Blob | null>(null);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
-    // Apply crop to preview immediately and prepare a downloadable blob
-    async function applyCropToPreview() {
-      if (!preview || !croppedAreaPixels) {
-        setMessage("No crop available");
-        return;
-      }
-      try {
-        const blob = await getCroppedImg(preview, croppedAreaPixels, 512);
-        // create data URL for preview
-        const reader = new FileReader();
-        reader.onload = () => {
-          const dataUrl = String(reader.result || "");
-          setPreview(dataUrl);
-        };
-        reader.readAsDataURL(blob);
-
-        // create object URL for download
-        if (downloadUrl) {
-          URL.revokeObjectURL(downloadUrl);
-        }
-        const objUrl = URL.createObjectURL(blob);
-        setDownloadUrl(objUrl);
-        setAppliedBlob(blob);
-        setShowCropper(false);
-        setMessage("Crop applied — preview updated");
-      } catch (err) {
-        console.error("Failed to apply crop", err);
-        setMessage("Failed to apply crop");
-      }
+  // Apply crop to preview immediately and prepare a downloadable blob
+  async function applyCropToPreview() {
+    if (!preview || !croppedAreaPixels) {
+      setMessage("No crop available");
+      return;
     }
+    try {
+      const blob = await getCroppedImg(preview, croppedAreaPixels, 512);
+      // create data URL for preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = String(reader.result || "");
+        setPreview(dataUrl);
+      };
+      reader.readAsDataURL(blob);
 
-    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+      // create object URL for download
+      if (downloadUrl) {
+        URL.revokeObjectURL(downloadUrl);
+      }
+      const objUrl = URL.createObjectURL(blob);
+      setDownloadUrl(objUrl);
+      setAppliedBlob(blob);
+      setShowCropper(false);
+      setMessage("Crop applied — preview updated");
+    } catch (err) {
+      console.error("Failed to apply crop", err);
+      setMessage("Failed to apply crop");
+    }
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     setMessage(null);
     const f = e.target.files?.[0] ?? null;
     if (!f) return setFile(null);
@@ -195,8 +199,11 @@ export default function Settings() {
         // get cropped image blob from the preview data URL using selected area
         blob = await getCroppedImg(preview, croppedAreaPixels, 512);
       }
-      const filename = (file?.name ?? `avatar-${Date.now()}`).replace(/[^a-zA-Z0-9._-]/g, "-");
-      const signedResponse = await fetch("/api/upload/uploads", {
+      const filename = (file?.name ?? `avatar-${Date.now()}`).replace(
+        /[^a-zA-Z0-9._-]/g,
+        "-",
+      );
+      const signedResponse = await fetch("/api/upload/avatars", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fileName: filename, contentType: "image/jpeg" }),
@@ -204,8 +211,12 @@ export default function Settings() {
       if (!signedResponse.ok) {
         throw new Error(`Failed to prepare upload: ${signedResponse.status}`);
       }
-      const signed = (await signedResponse.json()) as { url?: string; key?: string };
-      if (!signed.url || !signed.key) throw new Error("Upload service returned an invalid URL");
+      const signed = (await signedResponse.json()) as {
+        url?: string;
+        key?: string;
+      };
+      if (!signed.url || !signed.key)
+        throw new Error("Upload service returned an invalid URL");
 
       setMessage("Uploading...");
       const uploadResponse = await fetch(signed.url, {
@@ -213,7 +224,8 @@ export default function Settings() {
         headers: { "Content-Type": "image/jpeg" },
         body: blob,
       });
-      if (!uploadResponse.ok) throw new Error(`Upload failed: ${uploadResponse.status}`);
+      if (!uploadResponse.ok)
+        throw new Error(`Upload failed: ${uploadResponse.status}`);
 
       const url = signed.url.split("?")[0];
 
@@ -249,7 +261,8 @@ export default function Settings() {
       }
     } catch (error: unknown) {
       console.error("Avatar upload error", error);
-      const message = error instanceof Error ? error.message : "Unknown avatar upload error";
+      const message =
+        error instanceof Error ? error.message : "Unknown avatar upload error";
       setMessage(message);
     } finally {
       setLoading(false);
@@ -264,8 +277,21 @@ export default function Settings() {
           <div className="row mt-3">
             <div className="col-md-4">
               <div className="text-center mb-3">
-                <div style={{ width: 128, height: 128, margin: "0 auto", position: "relative" }}>
-                  <Image src={settings?.avatarUrl ?? "/default.png"} alt={settings?.username ?? "avatar"} fill sizes="128px" style={{ objectFit: "cover", borderRadius: 8 }} />
+                <div
+                  style={{
+                    width: 128,
+                    height: 128,
+                    margin: "0 auto",
+                    position: "relative",
+                  }}
+                >
+                  <Image
+                    src={settings?.avatarUrl ?? "/default.png"}
+                    alt={settings?.username ?? "avatar"}
+                    fill
+                    sizes="128px"
+                    style={{ objectFit: "cover", borderRadius: 8 }}
+                  />
                 </div>
                 <div className="mt-2">
                   <strong>{settings?.username ?? "User"}</strong>
@@ -273,7 +299,9 @@ export default function Settings() {
               </div>
 
               <div>
-                <label className="form-label" htmlFor="avatar-file">Upload new avatar</label>
+                <label className="form-label" htmlFor="avatar-file">
+                  Upload new avatar
+                </label>
 
                 <div
                   onDragOver={(e) => e.preventDefault()}
@@ -281,55 +309,128 @@ export default function Settings() {
                     e.preventDefault();
                     const f = e.dataTransfer?.files?.[0];
                     if (f) {
-                      const inputEvent = { target: { files: [f] } } as unknown as React.ChangeEvent<HTMLInputElement>;
+                      const inputEvent = {
+                        target: { files: [f] },
+                      } as unknown as React.ChangeEvent<HTMLInputElement>;
                       handleFileChange(inputEvent);
                     }
                   }}
-                  style={{ border: "2px dashed #ddd", padding: 8, borderRadius: 6 }}
+                  style={{
+                    border: "2px dashed #ddd",
+                    padding: 8,
+                    borderRadius: 6,
+                  }}
                 >
-                  <input id="avatar-file" type="file" accept="image/*" className="form-control" onChange={handleFileChange} />
-                  <div className="small text-muted mt-1">Or drag & drop an image here</div>
+                  <input
+                    id="avatar-file"
+                    type="file"
+                    accept="image/*"
+                    className="form-control"
+                    onChange={handleFileChange}
+                  />
+                  <div className="small text-muted mt-1">
+                    Or drag & drop an image here
+                  </div>
                 </div>
 
                 {preview && (
                   <div className="mt-2">
-                    <div style={{ width: 96, height: 96, position: "relative" }}>
-                      <Image src={preview} alt="preview" fill sizes="96px" style={{ objectFit: "cover", borderRadius: 8 }} />
+                    <div
+                      style={{ width: 96, height: 96, position: "relative" }}
+                    >
+                      <Image
+                        src={preview}
+                        alt="preview"
+                        fill
+                        sizes="96px"
+                        style={{ objectFit: "cover", borderRadius: 8 }}
+                      />
                     </div>
                     <div className="mt-2 d-flex gap-2">
-                      <button className="btn btn-sm btn-outline-secondary" onClick={() => setShowCropper(true)}>Edit crop</button>
-                      <button className="btn btn-sm btn-outline-secondary" onClick={() => { setFile(null); setPreview(null); setMessage(null); setAppliedBlob(null); if (downloadUrl) { URL.revokeObjectURL(downloadUrl); setDownloadUrl(null); } }}>Remove</button>
+                      <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={() => setShowCropper(true)}
+                      >
+                        Edit crop
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={() => {
+                          setFile(null);
+                          setPreview(null);
+                          setMessage(null);
+                          setAppliedBlob(null);
+                          if (downloadUrl) {
+                            URL.revokeObjectURL(downloadUrl);
+                            setDownloadUrl(null);
+                          }
+                        }}
+                      >
+                        Remove
+                      </button>
                       {downloadUrl && (
-                        <a href={downloadUrl} download="avatar.jpg" className="btn btn-sm btn-outline-primary">Download</a>
+                        <a
+                          href={downloadUrl}
+                          download="avatar.jpg"
+                          className="btn btn-sm btn-outline-primary"
+                        >
+                          Download
+                        </a>
                       )}
                     </div>
                   </div>
                 )}
 
                 <div className="mt-3 d-flex gap-2 align-items-center">
-                  <button className="btn btn-primary" onClick={applyCropAndUpload} disabled={!preview || loading}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={applyCropAndUpload}
+                    disabled={!preview || loading}
+                  >
                     {loading ? "Uploading..." : "Upload avatar"}
                   </button>
-                  <button className="btn btn-secondary" onClick={() => { setFile(null); setPreview(null); setMessage(null); }} disabled={loading}>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setFile(null);
+                      setPreview(null);
+                      setMessage(null);
+                    }}
+                    disabled={loading}
+                  >
                     Cancel
                   </button>
-                  {loading && <div className="ms-3 small text-muted">{message ?? "Uploading..."}</div>}
+                  {loading && (
+                    <div className="ms-3 small text-muted">
+                      {message ?? "Uploading..."}
+                    </div>
+                  )}
                 </div>
 
-                {message && !loading && <div className="mt-2 text-muted small">{message}</div>}
+                {message && !loading && (
+                  <div className="mt-2 text-muted small">{message}</div>
+                )}
               </div>
             </div>
 
             <div className="col-md-8">
               <div>
                 <h5>Preferences</h5>
-                <p className="text-muted">Theme, timezone and notification preferences are saved per-user.</p>
+                <p className="text-muted">
+                  Theme, timezone and notification preferences are saved
+                  per-user.
+                </p>
                 <div className="mb-3">
                   <label className="form-label">Theme</label>
                   <select
                     className="form-select"
                     value={settings?.theme ?? "light"}
-                    onChange={(e) => setSettings((s) => ({ ...(s ?? {}), theme: e.target.value }))}
+                    onChange={(e) =>
+                      setSettings((s) => ({
+                        ...(s ?? {}),
+                        theme: e.target.value,
+                      }))
+                    }
                   >
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
@@ -341,7 +442,12 @@ export default function Settings() {
                   <input
                     className="form-control"
                     value={settings?.timezone ?? "UTC"}
-                    onChange={(e) => setSettings((s) => ({ ...(s ?? {}), timezone: e.target.value }))}
+                    onChange={(e) =>
+                      setSettings((s) => ({
+                        ...(s ?? {}),
+                        timezone: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="form-check mb-3">
@@ -350,13 +456,25 @@ export default function Settings() {
                     type="checkbox"
                     id="emailNotifications"
                     checked={settings?.emailNotifications ?? true}
-                    onChange={(e) => setSettings((s) => ({ ...(s ?? {}), emailNotifications: e.target.checked }))}
+                    onChange={(e) =>
+                      setSettings((s) => ({
+                        ...(s ?? {}),
+                        emailNotifications: e.target.checked,
+                      }))
+                    }
                   />
-                  <label className="form-check-label" htmlFor="emailNotifications">
+                  <label
+                    className="form-check-label"
+                    htmlFor="emailNotifications"
+                  >
                     Email notifications enabled
                   </label>
                 </div>
-                <button className="btn btn-primary" onClick={savePreferences} disabled={!settings}>
+                <button
+                  className="btn btn-primary"
+                  onClick={savePreferences}
+                  disabled={!settings}
+                >
                   Save preferences
                 </button>
               </div>
@@ -365,9 +483,33 @@ export default function Settings() {
 
           {/* Cropper modal */}
           {showCropper && preview && (
-            <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-              <div style={{ width: 540, background: "#fff", padding: 16, borderRadius: 8 }}>
-                <div style={{ position: "relative", width: "100%", height: 400, background: "#000" }}>
+            <div
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.6)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1000,
+              }}
+            >
+              <div
+                style={{
+                  width: 540,
+                  background: "#fff",
+                  padding: 16,
+                  borderRadius: 8,
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: 400,
+                    background: "#000",
+                  }}
+                >
                   <Cropper
                     image={preview}
                     crop={crop}
@@ -380,19 +522,34 @@ export default function Settings() {
                 </div>
                 <div className="mt-3 d-flex gap-2 align-items-center">
                   <label className="form-label mb-0">Zoom</label>
-                  <input type="range" min={1} max={3} step={0.01} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} />
+                  <input
+                    type="range"
+                    min={1}
+                    max={3}
+                    step={0.01}
+                    value={zoom}
+                    onChange={(e) => setZoom(Number(e.target.value))}
+                  />
                   <div style={{ flex: 1 }} />
-                <button className="btn btn-primary" onClick={applyCropToPreview} disabled={!croppedAreaPixels}>
-                  Apply crop
+                  <button
+                    className="btn btn-primary"
+                    onClick={applyCropToPreview}
+                    disabled={!croppedAreaPixels}
+                  >
+                    Apply crop
                   </button>
-                <button className="btn btn-secondary" onClick={() => { setShowCropper(false); }}>
-                  Close
-                </button>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setShowCropper(false);
+                    }}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
           )}
-
         </div>
       </div>
     </div>
