@@ -17,6 +17,7 @@ export default function AdminReactionsPage() {
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState("");
   const [negative, setNegative] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     void loadReactions();
@@ -59,27 +60,31 @@ export default function AdminReactionsPage() {
       return;
     }
 
-    const res = await fetch("/api/admin/reactions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: name.trim(),
-        emoji: emoji.trim(),
-        negative,
-      }),
-    });
+    try {
+      setIsSubmitting(true);
+      const res = await fetch("/api/admin/reactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim(), emoji: emoji.trim(), negative }),
+      });
 
-    if (!res.ok) {
-      const body = await res.text();
-      setMessage(`Failed to create reaction: ${body}`);
-      return;
+      if (!res.ok) {
+        const body = await res.text();
+        setMessage(`Failed to create reaction: ${body}`);
+        return;
+      }
+
+      setName("");
+      setEmoji("");
+      setNegative(0);
+      setMessage("Reaction created");
+      await loadReactions();
+    } catch (error) {
+      console.error("Failed to create reaction", error);
+      setMessage("Failed to create reaction");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setName("");
-    setEmoji("");
-    setNegative(0);
-    setMessage("Reaction created");
-    void loadReactions();
   }
 
   if (loading) return <p>Loading admin reaction management...</p>;
@@ -88,6 +93,7 @@ export default function AdminReactionsPage() {
   return (
     <div className="container py-4">
       <h2>Reaction emoji management</h2>
+      <p className="text-muted">Create the reactions members can use on forum topics.</p>
       {message && <div className="alert alert-info">{message}</div>}
 
       <form className="card p-3 mb-4" onSubmit={handleCreateReaction}>
@@ -104,22 +110,26 @@ export default function AdminReactionsPage() {
           <div className="col-md-2">
             <label className="form-label">Negative</label>
             <input
-              type="number"
-              className="form-control"
-              min={0}
-              max={1}
-              value={negative}
-              onChange={(e) => setNegative(Number(e.target.value || 0))}
+              type="checkbox"
+              role="switch"
+              className="form-check-input"
+              checked={negative === 1}
+              onChange={(e) => setNegative(e.target.checked ? 1 : 0)}
             />
+            <span className="ms-2">Marks content negatively</span>
           </div>
           <div className="col-md-2">
-            <button className="btn btn-primary w-100" type="submit">Create reaction</button>
+            <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Creating..." : "Create reaction"}
+            </button>
           </div>
         </div>
       </form>
 
       <div className="row g-3">
-        {reactions.map((reaction) => (
+        {reactions.length === 0 ? (
+          <div className="col-12"><p className="text-muted">No reactions configured yet.</p></div>
+        ) : reactions.map((reaction) => (
           <div className="col-md-4" key={reaction.id}>
             <div className="card h-100">
               <div className="card-body">

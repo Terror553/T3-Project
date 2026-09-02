@@ -23,6 +23,7 @@ export default function AdminRolesPage() {
   const [team, setTeam] = useState(0);
   const [highTeam, setHighTeam] = useState(0);
   const [isDefault, setIsDefault] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     void loadRoles();
@@ -65,33 +66,41 @@ export default function AdminRolesPage() {
       return;
     }
 
-    const res = await fetch("/api/admin/roles", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: name.trim(),
-        color: color.trim() || "&7",
-        priority,
-        team,
-        highTeam,
-        default: isDefault,
-      }),
-    });
+    try {
+      setIsSubmitting(true);
+      const res = await fetch("/api/admin/roles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          color: color.trim() || "&7",
+          priority,
+          team,
+          highTeam,
+          default: isDefault,
+        }),
+      });
 
-    if (!res.ok) {
-      const body = await res.text();
-      setMessage(`Failed to create role: ${body}`);
-      return;
+      if (!res.ok) {
+        const body = await res.text();
+        setMessage(`Failed to create role: ${body}`);
+        return;
+      }
+
+      setName("");
+      setColor("&7");
+      setPriority(999);
+      setTeam(0);
+      setHighTeam(0);
+      setIsDefault(0);
+      setMessage("Role created");
+      await loadRoles();
+    } catch (error) {
+      console.error("Failed to create role", error);
+      setMessage("Failed to create role");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setName("");
-    setColor("&7");
-    setPriority(999);
-    setTeam(0);
-    setHighTeam(0);
-    setIsDefault(0);
-    setMessage("Role created");
-    void loadRoles();
   }
 
   if (loading) return <p>Loading admin role management...</p>;
@@ -100,6 +109,7 @@ export default function AdminRolesPage() {
   return (
     <div className="container py-4">
       <h2>Role management</h2>
+      <p className="text-muted">Configure display roles and moderation access flags for the community.</p>
       {message && <div className="alert alert-info">{message}</div>}
 
       <form className="card p-3 mb-4" onSubmit={handleCreateRole}>
@@ -123,46 +133,50 @@ export default function AdminRolesPage() {
             />
           </div>
           <div className="col-md-3">
-            <label className="form-label">Team</label>
+            <label className="form-label d-block">Team</label>
             <input
-              type="number"
-              className="form-control"
-              min={0}
-              max={1}
-              value={team}
-              onChange={(e) => setTeam(Number(e.target.value || 0))}
+              type="checkbox"
+              role="switch"
+              className="form-check-input"
+              checked={team === 1}
+              onChange={(e) => setTeam(e.target.checked ? 1 : 0)}
             />
+            <span className="ms-2">Team member</span>
           </div>
           <div className="col-md-3">
-            <label className="form-label">High team</label>
+            <label className="form-label d-block">High team</label>
             <input
-              type="number"
-              className="form-control"
-              min={0}
-              max={1}
-              value={highTeam}
-              onChange={(e) => setHighTeam(Number(e.target.value || 0))}
+              type="checkbox"
+              role="switch"
+              className="form-check-input"
+              checked={highTeam === 1}
+              onChange={(e) => setHighTeam(e.target.checked ? 1 : 0)}
             />
+            <span className="ms-2">High team member</span>
           </div>
           <div className="col-md-3">
-            <label className="form-label">Default</label>
+            <label className="form-label d-block">Default</label>
             <input
-              type="number"
-              className="form-control"
-              min={0}
-              max={1}
-              value={isDefault}
-              onChange={(e) => setIsDefault(Number(e.target.value || 0))}
+              type="checkbox"
+              role="switch"
+              className="form-check-input"
+              checked={isDefault === 1}
+              onChange={(e) => setIsDefault(e.target.checked ? 1 : 0)}
             />
+            <span className="ms-2">Default role</span>
           </div>
           <div className="col-md-3 d-flex align-items-end">
-            <button className="btn btn-primary w-100" type="submit">Create role</button>
+            <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Creating..." : "Create role"}
+            </button>
           </div>
         </div>
       </form>
 
       <div className="row g-3">
-        {roles.map((role) => (
+        {roles.length === 0 ? (
+          <div className="col-12"><p className="text-muted">No roles configured yet.</p></div>
+        ) : roles.map((role) => (
           <div className="col-md-6" key={role.id}>
             <div className="card h-100">
               <div className="card-body">
