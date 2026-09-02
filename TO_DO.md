@@ -170,7 +170,7 @@ _Severity: Low | Completion: 0%_
   - [x] **Server Logic:** `src/server/forum/forum.ts` now derives `latestEntry` from the already-loaded topic relation without a second latest-topic query.
 - [x] **Refactor React Logic**
   - [x] **UI/Client:** `subcategory/[id]/page.tsx` uses the unified subcategory payload and now surfaces fetch failures as a visible warning state.
-  - [ ] **Cleanup:** Remove the internal `/api/forum/latest-topic/[id]` endpoint once compatibility consumers are retired.
+  - [x] **Cleanup:** Removed the unused internal `/api/forum/latest-topic/[id]` endpoint after consolidating subcategory loading.
 
 ---
 
