@@ -68,10 +68,10 @@ _Severity: Low | Completion: 10%_
 
 **Context:** Prisma models (`Clan`, `EnderChest`, `Cooldown`) and Type interfaces (`src/server/types/clan.ts`, `minecraft.ts`, `verification.ts`) exist, meaning game-server sync is planned but missing web implementation.
 
-- [ ] **Clan Viewer**
-  - **API/Logic:** Build a `src/server/clan/clan.ts` module with GET methods for the `Clan` table.
-  - **API Route:** Expose at `src/app/api/clan/route.ts`.
-  - **Page:** Build `src/app/clans/page.tsx` reflecting active server clans.
+- [x] **Clan Viewer**
+  - [x] **API/Logic:** `src/server/clan/clan.ts` provides typed GET access to the `Clan` table.
+  - [x] **API Route:** Exposed at `src/app/api/clan/route.ts`.
+  - [x] **Page:** `src/app/clans/page.tsx` renders loading, empty, error, and responsive clan cards.
 - [ ] **Account Verification System**
   - **API/Logic:** Flesh out a verification flow using `src/server/types/verification.ts`. This links in-game UUIDs to `ForumUser` accounts.
 
