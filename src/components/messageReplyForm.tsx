@@ -19,9 +19,10 @@ const initialValues: MessageReplyValues = {
 
 interface MessageReplyFormProps {
   id: number;
+  onSubmitted?: () => void | Promise<void>;
 }
 
-export const MessageReplyForm = ({ id }: MessageReplyFormProps) => {
+export const MessageReplyForm = ({ id, onSubmitted }: MessageReplyFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addNotification } = useNotification();
   const router = useRouter();
@@ -67,6 +68,7 @@ export const MessageReplyForm = ({ id }: MessageReplyFormProps) => {
         return;
       }
       router.refresh();
+      await onSubmitted?.();
       addNotification(`Message sent successfully!`, "success", 5000);
     } catch (error) {
       console.error("Message sending error:", error);

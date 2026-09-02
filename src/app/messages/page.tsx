@@ -7,6 +7,7 @@ import type { ForumMessage } from "~/server/types/forum";
 import { useTheme } from "~/client/theme";
 import { createMessageThreadSchema } from "~/lib/schemas/messagingSchemas";
 import UserPicker from "~/components/userPicker/UserPicker";
+import { useModalManager } from "~/client/modalUtils";
 
 const initialThreadValues = {
   receiverId: "",
@@ -21,6 +22,7 @@ export default function MessagesInbox() {
   const [loading, setLoading] = useState(true);
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const { addNotification } = useNotification();
+  const { openModal, closeModal } = useModalManager();
 
   const loadInbox = useCallback(async () => {
     try {
@@ -84,6 +86,7 @@ export default function MessagesInbox() {
       addNotification("Thread created successfully!", "success", 4000);
       setFormData(initialThreadValues);
       await loadInbox();
+      closeModal();
     } catch (error) {
       addNotification(`Unexpected error: ${String(error)}`, "error", 5000);
     } finally {
@@ -96,10 +99,17 @@ export default function MessagesInbox() {
   return (
     <div>
       <h2>Inbox</h2>
-      <div className="card mb-3">
-        <div className="card-header">Neue Nachricht</div>
-        <div className="card-body">
-          <form onSubmit={handleCreateThread} id="form-message-thread-create">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <p className="mb-0 text-muted">Start a private conversation with another community member.</p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() =>
+            openModal({
+              title: "Neue Nachricht",
+              size: "lg",
+              content: (
+                <form onSubmit={handleCreateThread} id="form-message-thread-create">
             <div className="form-group">
               {/* Recipient picker: search/select user instead of raw numeric ID */}
               {/* UserPicker sets the receiver id (string) on selection */}
@@ -153,11 +163,21 @@ export default function MessagesInbox() {
             <button type="submit" className="btn btn-primary btn-block" disabled={isComposing}>
               {isComposing ? "Senden..." : "Thread erstellen"}
             </button>
-          </form>
-        </div>
+                </form>
+              ),
+            })
+          }
+        >
+          Neue Nachricht
+        </button>
       </div>
       {messages.length === 0 ? (
-        <p>No messages</p>
+        <div className="card">
+          <div className="card-body text-center py-5">
+            <h3 className="h5">No messages yet</h3>
+            <p className="text-muted mb-0">Your conversations will appear here.</p>
+          </div>
+        </div>
       ) : (
         <ul className="list-group">
           {messages.map((m) => (
