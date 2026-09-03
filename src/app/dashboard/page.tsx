@@ -1,16 +1,5 @@
-export default async function Home() {
-  const user = null; // Simulating a user not being logged in
-  if (user == null) {
-    return (
-      <>
-        <h2>This is the Profile page, you are not logged in!</h2>
-      </>
-    );
-  }
+import { redirect } from "next/navigation";
 
-  return (
-    <>
-      <h2>This is the Profile page, you are logged in!</h2>
-    </>
-  );
+export default function DashboardHome(): never {
+  redirect("/dashboard/overview");
 }

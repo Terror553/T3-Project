@@ -1,242 +1,195 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useTheme } from "~/client/theme";
-import type { ForumMessage } from "~/server/types/forum";
-import { formatDate, getRelativeTime } from "~/utils/dateUtils";
-import { replaceColor } from "~/utils/styleUtils";
 
-export default function Messages() {
+import Link from "next/link";
+import { type FormEvent, useCallback, useEffect, useState } from "react";
+import { useNotification } from "~/client/notification";
+import type { ForumMessage } from "~/server/types/forum";
+import { useTheme } from "~/client/theme";
+import { createMessageThreadSchema } from "~/lib/schemas/messagingSchemas";
+import UserPicker from "~/components/userPicker/UserPicker";
+import { useModalManager } from "~/client/modalUtils";
+
+const initialThreadValues = {
+  receiverId: "",
+  title: "",
+  message: "",
+};
+
+export default function MessagesInbox() {
   const [messages, setMessages] = useState<ForumMessage[]>([]);
+  const [isComposing, setIsComposing] = useState(false);
+  const [formData, setFormData] = useState(initialThreadValues);
   const [loading, setLoading] = useState(true);
   const { showLoadingBar, hideLoadingBar } = useTheme();
+  const { addNotification } = useNotification();
+  const { openModal, closeModal } = useModalManager();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        showLoadingBar("messagesLoadingBar");
-        setLoading(true);
-
-        const [msgRes] = await Promise.all([fetch("/api/user/messages")]);
-        if (!msgRes.ok) throw new Error(`User API Error ${msgRes.status}`);
-
-        const messages = (await msgRes.json()) as ForumMessage[];
-
-        if (!messages) throw new Error(`Unknown error fetching messages`);
-
-        setMessages(messages);
-        setLoading(false);
-        hideLoadingBar("messagesLoadingBar");
-      } catch (err) {
-        console.error("Error fetching user", err);
-        setLoading(false);
-        hideLoadingBar("messagesLoadingBar");
-      }
+  const loadInbox = useCallback(async () => {
+    try {
+      showLoadingBar("messages");
+      setLoading(true);
+      const res = await fetch("/api/messages");
+      if (!res.ok) throw new Error(`Failed fetching messages ${res.status}`);
+      const data = (await res.json()) as ForumMessage[];
+      setMessages(data || []);
+    } catch (err) {
+      console.error("Error loading messages", err);
+      setMessages([]);
+    } finally {
+      setLoading(false);
+      hideLoadingBar("messages");
     }
-
-    void fetchData();
   }, [hideLoadingBar, showLoadingBar]);
 
-  return (
-    <>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {messages ? (
-            <>
-              <div className="action-bar">
-                <div className="action-bar-pagination">
-                  <ul className="pagination d-inline-flex">
-                    <li className="page-item  disabled">
-                      <a className="page-link" href="#">
-                        «
-                      </a>
-                    </li>
-                    <li className="page-item  active ">
-                      <a className="page-link" href="/user/messaging/&amp;p=1">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item  disabled ">
-                      <a className="page-link" href="#">
-                        »
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="action-bar-buttons">
-                  <Link
-                    href="/profile/settings/messaging/new"
-                    className="btn btn-primary btn-sm"
-                  >
-                    New Message
-                  </Link>
-                </div>
-              </div>
-              <div className="col-xl-12 col-lg-8">
-                <div className="card">
-                  {messages.length === 0 ? (
-                    <>
-                      <div className="card-body">
-                        You do not have any messages.
-                      </div>
-                      <div className="card-footer">
-                        <Link
-                          href="/profile/settings/messaging/new"
-                          className="btn btn-primary"
-                        >
-                          New Message
-                        </Link>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="card-body">
-                        <div className="list list-relaxed list-divided">
-                          {messages.map((message) => (
-                            <div className="list-item" key={message.id}>
-                              <div className="list-content">
-                                <a
-                                  href={`/profile/settings/messaging/${message.id}`}
-                                >
-                                  {message.title}
-                                </a>
-                                <div className="list-meta">
-                                  <div>
-                                    Sender:{" "}
-                                    <Link
-                                      href={`/profile/${message.sender.id}/`}
-                                      style={replaceColor({
-                                        color: message.sender.group?.color,
-                                        gradient:
-                                          message.sender.group?.gradient,
-                                        end: message.sender.group?.end,
-                                        start: message.sender.group?.start,
-                                        isBadge: false,
-                                      })}
-                                    >
-                                      {message.sender.username}
-                                    </Link>
-                                    , Reciever:{" "}
-                                    <Link
-                                      href={`/profile/${message.receiver.id}/`}
-                                      style={replaceColor({
-                                        color: message.receiver.group?.color,
-                                        gradient:
-                                          message.receiver.group?.gradient,
-                                        end: message.receiver.group?.end,
-                                        start: message.receiver.group?.start,
-                                        isBadge: false,
-                                      })}
-                                    >
-                                      {message.receiver.username}
-                                    </Link>
-                                  </div>
-                                  <div className="d-sm-none">
-                                    Last Message:{" "}
-                                    <Link
-                                      href={`/profile/${message.receiver.id}/`}
-                                    >
-                                      {message.receiver.username}
-                                    </Link>
-                                    •
-                                    <span title={formatDate(message.createdAt)}>
-                                      {getRelativeTime(message.createdAt)}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="list-extra text-end align-self-center d-none d-sm-block">
-                                <div className="user-item user-item-right">
-                                  <div className="user-item-avatar">
-                                    <Link
-                                      href={`/profile/${message.sender?.id}/`}
-                                    >
-                                      <Image
-                                        src={message.sender?.avatarUrl}
-                                        alt={
-                                          message.sender?.username ||
-                                          "User Avatar"
-                                        }
-                                        width={30}
-                                        height={30}
-                                      />
-                                    </Link>
-                                  </div>
-                                  <div className="user-item-content">
-                                    <Link
-                                      href={`/profile/${message.sender?.id}/`}
-                                      style={replaceColor({
-                                        color: message.sender.group?.color,
-                                        gradient:
-                                          message.sender.group?.gradient,
-                                        end: message.sender.group?.end,
-                                        start: message.sender.group?.start,
-                                        isBadge: false,
-                                      })}
-                                    >
-                                      {message.sender.username}
-                                    </Link>
-                                    <div className="user-item-meta">
-                                      <span
-                                        title={formatDate(
-                                          message.createdAt,
-                                          true,
-                                        )}
-                                      >
-                                        {getRelativeTime(message.createdAt)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
+  useEffect(() => {
+    void loadInbox();
+  }, [loadInbox]);
 
-              <div className="action-bar">
-                <div className="action-bar-pagination">
-                  <ul className="pagination d-inline-flex">
-                    <li className="page-item  disabled">
-                      <Link className="page-link" href="#">
-                        «
-                      </Link>
-                    </li>
-                    <li className="page-item  active ">
-                      <Link className="page-link" href={""}>
-                        1
-                      </Link>
-                    </li>
-                    <li className="page-item  disabled ">
-                      <Link className="page-link" href="#">
-                        »
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-                <div className="action-bar-buttons">
-                  <Link
-                    href="/profile/settings/messaging/new"
-                    className="btn btn-primary btn-sm"
-                  >
-                    New Message
-                  </Link>
-                </div>
+  async function handleCreateThread(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const parsed = createMessageThreadSchema.safeParse({
+      receiverId: Number(formData.receiverId),
+      title: formData.title,
+      message: formData.message,
+    });
+
+    if (!parsed.success) {
+      addNotification("Please provide receiver id, title and message.", "error", 4000);
+      return;
+    }
+
+    try {
+      setIsComposing(true);
+      const response = await fetch("/api/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(parsed.data),
+      });
+
+      const result = (await response.json()) as {
+        success?: boolean;
+        error?: { message?: string; code?: string };
+      };
+
+      if (!response.ok || !result.success) {
+        addNotification(
+          `Error creating thread, ${result.error?.message ?? "Unknown error"} (${result.error?.code ?? "UNKNOWN"})`,
+          "error",
+          5000,
+        );
+        return;
+      }
+
+      addNotification("Thread created successfully!", "success", 4000);
+      setFormData(initialThreadValues);
+      await loadInbox();
+      closeModal();
+    } catch (error) {
+      addNotification(`Unexpected error: ${String(error)}`, "error", 5000);
+    } finally {
+      setIsComposing(false);
+    }
+  }
+
+  if (loading) return <p>Loading messages...</p>;
+
+  return (
+    <div>
+      <h2>Inbox</h2>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <p className="mb-0 text-muted">Start a private conversation with another community member.</p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() =>
+            openModal({
+              title: "Neue Nachricht",
+              size: "lg",
+              content: (
+                <form onSubmit={handleCreateThread} id="form-message-thread-create">
+            <div className="form-group">
+              {/* Recipient picker: search/select user instead of raw numeric ID */}
+              {/* UserPicker sets the receiver id (string) on selection */}
+              <label className="form-label">Recipient</label>
+              {/* Lazy load component to avoid adding bundle weight to non-client pages if needed */}
+              <div>
+                <UserPicker
+                  value={formData.receiverId}
+                  onChange={(val: string) => setFormData((current) => ({ ...current, receiverId: val }))}
+                />
               </div>
-            </>
-          ) : (
-            <>Error..</>
-          )}
-        </>
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="threadTitle">
+                Title
+              </label>
+              <input
+                id="threadTitle"
+                name="title"
+                type="text"
+                className="form-control"
+                value={formData.title}
+                onChange={(event) =>
+                  setFormData((current) => ({
+                    ...current,
+                    title: event.target.value,
+                  }))
+                }
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="threadMessage">
+                Message
+              </label>
+              <textarea
+                id="threadMessage"
+                name="message"
+                className="form-control"
+                value={formData.message}
+                onChange={(event) =>
+                  setFormData((current) => ({
+                    ...current,
+                    message: event.target.value,
+                  }))
+                }
+                required
+              />
+            </div>
+            <hr />
+            <button type="submit" className="btn btn-primary btn-block" disabled={isComposing}>
+              {isComposing ? "Senden..." : "Thread erstellen"}
+            </button>
+                </form>
+              ),
+            })
+          }
+        >
+          Neue Nachricht
+        </button>
+      </div>
+      {messages.length === 0 ? (
+        <div className="card">
+          <div className="card-body text-center py-5">
+            <h3 className="h5">No messages yet</h3>
+            <p className="text-muted mb-0">Your conversations will appear here.</p>
+          </div>
+        </div>
+      ) : (
+        <ul className="list-group">
+          {messages.map((m) => (
+            <li key={m.id} className="list-group-item">
+              <Link href={`/profile/settings/messaging/${m.id}`}>
+                <strong>{m.title}</strong> — {m.sender?.username ?? "Unknown"}
+                <div className="small text-muted">{new Date(m.createdAt).toLocaleString()}</div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
-    </>
+    </div>
   );
 }

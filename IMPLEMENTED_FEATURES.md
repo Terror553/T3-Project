@@ -2,6 +2,51 @@
 
 This file lists every feature implemented so far in this agent session with a short description and links to the main files changed. It will be updated for each subsequent change.
 
+## Current implementation cycle
+
+- Updated this implementation record before continuing work so the current
+  dashboard, messaging, Bootstrap/theme, announcements, and forum-label
+  changes are preserved in the project history.
+- Replaced the dashboard root placeholder with a redirect to the live overview,
+  added shared Bootstrap dashboard permission/section components, and wired
+  existing administration screens into dashboard routes where matching APIs
+  already exist.
+- Moved the richer messaging inbox and thread pages to
+  `src/app/profile/settings/messaging`, updated internal links, and removed the
+  duplicate `/messages` page surface.
+- Added shared light/dark theme styling for Bootstrap dashboard sections and
+  tables in `src/styles/theme`.
+- Added persisted dashboard announcements and forum labels, including
+  authorized raw-Prisma API routes, migrations, validation, and Bootstrap
+  management screens.
+- Updated the seed cleanup to remove announcement and forum-label records, and
+  hardened label creation error handling in the dashboard UI.
+- The next continuation slice is extending announcements and labels from
+  create/list screens into complete moderation management with authorized
+  deletion.
+- Announcements and forum labels now support authorized deletion with
+  confirmation/error handling in their Bootstrap dashboard screens.
+- Corrected the CRUD continuation wiring so the new DELETE handlers and UI
+  actions are module-level, type-safe, and independently callable.
+- Added the module-level DELETE API handlers for announcements and forum labels
+  after completing the CRUD wiring correction.
+- Rewrote the two dashboard CRUD route modules cleanly after validation exposed
+  an invalid nested-export placement; both APIs now have independent GET, POST,
+  and DELETE handlers.
+- Tightened announcement POST authorization narrowing so strict TypeScript can
+  prove the authenticated staff user exists before persistence.
+- Applied the same explicit authenticated-user guard to the final announcement
+  delete path before rerunning validation.
+- Completed the current dashboard CRUD slice after validation: announcement
+  and label APIs now expose clean independent GET/POST/DELETE handlers, and
+  their Bootstrap screens provide create, list, delete confirmation, and
+  visible error handling.
+
+## Latest progress
+
+- Synchronized `prisma/seed.ts` with the upload metadata and forum report migrations. Seed cleanup removes rows from both new tables, and deterministic moderation fixture data is inserted after forum content is created.
+- Applied the two new migrations to the deployment database after safely baselining the two existing migrations; no database reset was performed.
+
 Format: Feature title â€” short description. Key files/paths (absolute) referenced for context.
 
 1. Baseline stabilization

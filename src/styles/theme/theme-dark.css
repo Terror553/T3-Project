@@ -24,6 +24,11 @@
 	color-scheme: dark;
 }
 
+[data-theme="dark"] .dashboard-section .table {
+	--bs-table-color: var(--text-primary);
+	--bs-table-border-color: var(--divider);
+}
+
 [data-theme="dark"] .header.faded::before {
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, transparent), color-stop(30%, rgba(0, 0, 0, 0.18)), to(var(--background-page)));
 	background: linear-gradient(transparent 0, rgba(0, 0, 0, 0.18) 30%, var(--background-page) 100%);

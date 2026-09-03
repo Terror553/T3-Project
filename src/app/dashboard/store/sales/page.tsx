@@ -1,7 +1,5 @@
-export default async function Sales() {
-  return (
-    <>
-      <h2>This is the Sales</h2>
-    </>
-  );
+import StoreSection from "~/components/dashboard/StoreSection";
+
+export default function Sales() {
+  return <StoreSection title="Sales" description="Review completed store sales and revenue." />;
 }

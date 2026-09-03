@@ -327,6 +327,8 @@ async function clearDatabase(): Promise<void> {
 
   await prisma.$executeRawUnsafe("DELETE FROM forum_reports");
   await prisma.$executeRawUnsafe("DELETE FROM upload_metadata");
+  await prisma.$executeRawUnsafe("DELETE FROM announcements");
+  await prisma.$executeRawUnsafe("DELETE FROM forum_labels");
   await prisma.forumTopicReplyReaction.deleteMany();
   await prisma.forumTopicReaction.deleteMany();
   await prisma.forumReaction.deleteMany();

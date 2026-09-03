@@ -59,6 +59,32 @@ model ForumReport {
     @@map("forum_reports")
 }
 
+model Announcement {
+    id        Int       @id @default(autoincrement())
+    title     String    @db.VarChar(255)
+    content   String    @db.LongText
+    published Int       @default(1) @db.TinyInt
+    authorId  Int
+    createdAt DateTime  @default(now()) @db.DateTime(6)
+    updatedAt DateTime  @default(now()) @db.DateTime(6)
+    author    ForumUser @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    @@index([authorId])
+    @@index([published])
+    @@map("announcements")
+}
+
+model ForumLabel {
+    id        Int       @id @default(autoincrement())
+    name      String    @db.VarChar(100)
+    color     String    @db.VarChar(30)
+    createdAt DateTime  @default(now()) @db.DateTime(6)
+    updatedAt DateTime  @default(now()) @db.DateTime(6)
+
+    @@unique([name])
+    @@map("forum_labels")
+}
+
 model ConsoleLog {
     id      Int    @id @default(autoincrement())
     message String @db.Text
@@ -325,6 +351,7 @@ model ForumUser {
     uploadMetadata         UploadMetadata[]
     reportsSubmitted       ForumReport[]              @relation("forum_report_reporter")
     reportsReviewed        ForumReport[]              @relation("forum_report_reviewer")
+    announcements          Announcement[]
 
     @@unique([username(length: 255), password(length: 255), salt(length: 255), email(length: 255), userAuthToken(length: 255)])
     @@index([roleId], map: "FK_0fd7d07d475155bfb73b59a0b64")

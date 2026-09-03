@@ -1,7 +1,5 @@
-export default async function Payments() {
-  return (
-    <>
-      <h2>This is the Payments</h2>
-    </>
-  );
+import StoreSection from "~/components/dashboard/StoreSection";
+
+export default function Payments() {
+  return <StoreSection title="Payments" description="Review payment activity and provider configuration." />;
 }

@@ -1,7 +1,5 @@
-export default async function Coupons() {
-  return (
-    <>
-      <h2>This is the Coupons</h2>
-    </>
-  );
+import StoreSection from "~/components/dashboard/StoreSection";
+
+export default function Coupons() {
+  return <StoreSection title="Coupons" description="Manage promotional codes for the store." />;
 }

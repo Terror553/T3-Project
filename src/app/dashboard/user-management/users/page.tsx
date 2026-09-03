@@ -1,7 +1,5 @@
-export default async function Users() {
-  return (
-    <>
-      <h2>This is the Users</h2>
-    </>
-  );
+import DashboardUsers from "~/components/dashboard/DashboardUsers";
+
+export default function Users() {
+  return <DashboardUsers />;
 }

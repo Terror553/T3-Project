@@ -4,7 +4,7 @@
 
 - Forum read flows are stabilized and refactored.
 - Profile settings and avatar upload flow are implemented with client-side cropping (react-easy-crop) and multipart progress.
-- User preferences (theme, timezone, notifications) persist via JSON file storage without requiring DB migrations.
+- User preferences (theme, timezone, notifications, and compact layout) persist through the profile settings API.
 - Admin panel is substantially complete with category management, role management, emoji reaction management, bans, and report moderation.
 - All production code has been cleaned to strict TypeScript with zero `any` types.
 - Focused Vitest coverage exists for forum, messaging, admin, profile, upload metadata, and clan server flows.
@@ -15,6 +15,18 @@
 - Public profile wall posts now render from the loaded Prisma relations.
 - Extended profile preferences now include a persisted compact-layout option.
 - Forum reports now have persistence, authenticated submission, and moderator status actions.
+- Dashboard placeholder routes now have a shared permission-gated Bootstrap
+  section shell, existing admin features are reachable from dashboard routes,
+  and messaging is canonical under profile settings.
+- The active next cycle is tracked in `TO_DO.md`, with remaining dashboard
+  configuration, store, announcement, labels, backend, and style-audit work
+  still open.
+- Dashboard announcements and forum labels are now implemented and deployed;
+  remaining gaps are configuration persistence and store domain/API design.
+- The current continuation completed announcement and label deletion with
+  strict authorization and validation. Next work remains dashboard
+  configuration persistence, store domain/API implementation, and focused
+  dashboard tests.
 
 ## Recently Completed Features (Session 3 Snapshot)
 
@@ -40,6 +52,6 @@
 
 ## Next work item
 
-**Remaining validation and platform work**: apply the upload and report migrations in the deployment database and continue adding focused tests for uncovered routes. Storage-provider switching is intentionally out of scope because MinIO is the configured deployment.
+**Remaining validation and platform work**: continue adding focused tests for uncovered routes. The deployment database is now baselined and has the upload metadata and forum report migrations applied. Storage-provider switching is intentionally out of scope because MinIO is the configured deployment.
 
 Prioritize report submission and moderation workflow, followed by focused validation tests for the remaining API and UI milestones.

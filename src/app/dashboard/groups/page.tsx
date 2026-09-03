@@ -1,7 +1,1 @@
-export default async function Groups() {
-  return (
-    <>
-      <h2>This is the Groups</h2>
-    </>
-  );
-}
+export { default } from "~/app/admin/roles/page";

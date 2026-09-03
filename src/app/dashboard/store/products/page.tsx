@@ -1,7 +1,5 @@
-export default async function Products() {
-  return (
-    <>
-      <h2>This is the Products</h2>
-    </>
-  );
+import StoreSection from "~/components/dashboard/StoreSection";
+
+export default function Products() {
+  return <StoreSection title="Products" description="Manage products offered by the community store." />;
 }
