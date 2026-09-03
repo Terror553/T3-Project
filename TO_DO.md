@@ -176,28 +176,26 @@ _Severity: Low | Completion: 100%_
 
 ## 10. File Uploads & CDN
 
-_Severity: High | Completion: 90%_
+_Severity: High | Completion: 95%_
 
-**Context:** The backend upload infrastructure is complete with local file storage, Prisma metadata persistence, attachment targets, and progress tracking. S3/CDN provider switching is intentionally deferred because the current deployment uses the existing configured client and local adapter.
+**Context:** Uploads use the configured S3-compatible MinIO client, Prisma metadata persistence, attachment targets, and direct browser-to-bucket transfers.
 
 - [x] **API Route for Pre-signed URLs**
   - [x] **API:** `src/app/api/upload/[path]/route.ts` implemented for file serving.
-  - [x] **API:** `src/app/api/uploads/route.ts` for JSON file upload.
-  - [x] **API:** `src/app/api/uploads/form/route.ts` for multipart form uploads (5MB limit, progress support).
+  - [x] **API:** Direct browser upload using the pre-signed URL returned by `src/app/api/upload/[path]/route.ts`.
 - [x] **File Upload Component**
   - [x] **UI/Client:** `UploadForm.tsx` component with configurable title and aspect ratio.
   - [x] **Client Logic:** Uses `FormProvider`, `useFormManager`, and `setFieldValue`.
-  - [x] **Enhancements:** Multipart progress tracking, client-side image cropping, aspect ratio enforcement.
+  - [x] **Enhancements:** Client-side image cropping and aspect ratio enforcement.
 - [x] **Storage Adapter**
-  - [x] **Server Logic:** `src/server/storage/storage.ts` implements local file storage adapter with public URLs.
+  - [x] **Server Logic:** `src/server/s3.ts` provides the MinIO/S3-compatible client.
   - [x] **Server Logic:** `src/app/api/upload/save/route.ts` handles file persistence with metadata.
   - [x] **Validation:** Upload metadata strictly typed and validated at runtime.
   - [x] **Database Integration**
     - [x] **Server Logic:** Persist upload metadata and attachment targets through the storage module.
     - [x] **Prisma Schema:** Added the `UploadMetadata` model and deployment migration.
-  - [ ] **S3/CDN Migration**
-  - [ ] **Server Logic:** Connect S3 keys to application models when ready to migrate from local storage.
-  - [ ] **Configuration:** Env-based storage adapter switching (local vs. S3).
+  - [x] **S3/MinIO Storage**
+  - [x] **Server Logic:** Browser uploads go directly to the configured bucket using pre-signed URLs.
 
 ---
 

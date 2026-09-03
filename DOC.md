@@ -365,17 +365,17 @@ export default function MyComponent() {
 
 ## 10. File Uploads
 
-The upload system supports local storage for the current deployment and retains an S3 client for a future provider migration. The current profile flow uploads files to the local adapter, persists a durable metadata record, and then attaches the saved public URL to the owning profile.
+The upload system uses the configured S3-compatible client (MinIO) as its only file store. Browser clients request a pre-signed URL, upload directly to the bucket, then persist a durable metadata record and attach the saved public URL to the owning profile.
 
 ### 10.1 Storage Providers
 
-The S3 client is configured in `src/server/s3.ts` with region, endpoint, and credentials from environment variables. It remains available for future cloud migration. The active local adapter in `src/server/storage/storage.ts` writes files beneath `public/uploads` and returns a public `/uploads/...` URL.
+The S3 client is configured in `src/server/s3.ts` with region, endpoint, and credentials from environment variables. The endpoint supports MinIO through `forcePathStyle: true`. No server-side filesystem upload adapter is used.
 
 `src/server/storage/uploadMetadata.ts` persists the file name, content type, byte size, public URL, storage path, owner ID, optional attachment target, and creation time through Prisma. `saveUploadMetadata` creates a record and normalizes the database timestamp to an ISO string; `listUploadMetadata` optionally filters records by owner and orders newest first. The `UploadMetadata` model and deployment migration are defined in `prisma/schema.prisma` and `prisma/migrations/20260902215000_add_upload_metadata/migration.sql`.
 
 ### 10.2 API Route for Pre-signed URLs
 
-The legacy API route at `src/app/api/upload/[path]/route.ts` generates an S3 pre-signed upload URL. The current local upload routes are `src/app/api/uploads/route.ts` for JSON/base64-style uploads and `src/app/api/uploads/form/route.ts` for multipart uploads. The multipart route enforces the five-megabyte limit and returns progress-compatible responses. `src/app/api/upload/save/route.ts` validates metadata and saves the database record, including optional attachment information.
+The API route at `src/app/api/upload/[path]/route.ts` generates an S3-compatible pre-signed upload URL. Clients upload directly to that URL with `PUT`; file bytes never pass through the Next.js server. `src/app/api/upload/save/route.ts` validates metadata and saves the database record, including optional attachment information.
 
 - **HTTP Method**: `POST`
 - **Request Body**:
@@ -1498,11 +1498,16 @@ const clans = await fetch("/api/clan").then((r) => r.json());
 const verification = await fetch("/api/profile/verification").then((r) =>
   r.json(),
 );
-const upload = await fetch("/api/uploads", {
+const signed = await fetch("/api/upload/uploads", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ fileName, contentType, data }),
+  body: JSON.stringify({ fileName, contentType }),
 }).then((r) => r.json());
+await fetch(signed.url, {
+  method: "PUT",
+  headers: { "Content-Type": contentType },
+  body: file,
+});
 ```
 
 The protected messaging and verification routes require the authenticated session. Upload responses can be passed to `POST /api/upload/save` with `ownerUserId` and an optional `attachTo` target; the save route validates the target before persisting `UploadMetadata`.
