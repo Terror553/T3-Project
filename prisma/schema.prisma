@@ -37,6 +37,28 @@ model UploadMetadata {
     @@map("upload_metadata")
 }
 
+model ForumReport {
+    id         Int              @id @default(autoincrement())
+    reason     String           @db.Text
+    status     String           @default("open") @db.VarChar(20)
+    reporterId  Int
+    topicId    Int?
+    replyId    Int?
+    reviewedBy Int?
+    createdAt  DateTime         @default(now()) @db.DateTime(6)
+    updatedAt  DateTime         @default(now()) @db.DateTime(6)
+    reporter   ForumUser        @relation("forum_report_reporter", fields: [reporterId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    topic      ForumTopic?      @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    reply      ForumTopicReply? @relation(fields: [replyId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    reviewer   ForumUser?       @relation("forum_report_reviewer", fields: [reviewedBy], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+    @@index([reporterId])
+    @@index([topicId])
+    @@index([replyId])
+    @@index([status])
+    @@map("forum_reports")
+}
+
 model ConsoleLog {
     id      Int    @id @default(autoincrement())
     message String @db.Text
@@ -210,6 +232,7 @@ model ForumTopicReply {
     author         ForumUser?                @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_3487d2b211836d6fff2cb39eeb0")
     topic          ForumTopic?               @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_9a56eaee984340cdc2ff1b383df")
     replyReactions ForumTopicReplyReaction[]
+    reports        ForumReport[]
 
     @@index([authorId], map: "FK_3487d2b211836d6fff2cb39eeb0")
     @@index([topicId], map: "FK_9a56eaee984340cdc2ff1b383df")
@@ -251,6 +274,7 @@ model ForumTopic {
     subcategory    ForumSubcategory?    @relation(fields: [subcategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_01d2ff4b1bbf5c9eee83310498a")
     author         ForumUser?           @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c228733246cf2aee0240663b354")
     hidden         Int                  @default(0) @db.TinyInt
+    reports        ForumReport[]
 
     @@index([subcategoryId], map: "FK_01d2ff4b1bbf5c9eee83310498a")
     @@index([authorId], map: "FK_c228733246cf2aee0240663b354")
@@ -299,6 +323,8 @@ model ForumUser {
     wikiCategories         WikiCategory[]
     wikiSubCategories      WikiSubCategory[]
     uploadMetadata         UploadMetadata[]
+    reportsSubmitted       ForumReport[]              @relation("forum_report_reporter")
+    reportsReviewed        ForumReport[]              @relation("forum_report_reviewer")
 
     @@unique([username(length: 255), password(length: 255), salt(length: 255), email(length: 255), userAuthToken(length: 255)])
     @@index([roleId], map: "FK_0fd7d07d475155bfb73b59a0b64")

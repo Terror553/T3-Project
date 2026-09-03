@@ -105,7 +105,7 @@ _Severity: Medium | Completion: 100%_
 
 ## 6. Admin Panel & Moderation Tools
 
-_Severity: Medium | Completion: 90%_
+_Severity: Medium | Completion: 100%_
 
 **Context:** A comprehensive admin panel has been implemented with role-based access control. Core infrastructure including category management, role management, and emoji management are complete. Advanced moderation features remain.
 
@@ -127,7 +127,7 @@ _Severity: Medium | Completion: 90%_
   - [x] **Authorization:** Team-level access control.
 - [x] **Advanced Moderation**
   - [x] **User Bans:** Added authenticated admin ban listing and creation with a dashboard management UI.
-  - [x] **Reports UI:** Added a clear empty-state screen while report submission infrastructure remains future work.
+  - [x] **Reports:** Added authenticated report submission, moderator listing, and resolve/dismiss actions.
 
 ---
 

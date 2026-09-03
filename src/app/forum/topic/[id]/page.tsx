@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { type FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/client/theme";
 import type { ForumTopic, ForumUser } from "~/server/types/forum";
@@ -28,6 +28,31 @@ export default function Topic() {
   ];
 
   const isFollowing = !!user && !!topic?.forum_topic_follow?.some((follow) => follow.userId === user.id);
+
+  async function handleReportSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!user) {
+      window.alert("You must be signed in to submit a report.");
+      return;
+    }
+
+    const form = new FormData(event.currentTarget);
+    const reason = String(form.get("reason") ?? "").trim();
+    const targetType = form.get("targetType");
+    const targetId = Number(form.get("targetId"));
+    const payload = targetType === "topic" ? { reason, topicId: targetId } : { reason, replyId: targetId };
+    const response = await fetch("/api/reports", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      window.alert("Unable to submit report.");
+      return;
+    }
+    window.alert("Report submitted.");
+    event.currentTarget.reset();
+  }
 
   if (!id) {
     throw new Error("ID is undefined in Forum component");
@@ -532,10 +557,7 @@ export default function Topic() {
                                             <i className="fa fa-times"></i>
                                           </Link>
                                         </div>
-                                        <form
-                                          action="?/reportPost"
-                                          method="post"
-                                        >
+                                        <form onSubmit={handleReportSubmit}>
                                           <div className="modal-body">
                                             <div className="form-group">
                                               <label className="form-label">
@@ -548,9 +570,14 @@ export default function Topic() {
                                                 name="reason"
                                               ></textarea>
                                               <input
-                                                id="postId"
-                                                name="postId"
+                                                name="targetType"
                                                 type="hidden"
+                                                value="topic"
+                                              />
+                                              <input
+                                                name="targetId"
+                                                type="hidden"
+                                                value={topic.id}
                                               />
                                             </div>
                                           </div>
@@ -808,7 +835,7 @@ export default function Topic() {
                                         <i className="fa fa-times"></i>
                                       </Link>
                                     </div>
-                                    <form action="?/reportPost" method="post">
+                                    <form onSubmit={handleReportSubmit}>
                                       <div className="modal-body">
                                         <div className="form-group">
                                           <label className="form-label">
@@ -820,9 +847,14 @@ export default function Topic() {
                                             name="reason"
                                           ></textarea>
                                           <input
-                                            id="postId"
-                                            name="postId"
+                                            name="targetType"
                                             type="hidden"
+                                            value="reply"
+                                          />
+                                          <input
+                                            name="targetId"
+                                            type="hidden"
+                                            value={reply.id}
                                           />
                                         </div>
                                       </div>
