@@ -11,7 +11,11 @@ type Props = {
   placeholder?: string;
 };
 
-export default function UserPicker({ value, onChange, placeholder = "Select a user" }: Props) {
+export default function UserPicker({
+  value,
+  onChange,
+  placeholder = "Select a user",
+}: Props) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<UserResult[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
@@ -21,7 +25,9 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
   const containerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   // stable id for aria attributes
-  const idRef = useRef<string>(`user-picker-${Math.random().toString(36).slice(2, 8)}`);
+  const idRef = useRef<string>(
+    `user-picker-${Math.random().toString(36).slice(2, 8)}`,
+  );
   const listboxId = `${idRef.current}-listbox`;
 
   useEffect(() => {
@@ -50,12 +56,15 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
       setOpen(false);
       return;
     }
-    setLoading(true);
+
+    setLoading(true);
     // Debounced search
     debouncer.current = window.setTimeout(() => {
       const doSearch = async () => {
         try {
-          const res = await fetch(`/api/user/search?q=${encodeURIComponent(query)}`);
+          const res = await fetch(
+            `/api/user/search?q=${encodeURIComponent(query)}`,
+          );
           if (!res.ok) throw new Error(`Search failed ${res.status}`);
           const data = (await res.json()) as UserResult[];
           setResults(data || []);
@@ -72,61 +81,79 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
       };
       void doSearch();
     }, 250);
-    return () => {
+
+    return () => {
       if (debouncer.current) window.clearTimeout(debouncer.current);
     };
   }, [query]);
-  const selectUser = useCallback((u: UserResult) => {
-    onChange(String(u.id));
-    setQuery(u.username);
-    setOpen(false);
-    setHighlightedIndex(-1);
-    // return focus to the input so keyboard users remain in flow
-    inputRef.current?.focus();
-  }, [onChange]);
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!open || results.length === 0) {
-      // If list is closed and user presses ArrowDown, open it (if results exist)
-      if (e.key === "ArrowDown" && results.length > 0) {
-        e.preventDefault();
-        setOpen(true);
-        setHighlightedIndex(0);
-      }
-      return;
-    }
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setHighlightedIndex((prev) => (prev >= results.length - 1 ? 0 : prev + 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setHighlightedIndex((prev) => (prev <= 0 ? results.length - 1 : prev - 1));
-    } else if (e.key === "Home") {
-      e.preventDefault();
-      setHighlightedIndex(0);
-    } else if (e.key === "End") {
-      e.preventDefault();
-      setHighlightedIndex(results.length - 1);
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      const idx = highlightedIndex >= 0 ? highlightedIndex : 0;
-      const item = results[idx];
-      if (item) selectUser(item);
-    } else if (e.key === "Escape") {
+
+  const selectUser = useCallback(
+    (u: UserResult) => {
+      onChange(String(u.id));
+      setQuery(u.username);
       setOpen(false);
-      inputRef.current?.blur();
-    }
-  }, [open, results, highlightedIndex, selectUser]);
-  function clearSelection() {
+      setHighlightedIndex(-1);
+      // return focus to the input so keyboard users remain in flow
+      inputRef.current?.focus();
+    },
+    [onChange],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (!open || results.length === 0) {
+        // If list is closed and user presses ArrowDown, open it (if results exist)
+        if (e.key === "ArrowDown" && results.length > 0) {
+          e.preventDefault();
+          setOpen(true);
+          setHighlightedIndex(0);
+        }
+        return;
+      }
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setHighlightedIndex((prev) =>
+          prev >= results.length - 1 ? 0 : prev + 1,
+        );
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setHighlightedIndex((prev) =>
+          prev <= 0 ? results.length - 1 : prev - 1,
+        );
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        setHighlightedIndex(0);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        setHighlightedIndex(results.length - 1);
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        const idx = highlightedIndex >= 0 ? highlightedIndex : 0;
+        const item = results[idx];
+        if (item) selectUser(item);
+      } else if (e.key === "Escape") {
+        setOpen(false);
+        inputRef.current?.blur();
+      }
+    },
+    [open, results, highlightedIndex, selectUser],
+  );
+
+  function clearSelection() {
     onChange("");
     setQuery("");
     setResults([]);
     setHighlightedIndex(-1);
     inputRef.current?.focus();
   }
-  return (
-    <div className="user-picker" ref={containerRef} style={{ position: "relative" }}>
-      <label className="form-label" htmlFor={`${idRef.current}-input`}>{placeholder}</label>
-      <div style={{ display: "flex", gap: 8 }}>
+
+  return (
+    <div className="user-picker position-relative" ref={containerRef}>
+      <label className="form-label" htmlFor={`${idRef.current}-input`}>
+        {placeholder}
+      </label>
+      <div className="d-flex gap-2">
         <input
           id={`${idRef.current}-input`}
           ref={inputRef}
@@ -142,19 +169,29 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
           aria-controls={open && results.length > 0 ? listboxId : undefined}
           aria-expanded={open}
           aria-haspopup="listbox"
-          aria-activedescendant={open && highlightedIndex >= 0 && results[highlightedIndex] ? `user-picker-option-${results[highlightedIndex].id}` : undefined}
+          aria-activedescendant={
+            open && highlightedIndex >= 0 && results[highlightedIndex]
+              ? `user-picker-option-${results[highlightedIndex].id}`
+              : undefined
+          }
         />
-        <button type="button" className="btn btn-outline-secondary" onClick={clearSelection} aria-label="Clear selection">
+        <button
+          type="button"
+          className="btn btn-outline-secondary"
+          onClick={clearSelection}
+          aria-label="Clear selection"
+        >
           Clear
         </button>
       </div>
-      {open && results.length > 0 && (
+
+      {open && results.length > 0 && (
         <ul
           id={listboxId}
-          className="list-group"
           role="listbox"
           aria-label="User search results"
-          style={{ position: "absolute", zIndex: 60, width: "100%", maxHeight: 240, overflowY: "auto", marginTop: 6 }}
+          className="list-group position-absolute w-100 overflow-auto mt-1"
+          style={{ zIndex: 60, maxHeight: 240 }}
         >
           {results.map((u, idx) => (
             <li
@@ -167,8 +204,14 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
               onClick={() => selectUser(u)}
               onMouseEnter={() => setHighlightedIndex(idx)}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Image src={u.avatarUrl ?? "/default.png"} alt={u.username} width={28} height={28} style={{ borderRadius: 12 }} />
+              <div className="d-flex align-items-center gap-2">
+                <Image
+                  src={u.avatarUrl ?? "/default.png"}
+                  alt={u.username}
+                  width={28}
+                  height={28}
+                  style={{ borderRadius: 12 }}
+                />
                 <div>
                   <div>{u.username}</div>
                   <div className="small text-muted">ID: {u.id}</div>
@@ -178,7 +221,8 @@ export default function UserPicker({ value, onChange, placeholder = "Select a us
           ))}
         </ul>
       )}
-      {loading && <div className="small text-muted mt-1">Searching...</div>}
+
+      {loading && <div className="small text-muted mt-1">Searching...</div>}
     </div>
   );
 }

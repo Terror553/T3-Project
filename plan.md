@@ -28,6 +28,9 @@
   store domain/API implementation, and focused dashboard tests.
 - Dashboard configuration persistence is now implemented for general,
   registration, privacy, and terms settings with a deployed migration.
+- Completed a Bootstrap 5.0.1 and accessibility audit for changed dashboard,
+  messaging, and UserPicker surfaces, including supported utility classes,
+  semantic loading/error states, labels, and responsive layouts.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

@@ -34,39 +34,59 @@ export default function MessageThread() {
     if (id) void loadThread();
   }, [id, loadThread]);
 
-  if (loading) return <p>Loading thread...</p>;
-  if (!message) return <p>Message not found</p>;
+  if (loading)
+    return (
+      <p className="alert alert-info" role="status">
+        Loading thread...
+      </p>
+    );
+  if (!message)
+    return (
+      <p className="alert alert-warning" role="alert">
+        Message not found.
+      </p>
+    );
 
   return (
     <div className="container py-3">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <Link href="/profile/settings/messaging" className="btn btn-link px-0">
+          <Link
+            href="/profile/settings/messaging"
+            className="btn btn-link px-0"
+          >
             &larr; Back to inbox
           </Link>
           <h2 className="mb-0">{message.title}</h2>
         </div>
-        <span className="badge text-bg-secondary">
-          {message.messageReplies.length} {message.messageReplies.length === 1 ? "reply" : "replies"}
+        <span className="badge bg-secondary text-white">
+          {message.messageReplies.length}{" "}
+          {message.messageReplies.length === 1 ? "reply" : "replies"}
         </span>
       </div>
       <div className="card mb-3 border-primary">
         <div className="card-body">
           <div dangerouslySetInnerHTML={{ __html: message.message }} />
-          <div className="small text-muted mt-3">From: {message.sender?.username ?? "Unknown"}</div>
+          <div className="small text-muted mt-3">
+            From: {message.sender?.username ?? "Unknown"}
+          </div>
         </div>
       </div>
 
       <h4 className="h5 mb-3">Replies</h4>
       {message.messageReplies.length === 0 ? (
-        <p className="text-muted">No replies yet. Start the conversation below.</p>
+        <p className="text-muted">
+          No replies yet. Start the conversation below.
+        </p>
       ) : (
-        <div className="vstack gap-2">
+        <div className="d-grid gap-2">
           {message.messageReplies.map((r) => (
             <div key={r.id} className="card">
               <div className="card-body">
                 <div dangerouslySetInnerHTML={{ __html: r.message }} />
-                <div className="small text-muted mt-2">From: {r.sender?.username ?? "Unknown"}</div>
+                <div className="small text-muted mt-2">
+                  From: {r.sender?.username ?? "Unknown"}
+                </div>
               </div>
             </div>
           ))}

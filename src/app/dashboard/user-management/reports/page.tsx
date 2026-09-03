@@ -19,7 +19,8 @@ export default function Reports() {
   async function loadReports(): Promise<void> {
     try {
       const response = await fetch("/api/reports");
-      if (!response.ok) throw new Error(`Failed to load reports (${response.status})`);
+      if (!response.ok)
+        throw new Error(`Failed to load reports (${response.status})`);
       setReports((await response.json()) as Report[]);
     } catch (loadError) {
       console.error("Failed to load reports", loadError);
@@ -27,7 +28,10 @@ export default function Reports() {
     }
   }
 
-  async function updateStatus(id: number, status: "resolved" | "dismissed"): Promise<void> {
+  async function updateStatus(
+    id: number,
+    status: "resolved" | "dismissed",
+  ): Promise<void> {
     const response = await fetch("/api/reports", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -47,7 +51,9 @@ export default function Reports() {
   return (
     <main className="container-fluid py-4">
       <h1 className="h3">Reports</h1>
-      <p className="text-muted">Review community reports and record moderation decisions.</p>
+      <p className="text-muted">
+        Review community reports and record moderation decisions.
+      </p>
       {error && <div className="alert alert-warning">{error}</div>}
       {reports.length === 0 ? (
         <div className="alert alert-secondary">No reports found.</div>
@@ -55,20 +61,50 @@ export default function Reports() {
         <div className="table-responsive">
           <table className="table align-middle">
             <thead>
-              <tr><th>Target</th><th>Reporter</th><th>Reason</th><th>Status</th><th>Actions</th></tr>
+              <tr>
+                <th>Target</th>
+                <th>Reporter</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
               {reports.map((report) => (
                 <tr key={report.id}>
-                  <td>{report.topicId ? `Topic #${report.topicId}` : `Reply #${report.replyId}`}</td>
+                  <td>
+                    {report.topicId
+                      ? `Topic #${report.topicId}`
+                      : `Reply #${report.replyId}`}
+                  </td>
                   <td>{report.reporter.username}</td>
                   <td>{report.reason}</td>
-                  <td><span className="badge text-bg-secondary">{report.status}</span></td>
+                  <td>
+                    <span className="badge bg-secondary text-white">
+                      {report.status}
+                    </span>
+                  </td>
                   <td>
                     {report.status === "open" && (
                       <div className="btn-group btn-group-sm">
-                        <button type="button" className="btn btn-success" onClick={() => void updateStatus(report.id, "resolved")}>Resolve</button>
-                        <button type="button" className="btn btn-outline-secondary" onClick={() => void updateStatus(report.id, "dismissed")}>Dismiss</button>
+                        <button
+                          type="button"
+                          className="btn btn-success"
+                          onClick={() =>
+                            void updateStatus(report.id, "resolved")
+                          }
+                        >
+                          Resolve
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary"
+                          onClick={() =>
+                            void updateStatus(report.id, "dismissed")
+                          }
+                        >
+                          Dismiss
+                        </button>
                       </div>
                     )}
                   </td>

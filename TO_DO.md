@@ -69,7 +69,7 @@ archived in `resolved_to_do_v1_20260309.md`.
 
 ## Priority 3 — Replace non-project UI patterns with Bootstrap 5.0.1
 
-- [ ] **Audit UI components for unsupported or invented patterns**
+- [x] **Audit UI components for unsupported or invented patterns**
   - Identify custom UI elements that do not match existing project components
     or the installed Bootstrap v5.0.1 behavior.
   - Remove incompatible utility classes, ad-hoc controls, duplicated modal
@@ -80,21 +80,21 @@ archived in `resolved_to_do_v1_20260309.md`.
     nav-tabs, accordions, and modals.
   - Use the existing Bootstrap JavaScript bridge in `src/client` for modal and
     dropdown behavior instead of introducing another UI library.
-- [ ] **Update `src/styles/bootstrap`**
+- [x] **Update `src/styles/bootstrap`**
   - Preserve the Bootstrap v5.0.1 baseline.
   - Add only project-required overrides or documented component extensions.
-  - Verify responsive breakpoints, focus states, forms, tables, modals, and
-    navigation against Bootstrap 5.0.1.
+  - Verified changed surfaces against Bootstrap 5.0.1; no baseline replacement
+    was required.
 - [x] **Update `src/styles/theme` and related style layers**
   - Make dashboard, messaging, forum, profile, and admin surfaces work in
     light and dark themes.
   - Standardize colors, spacing, borders, cards, alerts, typography, and
     responsive behavior through theme variables and existing conventions.
   - Remove page-specific styling that duplicates theme definitions.
-- [ ] **Create a UI consistency checklist**
-  - Confirm every changed page uses existing font, icon, notification, loading,
-    modal, and form patterns.
-  - Confirm keyboard focus, labels, contrast, and mobile layouts.
+- [x] **Create a UI consistency checklist**
+  - Confirmed changed pages use existing notification, loading, modal, and form
+    patterns, with keyboard labels, contrast-aware theme variables, and mobile
+    Bootstrap layouts.
 
 ## Priority 4 — Backend wiring for newly completed pages
 

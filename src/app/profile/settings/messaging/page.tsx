@@ -32,8 +32,8 @@ export default function MessagesInbox() {
       if (!res.ok) throw new Error(`Failed fetching messages ${res.status}`);
       const data = (await res.json()) as ForumMessage[];
       setMessages(data || []);
-    } catch (err) {
-      console.error("Error loading messages", err);
+    } catch (error) {
+      console.error("Error loading messages", error);
       setMessages([]);
     } finally {
       setLoading(false);
@@ -55,7 +55,11 @@ export default function MessagesInbox() {
     });
 
     if (!parsed.success) {
-      addNotification("Please provide receiver id, title and message.", "error", 4000);
+      addNotification(
+        "Please provide receiver id, title and message.",
+        "error",
+        4000,
+      );
       return;
     }
 
@@ -94,88 +98,105 @@ export default function MessagesInbox() {
     }
   }
 
-  if (loading) return <p>Loading messages...</p>;
+  if (loading)
+    return (
+      <p className="alert alert-info" role="status">
+        Loading messages...
+      </p>
+    );
 
   return (
     <div>
       <h2>Inbox</h2>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <p className="mb-0 text-muted">Start a private conversation with another community member.</p>
+        <p className="mb-0 text-muted">
+          Start a private conversation with another community member.
+        </p>
         <button
           type="button"
           className="btn btn-primary"
           onClick={() =>
             openModal({
-              title: "Neue Nachricht",
+              title: "New message",
               size: "lg",
               content: (
-                <form onSubmit={handleCreateThread} id="form-message-thread-create">
-            <div className="form-group">
-              {/* Recipient picker: search/select user instead of raw numeric ID */}
-              {/* UserPicker sets the receiver id (string) on selection */}
-              <label className="form-label">Recipient</label>
-              {/* Lazy load component to avoid adding bundle weight to non-client pages if needed */}
-              <div>
-                <UserPicker
-                  value={formData.receiverId}
-                  onChange={(val: string) => setFormData((current) => ({ ...current, receiverId: val }))}
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="form-label" htmlFor="threadTitle">
-                Title
-              </label>
-              <input
-                id="threadTitle"
-                name="title"
-                type="text"
-                className="form-control"
-                value={formData.title}
-                onChange={(event) =>
-                  setFormData((current) => ({
-                    ...current,
-                    title: event.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label" htmlFor="threadMessage">
-                Message
-              </label>
-              <textarea
-                id="threadMessage"
-                name="message"
-                className="form-control"
-                value={formData.message}
-                onChange={(event) =>
-                  setFormData((current) => ({
-                    ...current,
-                    message: event.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
-            <hr />
-            <button type="submit" className="btn btn-primary btn-block" disabled={isComposing}>
-              {isComposing ? "Senden..." : "Thread erstellen"}
-            </button>
+                <form
+                  onSubmit={handleCreateThread}
+                  id="form-message-thread-create"
+                >
+                  <div className="mb-3">
+                    <div>
+                      <UserPicker
+                        value={formData.receiverId}
+                        onChange={(val: string) =>
+                          setFormData((current) => ({
+                            ...current,
+                            receiverId: val,
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="threadTitle">
+                      Title
+                    </label>
+                    <input
+                      id="threadTitle"
+                      name="title"
+                      type="text"
+                      className="form-control"
+                      value={formData.title}
+                      onChange={(event) =>
+                        setFormData((current) => ({
+                          ...current,
+                          title: event.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="threadMessage">
+                      Message
+                    </label>
+                    <textarea
+                      id="threadMessage"
+                      name="message"
+                      className="form-control"
+                      value={formData.message}
+                      onChange={(event) =>
+                        setFormData((current) => ({
+                          ...current,
+                          message: event.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-100"
+                    disabled={isComposing}
+                  >
+                    {isComposing ? "Sending..." : "Create thread"}
+                  </button>
                 </form>
               ),
             })
           }
         >
-          Neue Nachricht
+          New message
         </button>
       </div>
       {messages.length === 0 ? (
         <div className="card">
           <div className="card-body text-center py-5">
             <h3 className="h5">No messages yet</h3>
-            <p className="text-muted mb-0">Your conversations will appear here.</p>
+            <p className="text-muted mb-0">
+              Your conversations will appear here.
+            </p>
           </div>
         </div>
       ) : (
@@ -184,7 +205,9 @@ export default function MessagesInbox() {
             <li key={m.id} className="list-group-item">
               <Link href={`/profile/settings/messaging/${m.id}`}>
                 <strong>{m.title}</strong> — {m.sender?.username ?? "Unknown"}
-                <div className="small text-muted">{new Date(m.createdAt).toLocaleString()}</div>
+                <div className="small text-muted">
+                  {new Date(m.createdAt).toLocaleString()}
+                </div>
               </Link>
             </li>
           ))}

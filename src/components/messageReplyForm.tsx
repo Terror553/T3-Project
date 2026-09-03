@@ -22,7 +22,10 @@ interface MessageReplyFormProps {
   onSubmitted?: () => void | Promise<void>;
 }
 
-export const MessageReplyForm = ({ id, onSubmitted }: MessageReplyFormProps) => {
+export const MessageReplyForm = ({
+  id,
+  onSubmitted,
+}: MessageReplyFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addNotification } = useNotification();
   const router = useRouter();
@@ -112,7 +115,7 @@ function MessageReplyInner({
       <Button
         type="submit"
         variant="primary"
-        className="btn-block"
+        className="w-100"
         disabled={isSubmitting}
       >
         {isSubmitting ? "Am Posten.." : "Posten"}
