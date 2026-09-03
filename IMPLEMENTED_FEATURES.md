@@ -2,52 +2,79 @@
 
 This file lists every feature implemented so far in this agent session with a short description and links to the main files changed. It will be updated for each subsequent change.
 
-## Current implementation cycle
+31. Dashboard management surfaces
 
-- Updated this implementation record before continuing work so the current
-  dashboard, messaging, Bootstrap/theme, announcements, and forum-label
-  changes are preserved in the project history.
-- Replaced the dashboard root placeholder with a redirect to the live overview,
-  added shared Bootstrap dashboard permission/section components, and wired
-  existing administration screens into dashboard routes where matching APIs
-  already exist.
-- Moved the richer messaging inbox and thread pages to
-  `src/app/profile/settings/messaging`, updated internal links, and removed the
-  duplicate `/messages` page surface.
-- Added shared light/dark theme styling for Bootstrap dashboard sections and
-  tables in `src/styles/theme`.
-- Added persisted dashboard announcements and forum labels, including
-  authorized raw-Prisma API routes, migrations, validation, and Bootstrap
-  management screens.
-- Updated the seed cleanup to remove announcement and forum-label records, and
-  hardened label creation error handling in the dashboard UI.
-- The next continuation slice is extending announcements and labels from
-  create/list screens into complete moderation management with authorized
-  deletion.
-- Announcements and forum labels now support authorized deletion with
-  confirmation/error handling in their Bootstrap dashboard screens.
-- Corrected the CRUD continuation wiring so the new DELETE handlers and UI
-  actions are module-level, type-safe, and independently callable.
-- Added the module-level DELETE API handlers for announcements and forum labels
-  after completing the CRUD wiring correction.
-- Rewrote the two dashboard CRUD route modules cleanly after validation exposed
-  an invalid nested-export placement; both APIs now have independent GET, POST,
-  and DELETE handlers.
-- Tightened announcement POST authorization narrowing so strict TypeScript can
-  prove the authenticated staff user exists before persistence.
-- Applied the same explicit authenticated-user guard to the final announcement
-  delete path before rerunning validation.
-- Completed the current dashboard CRUD slice after validation: announcement
-  and label APIs now expose clean independent GET/POST/DELETE handlers, and
-  their Bootstrap screens provide create, list, delete confirmation, and
-  visible error handling.
+- Replaced dashboard placeholders with permission-gated Bootstrap sections,
+  routed existing administration features into the dashboard, and added
+  overview, user, group, punishment, report, forum, configuration, store,
+  settings, and announcement surfaces. Pages without domain persistence retain
+  explicit empty states instead of pretending to save data.
+- Validation: `npm run check` passed. `npx prisma validate` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/dashboard/DashboardSection.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/dashboard/DashboardUsers.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/dashboard/StoreSection.tsx
 
-## Latest progress
+32. Profile-settings messaging relocation
 
-- Synchronized `prisma/seed.ts` with the upload metadata and forum report migrations. Seed cleanup removes rows from both new tables, and deterministic moderation fixture data is inserted after forum content is created.
-- Applied the two new migrations to the deployment database after safely baselining the two existing migrations; no database reset was performed.
+- Moved the inbox and thread pages to the canonical profile-settings messaging
+  route, updated internal links, and removed the duplicate top-level messages
+  page surface while preserving the existing compose, reply, unread, loading,
+  empty, and error behavior.
+- Validation: `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/settings/messaging/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/settings/messaging/[id]/page.tsx
 
-Format: Feature title â€” short description. Key files/paths (absolute) referenced for context.
+33. Bootstrap dashboard theme foundation
+
+- Added shared dashboard section, table, alert, card, and responsive styling
+  using the installed Bootstrap 5.0.1 baseline and existing light/dark theme
+  variables. No alternate UI framework or storage-provider abstraction was
+  introduced.
+- Validation: `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/styles/bootstrap/bootstrap.min.css
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/styles/theme/theme.css
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/styles/theme/theme-dark.css
+
+34. Dashboard announcements CRUD
+
+- Added a Prisma-backed announcement model and deployment migration with
+  authorized GET, POST, and DELETE handlers. The Bootstrap dashboard screen
+  validates input, lists persisted announcements, confirms deletion, and
+  surfaces request failures to staff users.
+- Validation: `npm run check` passed. `npx prisma validate` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/schema.prisma
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/migrations/20260903221500_add_announcements/migration.sql
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/announcements/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/announcements/page.tsx
+
+35. Forum labels CRUD
+
+- Added a Prisma-backed forum-label model and migration with authorized
+  GET, POST, and DELETE handlers. Label creation validates names and
+  six-digit hexadecimal colors, while the Bootstrap dashboard screen provides
+  listing, deletion confirmation, and visible error handling.
+- Validation: `npm run check` passed. `npx prisma validate` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/schema.prisma
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/migrations/20260903223000_add_forum_labels/migration.sql
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/forum/labels/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/forum/labels/page.tsx
+
+36. Seed and migration synchronization
+
+- Updated `prisma/seed.ts` to clean announcement and forum-label records in
+  addition to upload metadata and forum reports, then safely baselined existing
+  migrations and deployed the new announcement and label migrations without a
+  destructive database reset.
+- Validation: `npx prisma migrate status` reported the database up to date.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/seed.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/migrations
 
 1. Baseline stabilization
 
