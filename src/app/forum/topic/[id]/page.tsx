@@ -14,7 +14,9 @@ export default function Topic() {
   const [loading, setLoading] = useState(true);
   const [topic, setTopic] = useState<ForumTopic | null>(null);
   const [isFollowPending, setIsFollowPending] = useState(false);
-  const [isReactionPending, setIsReactionPending] = useState<number | null>(null);
+  const [isReactionPending, setIsReactionPending] = useState<number | null>(
+    null,
+  );
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<ForumUser | null>(null);
@@ -27,7 +29,9 @@ export default function Topic() {
     { id: 5, emoji: "😄", label: "Laugh" },
   ];
 
-  const isFollowing = !!user && !!topic?.forum_topic_follow?.some((follow) => follow.userId === user.id);
+  const isFollowing =
+    !!user &&
+    !!topic?.forum_topic_follow?.some((follow) => follow.userId === user.id);
 
   async function handleReportSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,7 +44,10 @@ export default function Topic() {
     const reason = String(form.get("reason") ?? "").trim();
     const targetType = form.get("targetType");
     const targetId = Number(form.get("targetId"));
-    const payload = targetType === "topic" ? { reason, topicId: targetId } : { reason, replyId: targetId };
+    const payload =
+      targetType === "topic"
+        ? { reason, topicId: targetId }
+        : { reason, replyId: targetId };
     const response = await fetch("/api/reports", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -89,7 +96,10 @@ export default function Topic() {
         return {
           ...currentTopic,
           forum_topic_follow: nextFollowed
-            ? [...existingFollows, { id: Date.now(), topicId: currentTopic.id, userId: user.id! }]
+            ? [
+                ...existingFollows,
+                { id: Date.now(), topicId: currentTopic.id, userId: user.id! },
+              ]
             : existingFollows.filter((follow) => follow.userId !== user.id),
         };
       });
@@ -133,7 +143,10 @@ export default function Topic() {
         const nextReactions = alreadyReacted
           ? existingReactions.filter(
               (reaction) =>
-                !(reaction.authorId === user.id && reaction.forum_reaction_emojis?.id === reactionId),
+                !(
+                  reaction.authorId === user.id &&
+                  reaction.forum_reaction_emojis?.id === reactionId
+                ),
             )
           : [
               ...existingReactions,
@@ -143,8 +156,12 @@ export default function Topic() {
                 topicId: currentTopic.id,
                 forum_reaction_emojis: {
                   id: reactionId,
-                  name: reactionOptions.find((option) => option.id === reactionId)?.label ?? "Reaction",
-                  emoji: reactionOptions.find((option) => option.id === reactionId)?.emoji ?? "👍",
+                  name:
+                    reactionOptions.find((option) => option.id === reactionId)
+                      ?.label ?? "Reaction",
+                  emoji:
+                    reactionOptions.find((option) => option.id === reactionId)
+                      ?.emoji ?? "👍",
                   negative: 0,
                 },
               },
@@ -404,14 +421,16 @@ export default function Topic() {
                             const count =
                               topic.forum_reactions?.filter(
                                 (reaction) =>
-                                  reaction.forum_reaction_emojis?.id === reactionOption.id,
+                                  reaction.forum_reaction_emojis?.id ===
+                                  reactionOption.id,
                               ).length ?? 0;
                             const active =
                               !!user &&
                               !!topic.forum_reactions?.some(
                                 (reaction) =>
                                   reaction.authorId === user.id &&
-                                  reaction.forum_reaction_emojis?.id === reactionOption.id,
+                                  reaction.forum_reaction_emojis?.id ===
+                                    reactionOption.id,
                               );
 
                             return (
@@ -419,7 +438,9 @@ export default function Topic() {
                                 key={reactionOption.id}
                                 type="button"
                                 className={`btn btn-sm ${active ? "btn-outline-primary" : "btn-outline-secondary"}`}
-                                onClick={() => void handleToggleReaction(reactionOption.id)}
+                                onClick={() =>
+                                  void handleToggleReaction(reactionOption.id)
+                                }
                                 disabled={isReactionPending !== null}
                               >
                                 {reactionOption.emoji} {count}
