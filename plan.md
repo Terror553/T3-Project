@@ -12,6 +12,7 @@
 - Private messaging compose and thread UX are implemented with the shared modal manager.
 - Dashboard overview, clan viewer, account verification UI, advanced moderation, and forum subcategory query consolidation are now implemented.
 - Dashboard analytics now has a live metrics page backed by the stats endpoint.
+- Public profile wall posts now render from the loaded Prisma relations.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

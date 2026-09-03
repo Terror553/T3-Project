@@ -265,7 +265,7 @@ const ProfilePage = () => {
                         <div className="card-body">
                           {user.profileWalls ? (
                             <>
-                              {user.profileWalls.map((post) => {
+                              {user.profileWalls.map((post) => (
                                 <>
                                   <div className="message" id="profilePost-1">
                                     <div className="message-icon">
@@ -476,8 +476,8 @@ const ProfilePage = () => {
                                       </div>
                                     </div>
                                   </div>
-                                </>;
-                              })}
+                                </>
+                              ))}
                             </>
                           ) : (
                             <>No profile wall posts</>

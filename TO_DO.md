@@ -80,7 +80,7 @@ _Severity: Low | Completion: 100%_
 
 ## 5. User Settings & Extended Profile
 
-_Severity: Medium | Completion: 80%_
+_Severity: Medium | Completion: 90%_
 
 **Context:** Avatar upload, client-side crop functionality, and user preference persistence are now fully implemented. Settings pages exist for profile configuration, theme preferences, and password management.
 
@@ -96,6 +96,9 @@ _Severity: Medium | Completion: 80%_
   - [x] **Storage:** JSON file-backed persistence (no DB migration needed).
 - [ ] **Extended User Preferences UI**
   - [ ] **API/Server:** Settings already exposed, but advanced preference panel UI is pending.
+ - [x] **Profile Wall**
+  - [x] **Data Types/Server:** Public profile loading includes `ProfileWall` posts and replies.
+  - [x] **UI/Client:** Public profile renders loaded wall posts and reply areas.
 
 ---
 
