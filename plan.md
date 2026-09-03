@@ -33,6 +33,8 @@
   semantic loading/error states, labels, and responsive layouts.
 - Dashboard forum settings now persist topic, reply, and moderation-approval
   controls through the shared configuration API.
+- Dashboard navigation management now supports authorized create, list, and
+  delete operations against the existing ForumNavigation model.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

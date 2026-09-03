@@ -16,7 +16,7 @@ archived in `resolved_to_do_v1_20260309.md`.
     breadcrumbs, permissions, loading states, empty states, and error states.
 - [x] **Implement dashboard configuration pages**
   - General settings
-  - Navigation management
+  - [x] Navigation management
   - Privacy and terms
   - Registration settings
   - Reaction configuration
