@@ -18,6 +18,12 @@ export default function DashboardLayout({
             icon: "fas fa-home fa-fw",
           },
           {
+            id: 9,
+            name: "Analytics",
+            fullLink: "/dashboard/analytics",
+            icon: "fas fa-chart-line fa-fw",
+          },
+          {
             id: 8,
             name: "Community clans",
             fullLink: "/clans",

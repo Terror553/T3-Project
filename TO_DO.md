@@ -147,13 +147,13 @@ _Severity: Medium | Completion: 100%_
 
 ## 8. Dashboard Analytics & Game Server Integration
 
-_Severity: Low | Completion: 70%_
+_Severity: Low | Completion: 75%_
 
 **Context:** The dashboard overview and `/api/dashboard/stats` endpoint are implemented with typed community activity cards. Detailed analytics views and profile-wall integration remain pending.
 
 - [x] **Dashboard Data Endpoints**
   - [x] **API:** Fetch typed community statistics in `/api/dashboard/stats/route.ts`.
-  - [ ] **UI/Client:** Refine the `/dashboard/analytics` view with actual data components.
+  - [x] **UI/Client:** `/dashboard/analytics` displays live community metrics from the stats endpoint.
 - [ ] **Profile Wall**
   - **Data Types/Server:** Hook up `ProfileWall` and `ProfileWallReply` models to `profile.ts`.
   - **UI/Client:** Render user wall component on the public profile view natively.

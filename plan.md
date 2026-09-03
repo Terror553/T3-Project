@@ -11,6 +11,7 @@
 - Forum reaction and follow APIs and topic UI are implemented.
 - Private messaging compose and thread UX are implemented with the shared modal manager.
 - Dashboard overview, clan viewer, account verification UI, advanced moderation, and forum subcategory query consolidation are now implemented.
+- Dashboard analytics now has a live metrics page backed by the stats endpoint.
 
 ## Recently Completed Features (Session 3 Snapshot)
 
@@ -29,13 +30,13 @@
 3. ✅ User settings and extended profile preferences (avatar + preferences done, extended UI pending).
 4. ✅ Admin moderation flows and policy checks (categories, roles, reactions complete; user bans pending).
 5. ✅ Global modal manager (complete and regression-protected).
-6. ✅ Dashboard analytics overview (additional analytics views remain).
+6. ✅ Dashboard analytics overview and live metrics page.
 7. ✅ Minecraft account verification UI and code generation (in-game plugin consumption remains).
 8. ✅ Forum data-fetch refactor (subcategory query consolidation complete; legacy endpoint cleanup remains).
 9. ✅ File uploads and CDN persistence (local storage complete, S3 migration pending).
 
 ## Next work item
 
-**Remaining validation and platform work**: apply the upload migration in the deployment database, add focused tests for remaining routes, and implement report submission. Storage-provider switching is intentionally out of scope because the current local adapter and configured S3 client already cover the supported deployment paths.
+**Remaining validation and platform work**: complete profile-wall, extended preferences, and report submission features; apply the upload migration in the deployment database; add focused tests; and reconcile the status documents. Storage-provider switching is intentionally out of scope because MinIO is the configured deployment.
 
 Prioritize report submission and moderation workflow, followed by focused validation tests for the remaining API and UI milestones.
