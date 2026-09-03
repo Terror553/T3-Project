@@ -8,6 +8,7 @@ type Settings = {
   theme?: string;
   timezone?: string;
   emailNotifications?: boolean;
+  compactMode?: boolean;
   username?: string;
   avatarUrl?: string;
 };
@@ -84,6 +85,7 @@ export default function Settings() {
           theme: settings.theme ?? "light",
           timezone: settings.timezone ?? "UTC",
           emailNotifications: settings.emailNotifications ?? true,
+          compactMode: settings.compactMode ?? false,
         }),
       });
 
@@ -417,7 +419,7 @@ export default function Settings() {
               <div>
                 <h5>Preferences</h5>
                 <p className="text-muted">
-                  Theme, timezone and notification preferences are saved
+                  Theme, timezone, layout, and notification preferences are saved
                   per-user.
                 </p>
                 <div className="mb-3">
@@ -468,6 +470,23 @@ export default function Settings() {
                     htmlFor="emailNotifications"
                   >
                     Email notifications enabled
+                  </label>
+                </div>
+                <div className="form-check mb-3">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="compactMode"
+                    checked={settings?.compactMode ?? false}
+                    onChange={(e) =>
+                      setSettings((s) => ({
+                        ...(s ?? {}),
+                        compactMode: e.target.checked,
+                      }))
+                    }
+                  />
+                  <label className="form-check-label" htmlFor="compactMode">
+                    Use compact layout
                   </label>
                 </div>
                 <button

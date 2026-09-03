@@ -7,12 +7,14 @@ type UserProfileSettings = {
   theme: string;
   timezone: string;
   emailNotifications: boolean;
+  compactMode: boolean;
 };
 
 const DEFAULT_SETTINGS: UserProfileSettings = {
   theme: "light",
   timezone: "UTC",
   emailNotifications: true,
+  compactMode: false,
 };
 
 const SETTINGS_DIR = path.join(process.cwd(), "data", "profile-settings");
@@ -70,7 +72,7 @@ export async function PUT(request: Request) {
 
     const payload = (await request.json()) as Partial<UserProfileSettings>;
 
-    const acceptedKeys = ["theme", "timezone", "emailNotifications"] as const;
+    const acceptedKeys = ["theme", "timezone", "emailNotifications", "compactMode"] as const;
     const nextSettings = await readUserSettings(user.id);
 
     for (const key of acceptedKeys) {
@@ -98,6 +100,14 @@ export async function PUT(request: Request) {
           return NextResponse.json({ error: "Email notifications must be a boolean" }, { status: 400 });
         }
         nextSettings.emailNotifications = value;
+        continue;
+      }
+
+      if (key === "compactMode") {
+        if (typeof value !== "boolean") {
+          return NextResponse.json({ error: "Compact mode must be a boolean" }, { status: 400 });
+        }
+        nextSettings.compactMode = value;
       }
     }
 

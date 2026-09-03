@@ -13,6 +13,7 @@
 - Dashboard overview, clan viewer, account verification UI, advanced moderation, and forum subcategory query consolidation are now implemented.
 - Dashboard analytics now has a live metrics page backed by the stats endpoint.
 - Public profile wall posts now render from the loaded Prisma relations.
+- Extended profile preferences now include a persisted compact-layout option.
 
 ## Recently Completed Features (Session 3 Snapshot)
 
@@ -38,6 +39,6 @@
 
 ## Next work item
 
-**Remaining validation and platform work**: complete profile-wall, extended preferences, and report submission features; apply the upload migration in the deployment database; add focused tests; and reconcile the status documents. Storage-provider switching is intentionally out of scope because MinIO is the configured deployment.
+**Remaining validation and platform work**: implement report submission, apply the upload migration in the deployment database, add focused tests, and reconcile the status documents. Storage-provider switching is intentionally out of scope because MinIO is the configured deployment.
 
 Prioritize report submission and moderation workflow, followed by focused validation tests for the remaining API and UI milestones.
