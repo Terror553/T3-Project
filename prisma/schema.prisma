@@ -85,6 +85,14 @@ model ForumLabel {
     @@map("forum_labels")
 }
 
+model DashboardConfiguration {
+    key       String   @id @db.VarChar(100)
+    value     String   @db.Text
+    updatedAt DateTime @default(now()) @db.DateTime(6)
+
+    @@map("dashboard_configuration")
+}
+
 model ConsoleLog {
     id      Int    @id @default(autoincrement())
     message String @db.Text

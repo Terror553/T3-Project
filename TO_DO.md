@@ -14,7 +14,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Replace the placeholder `src/app/dashboard/page.tsx`.
   - Add a useful `/dashboard` landing experience and consistent navigation,
     breadcrumbs, permissions, loading states, empty states, and error states.
-- [ ] **Implement dashboard configuration pages**
+- [x] **Implement dashboard configuration pages**
   - General settings
   - Navigation management
   - Privacy and terms
@@ -41,11 +41,11 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Coupons
   - Start with read models and safe empty states where a write model/API is
     not yet available; add the corresponding server route before mutations.
-- [ ] **Implement dashboard announcements and settings**
+- [x] **Implement dashboard announcements and settings**
   - [x] Replace the placeholder announcements page with persisted Prisma-backed
     announcements and an authorized Bootstrap API/UI.
-  - Replace the placeholder dashboard settings page.
-  - Persist changes through validated server/API boundaries.
+  - Dashboard configuration now persists general, registration, privacy, and
+    terms settings through a validated server/API boundary.
 - [ ] **Move administrative functionality into the dashboard**
   - Treat `src/app/dashboard` as the canonical administration surface.
   - Integrate or redirect the existing `src/app/admin` category, role, and

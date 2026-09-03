@@ -25,8 +25,9 @@
   remaining gaps are configuration persistence and store domain/API design.
 - The current continuation completed announcement and label deletion with
   strict authorization and validation. Next work remains dashboard
-  configuration persistence, store domain/API implementation, and focused
-  dashboard tests.
+  store domain/API implementation, and focused dashboard tests.
+- Dashboard configuration persistence is now implemented for general,
+  registration, privacy, and terms settings with a deployed migration.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

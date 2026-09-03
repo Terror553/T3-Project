@@ -76,6 +76,23 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/seed.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/migrations
 
+## Current continuation
+
+37. Dashboard configuration persistence
+
+- Added a Prisma-backed key/value configuration model and authorized API for
+  general community identity, registration controls, privacy policy, and terms
+  of service. The dashboard form uses Bootstrap controls, Zod-backed request
+  validation, explicit permission checks, and visible load/save failures.
+- Validation: `npm run check` passed. `npx prisma validate` passed.
+  `npm run db:migrate` applied the migration successfully to the deployment
+  database.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/schema.prisma
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/migrations/20260903224500_add_dashboard_configuration/migration.sql
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/configuration/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/configuration/general/page.tsx
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.
