@@ -10,6 +10,9 @@ const DEFAULTS = {
   requireEmailVerification: false,
   privacyPolicy: "",
   termsOfService: "",
+  allowTopicCreation: true,
+  allowReplies: true,
+  requireModerationApproval: false,
 } as const;
 
 type Configuration = {
@@ -19,6 +22,9 @@ type Configuration = {
   requireEmailVerification: boolean;
   privacyPolicy: string;
   termsOfService: string;
+  allowTopicCreation: boolean;
+  allowReplies: boolean;
+  requireModerationApproval: boolean;
 };
 
 const configurationSchema = z.object({
@@ -28,6 +34,9 @@ const configurationSchema = z.object({
   requireEmailVerification: z.boolean(),
   privacyPolicy: z.string().max(10000),
   termsOfService: z.string().max(10000),
+  allowTopicCreation: z.boolean(),
+  allowReplies: z.boolean(),
+  requireModerationApproval: z.boolean(),
 });
 
 function isStaff(user: Awaited<ReturnType<typeof getCurrentUser>>): boolean {
@@ -42,49 +51,63 @@ async function readConfiguration(): Promise<Configuration> {
   return {
     siteName: values.get("siteName") ?? DEFAULTS.siteName,
     siteDescription: values.get("siteDescription") ?? DEFAULTS.siteDescription,
-    registrationEnabled: values.get("registrationEnabled") === "true" || (values.get("registrationEnabled") === undefined && DEFAULTS.registrationEnabled),
+    registrationEnabled:
+      values.get("registrationEnabled") === "true" ||
+      (values.get("registrationEnabled") === undefined &&
+        DEFAULTS.registrationEnabled),
     requireEmailVerification: values.get("requireEmailVerification") === "true",
     privacyPolicy: values.get("privacyPolicy") ?? DEFAULTS.privacyPolicy,
     termsOfService: values.get("termsOfService") ?? DEFAULTS.termsOfService,
+    allowTopicCreation: values.get("allowTopicCreation") !== "false",
+    allowReplies: values.get("allowReplies") !== "false",
+    requireModerationApproval:
+      values.get("requireModerationApproval") === "true",
   };
 }
 
 export async function GET() {
   const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  if (!isStaff(user)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!user)
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!isStaff(user))
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
     return NextResponse.json(await readConfiguration());
   } catch (error) {
     console.error("Failed to read dashboard configuration", error);
-    return NextResponse.json({ error: "Configuration is unavailable." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Configuration is unavailable." },
+      { status: 500 },
+    );
   }
 }
 
 export async function PUT(request: Request) {
   const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  if (!isStaff(user)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!user)
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!isStaff(user))
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
-    const parsed = configurationSchema.partial().safeParse(await request.json());
+    const parsed = configurationSchema
+      .partial()
+      .safeParse(await request.json());
     if (!parsed.success) {
-      return NextResponse.json({ error: "Configuration contains invalid values." }, { status: 400 });
+      return NextResponse.json(
+        { error: "Configuration contains invalid values." },
+        { status: 400 },
+      );
     }
     const current = await readConfiguration();
-    const next: Configuration = { ...current };
-    for (const key of Object.keys(current) as Array<keyof Configuration>) {
-      if (key === "siteName" && parsed.data.siteName !== undefined) next.siteName = parsed.data.siteName;
-      if (key === "siteDescription" && parsed.data.siteDescription !== undefined) next.siteDescription = parsed.data.siteDescription;
-      if (key === "registrationEnabled" && parsed.data.registrationEnabled !== undefined) next.registrationEnabled = parsed.data.registrationEnabled;
-      if (key === "requireEmailVerification" && parsed.data.requireEmailVerification !== undefined) next.requireEmailVerification = parsed.data.requireEmailVerification;
-      if (key === "privacyPolicy" && parsed.data.privacyPolicy !== undefined) next.privacyPolicy = parsed.data.privacyPolicy;
-      if (key === "termsOfService" && parsed.data.termsOfService !== undefined) next.termsOfService = parsed.data.termsOfService;
-    }
+    const next: Configuration = { ...current, ...parsed.data };
     await db.$transaction(
-      (Object.entries(next) as Array<[keyof Configuration, string | boolean]>).map(([key, value]) =>
-        db.$executeRaw`
+      (
+        Object.entries(next) as Array<[keyof Configuration, string | boolean]>
+      ).map(
+        ([key, value]) =>
+          db.$executeRaw`
           INSERT INTO \`dashboard_configuration\` (\`key\`, \`value\`)
           VALUES (${key}, ${String(value)})
           ON DUPLICATE KEY UPDATE \`value\` = VALUES(\`value\`), \`updatedAt\` = CURRENT_TIMESTAMP(6)
@@ -94,6 +117,9 @@ export async function PUT(request: Request) {
     return NextResponse.json(next);
   } catch (error) {
     console.error("Failed to update dashboard configuration", error);
-    return NextResponse.json({ error: "Configuration could not be saved." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Configuration could not be saved." },
+      { status: 500 },
+    );
   }
 }

@@ -31,6 +31,8 @@
 - Completed a Bootstrap 5.0.1 and accessibility audit for changed dashboard,
   messaging, and UserPicker surfaces, including supported utility classes,
   semantic loading/error states, labels, and responsive layouts.
+- Dashboard forum settings now persist topic, reply, and moderation-approval
+  controls through the shared configuration API.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

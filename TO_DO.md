@@ -21,7 +21,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Registration settings
   - Reaction configuration
 - [ ] **Implement dashboard forum management pages**
-  - Forum settings
+  - [x] Forum settings
   - Forum/category management under the dashboard route
   - [x] Forum labels (persisted model, authorized API, and Bootstrap UI)
   - Reuse the existing forum and admin server logic instead of creating
@@ -43,7 +43,7 @@ archived in `resolved_to_do_v1_20260309.md`.
     not yet available; add the corresponding server route before mutations.
 - [x] **Implement dashboard announcements and settings**
   - [x] Replace the placeholder announcements page with persisted Prisma-backed
-    announcements and an authorized Bootstrap API/UI.
+        announcements and an authorized Bootstrap API/UI.
   - Dashboard configuration now persists general, registration, privacy, and
     terms settings through a validated server/API boundary.
 - [ ] **Move administrative functionality into the dashboard**
