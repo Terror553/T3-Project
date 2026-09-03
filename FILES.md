@@ -2,7 +2,7 @@
 
 This file contains a tree of all files and folders in the project, along with their last modified date.
 
-**Last Updated:** 2026-09-03 00:05:45
+**Last Updated:** 2026-09-03 10:07:20
 
 Only `src/` and `prisma/` are inventoried here, as required by `DOC_AGENT.md`.
 
@@ -11,8 +11,9 @@ Only `src/` and `prisma/` are inventoried here, as required by `DOC_AGENT.md`.
 - `prisma/migrations/20250630130906_t3/migration.sql` - Modified: 2026-09-01 20:22:59
 - `prisma/migrations/20260428125523_yes/migration.sql` - Modified: 2026-09-01 20:22:59
 - `prisma/migrations/20260902215000_add_upload_metadata/migration.sql` - Modified: 2026-09-02 23:54:15
+- `prisma/migrations/20260903093000_add_forum_reports/migration.sql` - Modified: 2026-09-03 10:03:05
 - `prisma/migrations/migration_lock.toml` - Modified: 2026-09-01 20:22:59
-- `prisma/schema.prisma` - Modified: 2026-09-02 23:52:57
+- `prisma/schema.prisma` - Modified: 2026-09-03 10:03:05
 - `prisma/seed.ts` - Modified: 2026-09-01 20:22:59
 
 ## src/
@@ -51,7 +52,8 @@ Only `src/` and `prisma/` are inventoried here, as required by `DOC_AGENT.md`.
 - `src/app/api/messages/messages.route.test.ts` - Modified: 2026-09-01 20:22:59
 - `src/app/api/messages/route.ts` - Modified: 2026-09-01 20:22:59
 - `src/app/api/profile/settings/route.test.ts` - Modified: 2026-09-01 22:55:40
-- `src/app/api/profile/settings/route.ts` - Modified: 2026-09-01 20:22:59
+- `src/app/api/profile/settings/route.ts` - Modified: 2026-09-03 10:00:54
+- `src/app/api/reports/route.ts` - Modified: 2026-09-03 10:05:08
 - `src/app/api/profile/verification/route.ts` - Modified: 2026-09-02 23:46:53
 - `src/app/api/upload/[path]/route.ts` - Modified: 2026-09-01 20:22:59
 - `src/app/api/upload/save/route.ts` - Modified: 2026-09-01 20:22:59
@@ -74,6 +76,7 @@ Only `src/` and `prisma/` are inventoried here, as required by `DOC_AGENT.md`.
 - `src/app/dashboard/groups/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/dashboard/layout.tsx` - Modified: 2026-09-02 23:45:15
 - `src/app/dashboard/overview/page.tsx` - Modified: 2026-09-02 23:43:24
+- `src/app/dashboard/analytics/page.tsx` - Modified: 2026-09-03 09:54:38
 - `src/app/dashboard/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/dashboard/settings/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/dashboard/store/configuration/page.tsx` - Modified: 2026-09-01 20:22:59
@@ -83,12 +86,12 @@ Only `src/` and `prisma/` are inventoried here, as required by `DOC_AGENT.md`.
 - `src/app/dashboard/store/sales/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/dashboard/store/subscriptions/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/dashboard/user-management/punishments/page.tsx` - Modified: 2026-09-02 23:48:52
-- `src/app/dashboard/user-management/reports/page.tsx` - Modified: 2026-09-02 23:48:52
+- `src/app/dashboard/user-management/reports/page.tsx` - Modified: 2026-09-03 10:03:13
 - `src/app/dashboard/user-management/users/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/forum/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/forum/subcategory/[id]/page.tsx` - Modified: 2026-09-02 23:49:41
 - `src/app/forum/topic/[id]/page.test.tsx` - Modified: 2026-09-01 20:23:48
-- `src/app/forum/topic/[id]/page.tsx` - Modified: 2026-09-01 20:22:59
+- `src/app/forum/topic/[id]/page.tsx` - Modified: 2026-09-03 10:03:21
 - `src/app/forum/topic/add/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/forum/topic/new/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/layout.tsx` - Modified: 2026-09-01 20:22:59
@@ -96,7 +99,7 @@ Only `src/` and `prisma/` are inventoried here, as required by `DOC_AGENT.md`.
 - `src/app/messages/[id]/page.tsx` - Modified: 2026-09-02 23:41:21
 - `src/app/messages/page.tsx` - Modified: 2026-09-02 23:40:33
 - `src/app/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/profile/[id]/page.tsx` - Modified: 2026-09-01 20:22:59
+- `src/app/profile/[id]/page.tsx` - Modified: 2026-09-03 09:56:05
 - `src/app/profile/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/profile/settings/alerts/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/profile/settings/change-password/page.tsx` - Modified: 2026-09-01 20:22:59
@@ -106,7 +109,8 @@ Only `src/` and `prisma/` are inventoried here, as required by `DOC_AGENT.md`.
 - `src/app/profile/settings/messaging/[id]/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/profile/settings/messaging/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/profile/settings/overview/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/profile/settings/profile-settings/page.tsx` - Modified: 2026-09-03 00:05:45
+- `src/app/profile/settings/profile-settings/page.tsx` - Modified: 2026-09-03 10:00:54
+- `src/lib/schemas/messagingSchemas.test.ts` - Modified: 2026-09-03 10:07:20
 - `src/app/profile/settings/verification/page.tsx` - Modified: 2026-09-02 23:46:53
 - `src/app/register/page.tsx` - Modified: 2026-09-01 20:22:59
 - `src/app/rules/page.tsx` - Modified: 2026-09-01 20:22:59

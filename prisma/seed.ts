@@ -325,6 +325,8 @@ function boolInt(flag: boolean): number {
 async function clearDatabase(): Promise<void> {
   await prisma.$executeRawUnsafe("SET FOREIGN_KEY_CHECKS = 0");
 
+  await prisma.$executeRawUnsafe("DELETE FROM forum_reports");
+  await prisma.$executeRawUnsafe("DELETE FROM upload_metadata");
   await prisma.forumTopicReplyReaction.deleteMany();
   await prisma.forumTopicReaction.deleteMany();
   await prisma.forumReaction.deleteMany();
@@ -1011,6 +1013,29 @@ async function seedForumContent(
   });
 }
 
+async function seedReports(
+  forumUsers: Array<{ id: number }>,
+): Promise<void> {
+  const reporter = forumUsers[1];
+  if (!reporter) return;
+
+  const topic = await prisma.forumTopic.findFirst({
+    orderBy: { id: "asc" },
+    select: { id: true },
+  });
+  if (!topic) return;
+
+  await prisma.$executeRaw`
+    INSERT INTO forum_reports (reason, status, reporterId, topicId)
+    VALUES (
+      ${"Example report for seeded moderation data."},
+      ${"open"},
+      ${reporter.id},
+      ${topic.id}
+    )
+  `;
+}
+
 async function seedWiki(forumUsers: Array<{ id: number }>): Promise<void> {
   for (let i = 0; i < wikiTemplates.length; i += 1) {
     const template = wikiTemplates[i] as {
@@ -1096,6 +1121,7 @@ async function main(): Promise<void> {
       username: u.username,
     })),
   );
+  await seedReports(forumUsers);
 
   await seedWiki(
     forumUsers.map((u) => ({

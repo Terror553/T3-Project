@@ -166,9 +166,63 @@ If anything is missing or you want more detail in any entry, tell me which featu
 - Validation: targeted clan tests and `npm run check` passed.
 - Key file:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/clan/clan.test.ts
+
+34. MinIO-only file uploads
+
+- Removed the local filesystem upload adapter and server-side JSON/multipart upload endpoints. Upload clients now request a pre-signed URL from the existing MinIO-compatible S3 client and send file bytes directly to the bucket.
+- Updated the canonical documentation and backlog to reflect the direct-to-bucket flow.
+- Validation: `npm run check` passed.
+
+35. Dashboard analytics metrics
+
+- Added a dedicated analytics page with live registered-user, topic, reply, and derived engagement metrics, plus dashboard navigation.
+- Validation: `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/analytics/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/layout.tsx
+
+36. Public profile wall rendering
+
+- Fixed the profile wall map callback so loaded Prisma wall posts and their reply areas render instead of being discarded.
+- Validation: `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/[id]/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/auth/utils/getUser.ts
+
+37. Extended profile preferences
+
+- Added a persisted compact-layout preference to the profile settings API and UI alongside theme, timezone, and email notifications.
+- Validation: `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/profile/settings/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/settings/profile-settings/page.tsx
+
+38. Forum report submission and moderation
+
+- Added the `ForumReport` model and deployment migration, authenticated report submission for topics/replies, moderator listing, and resolve/dismiss actions in the dashboard.
+- Replaced the legacy non-functional report forms with JSON submissions to the report API.
+- Validation: `npm run check` and `npx prisma validate` passed. Prisma client regeneration remains blocked locally by a Windows query-engine file lock.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/schema.prisma
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/migrations/20260903093000_add_forum_reports/migration.sql
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/reports/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/forum/topic/[id]/page.tsx
+
+39. Final regression coverage
+
+- Added message-compose schema coverage and verified the complete serial Vitest suite.
+- Validation: `npx vitest run --maxWorkers=1` passed with 17 test files and 69 tests; `npm run check` passed.
+- Key file:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/lib/schemas/messagingSchemas.test.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/plan.md
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/vitest.config.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/forum/topic/[id]/page.test.tsx
+
+40. Documentation synchronization
+
+- Executed `DOC_AGENT.md`: reconciled the canonical architecture documentation, backlog percentages and checkboxes, execution roadmap, and source/Prisma inventory with verified implementations.
+- Confirmed report moderation, profile-wall rendering, compact preferences, analytics, MinIO uploads, and current regression coverage; deployment migration application remains operational follow-up work.
+- Validation: `npm run check` passed and documentation files report no diagnostics.
 
 18. Admin categories foundation coverage
 

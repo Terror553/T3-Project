@@ -1,10 +1,13 @@
 ﻿# PLAN_FOR_TO_DO
 
 ## Goal
+
 Create a clear, execution-ready roadmap for the backlog in `TO_DO.md`, ordered by impact, dependency readiness, and delivery value. The plan intentionally starts from the highest-risk and highest-value user-facing systems and moves outward to secondary and experimental features.
 
 ## Priority rule
+
 Priority is based on three filters, in order:
+
 1. User-facing and runtime-critical functionality.
 2. Features already partially implemented and close to completion.
 3. Work that unlocks the next layer of product functionality or validation.
@@ -12,6 +15,7 @@ Priority is based on three filters, in order:
 ## Top-level feature ordering
 
 ### P1 — Core community features (highest priority)
+
 1. Forum Core Mutations
    - Finish any remaining topic/reply UX, validation errors, and state handling.
    - confirm reaction and follow flows work in the topic page.
@@ -23,6 +27,7 @@ Priority is based on three filters, in order:
    - Ensure inbox/thread navigation is stable and well tested.
 
 ### P2 — Account and configuration features
+
 4. User Settings & Extended Profile
    - Extend profile settings, preferences, and edit flows.
    - Make user preferences consistent with the saved settings API.
@@ -33,6 +38,7 @@ Priority is based on three filters, in order:
    - Keep modal manager as a shared infrastructure utility; do not regress it.
 
 ### P3 — Integration and platform polish
+
 7. Dashboard Analytics & Game Server Integration
    - Power the dashboard with live or derived stats.
    - Connect game-server integration to user-facing dashboards.
@@ -42,29 +48,23 @@ Priority is based on three filters, in order:
    - Consolidate data-fetch patterns after the forum reads are stabilized.
 
 ### P4 — Secondary backend work
+
 10. File Uploads & CDN
-   - Finish database-backed upload metadata and storage integration.
-   - Add remaining persistence and attachment wiring.
+
+- Finish database-backed upload metadata and storage integration.
+- Add remaining persistence and attachment wiring.
 
 ## Execution sequence for this coding session
-Phase 1 — Stabilize forum UX and tests
-- Finish remaining forum topic interactions (follow/reaction UI).
-- Add Vitest coverage around the topic page and core forum behavior.
-- Validate with focused tests and type/lint checks.
 
-Phase 2 — Messaging and profile polish
-- Complete messaging compose flow and thread improvements.
-- Finish profile settings persistence and validation consistency.
+Phase 1 — Stabilize forum UX and tests: complete.
+Phase 2 — Messaging and profile polish: complete.
+Phase 3 — Admin and moderation polish: complete, including report submission and status actions.
+Phase 4 — Platform / integration backlog: complete for the current web scope, including analytics, clans, verification, forum query consolidation, and MinIO upload metadata.
 
-Phase 3 — Admin and moderation polish
-- Close admin edit flows and authorization polish.
-- Check API + UI symmetry before moving on.
-
-Phase 4 — Platform / integration backlog
-- Dashboard analytics, clans, and refactors.
-- Move to file upload persistence only once the user-facing core is stable.
+Remaining operational work is deployment migration application and focused coverage for any routes that are still uncovered.
 
 ## Delivery rules
+
 - Work from the top-level TO_DO sections downward, not by isolated files.
 - Prefer the earliest fully actionable task with the biggest benefit.
 - Commit each completed feature branch as a separate, focused unit of work.

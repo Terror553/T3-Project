@@ -195,6 +195,7 @@ Important behavior:
 - `Group`
 - `WikiCategory`, `WikiSubCategory`
 - `UploadMetadata` — durable file records containing the stored filename, content type, size, public URL, storage path, owner, and optional attachment target.
+- `ForumReport` — authenticated community reports targeting exactly one topic or reply, with moderator status and reviewer tracking.
 
 Many models are mapped to existing DB table names via `@@map(...)`, so keep map names intact unless doing a deliberate migration.
 
@@ -785,9 +786,16 @@ A new admin area has been added under `src/app/admin`, while the broader dashboa
 
 - **Layout**: `src/app/dashboard/layout.tsx` defines the new nested navigation structure.
 - **Pages**: `src/app/admin/page.tsx` provides the admin landing page; category, role, and reaction management pages provide the implemented moderation tools. The dashboard also contains user-management views for punishments and reports.
-- **Authorization**: Admin API routes resolve the current user and enforce team or high-team access before database mutations. Ban listing and creation are available through `src/app/api/admin/bans/route.ts`; report submission is not yet implemented and the reports page deliberately shows an empty state.
+- **Authorization**: Admin API routes resolve the current user and enforce team or high-team access before database mutations. Ban listing and creation are available through `src/app/api/admin/bans/route.ts`.
+- **Reports**: `src/app/api/reports/route.ts` accepts authenticated topic/reply reports with a required reason, lists reports for team/high-team moderators, and supports `PATCH` status changes to `open`, `resolved`, or `dismissed` while recording the reviewer. `src/app/dashboard/user-management/reports/page.tsx` loads the report table and provides resolve/dismiss controls with visible error and empty states.
 
-### 14.5 Private Messaging Feature
+Forum reports are stored by the `ForumReport` model in `prisma/schema.prisma` and introduced by `prisma/migrations/20260903093000_add_forum_reports/migration.sql`. The target validation rejects missing reasons, missing targets, and requests that specify both a topic and reply. Report reads and moderation actions are restricted to team or high-team users.
+
+### 14.5 Profile Wall and Preferences
+
+Public profile loading includes `ProfileWall` posts, their replies, and author metadata through `src/server/auth/utils/getUser.ts`; `src/app/profile/[id]/page.tsx` renders the wall entries and reply areas. Profile settings persist `theme`, `timezone`, `emailNotifications`, and `compactMode` per user in `data/profile-settings/<userId>.json` through `src/app/api/profile/settings/route.ts`. The settings API merges defaults on read, validates each supplied field on `PUT`, and returns `400` for invalid types or `401` when no session is present.
+
+### 14.6 Private Messaging Feature
 
 A private messaging system has been implemented, allowing users to send and receive private messages.
 
@@ -1498,6 +1506,7 @@ const clans = await fetch("/api/clan").then((r) => r.json());
 const verification = await fetch("/api/profile/verification").then((r) =>
   r.json(),
 );
+const reports = await fetch("/api/reports").then((r) => r.json());
 const signed = await fetch("/api/upload/uploads", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -1511,6 +1520,8 @@ await fetch(signed.url, {
 ```
 
 The protected messaging and verification routes require the authenticated session. Upload responses can be passed to `POST /api/upload/save` with `ownerUserId` and an optional `attachTo` target; the save route validates the target before persisting `UploadMetadata`.
+
+The reports endpoint requires an authenticated user for `POST`; send `{ reason, topicId }` or `{ reason, replyId }` with exactly one target. Team or high-team users can `GET` the moderation list and `PATCH` a report with `{ id, status }`, where `status` is `open`, `resolved`, or `dismissed`.
 
 #### Wiki API
 

@@ -5,7 +5,7 @@
 - Forum read flows are stabilized and refactored.
 - Profile settings and avatar upload flow are implemented with client-side cropping (react-easy-crop) and multipart progress.
 - User preferences (theme, timezone, notifications) persist via JSON file storage without requiring DB migrations.
-- Admin panel is substantially complete with category management, role management, emoji reaction management, and ban listing/creation; report submission remains pending.
+- Admin panel is substantially complete with category management, role management, emoji reaction management, bans, and report moderation.
 - All production code has been cleaned to strict TypeScript with zero `any` types.
 - Focused Vitest coverage exists for forum, messaging, admin, profile, upload metadata, and clan server flows.
 - Forum reaction and follow APIs and topic UI are implemented.
@@ -40,6 +40,6 @@
 
 ## Next work item
 
-**Remaining validation and platform work**: apply the upload and report migrations in the deployment database, add focused tests, and reconcile the status documents. Storage-provider switching is intentionally out of scope because MinIO is the configured deployment.
+**Remaining validation and platform work**: apply the upload and report migrations in the deployment database and continue adding focused tests for uncovered routes. Storage-provider switching is intentionally out of scope because MinIO is the configured deployment.
 
 Prioritize report submission and moderation workflow, followed by focused validation tests for the remaining API and UI milestones.

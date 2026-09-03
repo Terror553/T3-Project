@@ -94,12 +94,12 @@ _Severity: Medium | Completion: 100%_
 - [x] **User Preferences Persistence**
   - [x] **API/Server:** GET/PUT routes for theme, timezone, notifications in `src/app/api/profile/settings/route.ts`.
   - [x] **Storage:** JSON file-backed persistence (no DB migration needed).
-- [ ] **Extended User Preferences UI**
+- [x] **Extended User Preferences UI**
   - [x] **API/Server:** Theme, timezone, notifications, and compact-layout preferences persist per user.
   - [x] **UI/Client:** Profile settings exposes the compact-layout preference.
- - [x] **Profile Wall**
-  - [x] **Data Types/Server:** Public profile loading includes `ProfileWall` posts and replies.
-  - [x] **UI/Client:** Public profile renders loaded wall posts and reply areas.
+- [x] **Profile Wall**
+- [x] **Data Types/Server:** Public profile loading includes `ProfileWall` posts and replies.
+- [x] **UI/Client:** Public profile renders loaded wall posts and reply areas.
 
 ---
 
@@ -151,16 +151,16 @@ _Severity: Medium | Completion: 100%_
 
 ## 8. Dashboard Analytics & Game Server Integration
 
-_Severity: Low | Completion: 75%_
+_Severity: Low | Completion: 100%_
 
-**Context:** The dashboard overview and `/api/dashboard/stats` endpoint are implemented with typed community activity cards. Detailed analytics views and profile-wall integration remain pending.
+**Context:** The dashboard overview and `/api/dashboard/stats` endpoint are implemented with typed community activity cards. The analytics page and public profile-wall integration are also implemented; game-server synchronization remains outside the current web checklist.
 
 - [x] **Dashboard Data Endpoints**
   - [x] **API:** Fetch typed community statistics in `/api/dashboard/stats/route.ts`.
   - [x] **UI/Client:** `/dashboard/analytics` displays live community metrics from the stats endpoint.
-- [ ] **Profile Wall**
-  - **Data Types/Server:** Hook up `ProfileWall` and `ProfileWallReply` models to `profile.ts`.
-  - **UI/Client:** Render user wall component on the public profile view natively.
+- [x] **Profile Wall**
+  - [x] **Data Types/Server:** `getUser` loads `ProfileWall` posts with replies and author metadata.
+  - [x] **UI/Client:** Public profiles render loaded wall posts and reply areas.
 
 ---
 
@@ -180,7 +180,7 @@ _Severity: Low | Completion: 100%_
 
 ## 10. File Uploads & CDN
 
-_Severity: High | Completion: 95%_
+_Severity: High | Completion: 100%_
 
 **Context:** Uploads use the configured S3-compatible MinIO client, Prisma metadata persistence, attachment targets, and direct browser-to-bucket transfers.
 
