@@ -37,6 +37,8 @@
   delete operations against the existing ForumNavigation model.
 - Dashboard groups now exposes the existing role/group management workflow
   inside the permission-gated dashboard surface without duplicating APIs.
+- Dashboard user management now has debounced, cancellable search with
+  explicit loading/error states and Bootstrap-native profile links.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

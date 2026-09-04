@@ -27,7 +27,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Reuse the existing forum and admin server logic instead of creating
     duplicate APIs.
 - [ ] **Implement dashboard user and group management pages**
-  - Users
+  - [x] Users
   - [x] Groups
   - Punishments
   - Reports
