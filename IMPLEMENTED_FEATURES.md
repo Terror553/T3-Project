@@ -128,6 +128,18 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/configuration/navigation/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/configuration/navigation/page.tsx
 
+41. Dashboard groups management
+
+- Made the dashboard groups route a permission-gated Bootstrap surface that
+  reuses the existing role/group management API and form implementation.
+  Staff can continue to create roles, configure team flags and priorities, and
+  review the current group list without maintaining a second administration
+  workflow.
+- Validation: `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/groups/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/roles/page.tsx
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.

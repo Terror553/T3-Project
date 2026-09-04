@@ -35,6 +35,8 @@
   controls through the shared configuration API.
 - Dashboard navigation management now supports authorized create, list, and
   delete operations against the existing ForumNavigation model.
+- Dashboard groups now exposes the existing role/group management workflow
+  inside the permission-gated dashboard surface without duplicating APIs.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

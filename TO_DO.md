@@ -28,7 +28,7 @@ archived in `resolved_to_do_v1_20260309.md`.
     duplicate APIs.
 - [ ] **Implement dashboard user and group management pages**
   - Users
-  - Groups
+  - [x] Groups
   - Punishments
   - Reports
   - Ensure all actions use the dashboard permission and role checks.
