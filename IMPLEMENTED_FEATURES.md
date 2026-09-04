@@ -147,6 +147,13 @@ This file lists every feature implemented so far in this agent session with a sh
   Bootstrap controls, and framework-native profile links. It continues to use
   the shared user-search API rather than adding a duplicate user directory.
 
+43. Dashboard report moderation
+
+- The next dashboard slice hardens the existing persisted report workflow with
+  the shared permission-gated dashboard shell, explicit loading and empty
+  states, disabled moderation actions while requests are pending, and visible
+  success/error feedback.
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.

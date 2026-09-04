@@ -39,6 +39,8 @@
   inside the permission-gated dashboard surface without duplicating APIs.
 - Dashboard user management now has debounced, cancellable search with
   explicit loading/error states and Bootstrap-native profile links.
+- Dashboard reports now use the shared permission shell with explicit loading,
+  empty, error, and disabled-action states for moderation decisions.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

@@ -30,7 +30,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - [x] Users
   - [x] Groups
   - Punishments
-  - Reports
+  - [x] Reports
   - Ensure all actions use the dashboard permission and role checks.
 - [ ] **Implement dashboard store pages**
   - Store configuration
