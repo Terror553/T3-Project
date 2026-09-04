@@ -29,7 +29,7 @@ archived in `resolved_to_do_v1_20260309.md`.
 - [ ] **Implement dashboard user and group management pages**
   - [x] Users
   - [x] Groups
-  - Punishments
+  - [x] Punishments
   - [x] Reports
   - Ensure all actions use the dashboard permission and role checks.
 - [ ] **Implement dashboard store pages**

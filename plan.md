@@ -41,6 +41,8 @@
   explicit loading/error states and Bootstrap-native profile links.
 - Dashboard reports now use the shared permission shell with explicit loading,
   empty, error, and disabled-action states for moderation decisions.
+- Dashboard punishments now use the shared permission shell with explicit
+  loading, empty, validation, and in-flight submission states.
 
 ## Recently Completed Features (Session 3 Snapshot)
 
