@@ -2,14 +2,18 @@
 
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import Image from "next/image";
 import DashboardSection from "~/components/dashboard/DashboardSection";
 
-type Announcement = { id: number; title: string; content: string; createdAt: string };
+type Announcement = { id: number; title: string; content: string; imageUrl: string | null; createdAt: string };
 
 export default function Announcements() {
   const [items, setItems] = useState<Announcement[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -34,7 +38,7 @@ export default function Announcements() {
       const response = await fetch("/api/dashboard/announcements", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content }),
+        body: JSON.stringify({ title, content, imageUrl }),
       });
       if (!response.ok) {
         const result = (await response.json()) as { error?: string };
@@ -43,6 +47,8 @@ export default function Announcements() {
 
       setTitle("");
       setContent("");
+      setImageUrl(null);
+      setImagePreview(null);
       await load();
     } catch (saveError) {
       console.error("Failed to create announcement", saveError);
@@ -51,6 +57,34 @@ export default function Announcements() {
       setSaving(false);
     }
 
+  }
+  async function uploadImage(file: File): Promise<void> {
+    setUploading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/upload/uploads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: file.name, contentType: file.type }),
+      });
+      if (!response.ok) throw new Error("The image upload could not be prepared.");
+      const signed = (await response.json()) as { url?: string };
+      if (!signed.url) throw new Error("The upload service returned an invalid URL.");
+      const uploadResponse = await fetch(signed.url, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      if (!uploadResponse.ok) throw new Error("The image upload failed.");
+      const publicUrl = signed.url.split("?")[0] ?? signed.url;
+      setImageUrl(publicUrl);
+      setImagePreview(URL.createObjectURL(file));
+    } catch (uploadError) {
+      console.error("Failed to upload announcement image", uploadError);
+      setError(uploadError instanceof Error ? uploadError.message : "The image upload failed.");
+    } finally {
+      setUploading(false);
+    }
   }
   async function remove(id: number): Promise<void> {
     if (!window.confirm("Delete this announcement?")) return;
@@ -73,12 +107,15 @@ export default function Announcements() {
           <input id="announcement-title" className="form-control mb-3" value={title} onChange={(event) => setTitle(event.target.value)} required />
           <label className="form-label" htmlFor="announcement-content">Content</label>
           <textarea id="announcement-content" className="form-control mb-3" rows={4} value={content} onChange={(event) => setContent(event.target.value)} required />
-          <button className="btn btn-primary" type="submit" disabled={saving}>{saving ? "Publishing..." : "Publish announcement"}</button>
+          <label className="form-label" htmlFor="announcement-image">Image (optional)</label>
+          {imagePreview && <Image className="img-fluid rounded mb-3" src={imagePreview} alt="Announcement preview" width={640} height={360} unoptimized />}
+          <input id="announcement-image" className="form-control mb-3" type="file" accept="image/*" disabled={uploading} onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file); }} />
+          <button className="btn btn-primary" type="submit" disabled={saving || uploading}>{uploading ? "Uploading image..." : saving ? "Publishing..." : "Publish announcement"}</button>
         </div>
       </form>
       {items.length === 0 ? <div className="alert alert-secondary">No announcements published yet.</div> : (
         <div className="list-group">
-          {items.map((item) => <article className="list-group-item" key={item.id}><div className="d-flex justify-content-between gap-3"><div><h2 className="h5 mb-1">{item.title}</h2><p className="mb-1">{item.content}</p><small className="text-muted">{new Date(item.createdAt).toLocaleString()}</small></div><button className="btn btn-sm btn-outline-danger align-self-start" type="button" onClick={() => void remove(item.id)}>Delete</button></div></article>)}
+          {items.map((item) => <article className="list-group-item" key={item.id}><div className="d-flex justify-content-between gap-3"><div>{item.imageUrl && <Image className="img-fluid rounded mb-2" src={item.imageUrl} alt="" width={320} height={180} unoptimized />}<h2 className="h5 mb-1">{item.title}</h2><p className="mb-1">{item.content}</p><small className="text-muted">{new Date(item.createdAt).toLocaleString()}</small></div><button className="btn btn-sm btn-outline-danger align-self-start" type="button" onClick={() => void remove(item.id)}>Delete</button></div></article>)}
         </div>
       )}
     </DashboardSection>

@@ -45,6 +45,8 @@
   loading, empty, validation, and in-flight submission states.
 - Dedicated privacy/terms and registration dashboard forms now persist through
   the existing authorized configuration API; store work remains out of scope.
+- Announcements now support optional MinIO images, public list/detail pages,
+  and shared landing-page rendering from published database records.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

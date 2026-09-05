@@ -202,6 +202,24 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/configuration/registration/page.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/configuration/route.ts
 
+47. Public announcement publishing and image integration
+
+- Extend announcements beyond the dashboard by adding persisted image URLs,
+  MinIO-backed dashboard image upload, public list/detail pages, and shared
+  landing-page data so staff-created announcements replace the hard-coded
+  example card.
+- Use the existing forum card/page conventions and upload metadata flow while
+  preserving the store work deferral.
+- Validation: `npm run check`, `npm run build`, `npx prisma validate`, and the
+  focused upload metadata test passed. The additive image migration was
+  applied with `npm run db:migrate`.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/schema.prisma
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/migrations
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/announcements/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/announcements
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.

@@ -44,6 +44,8 @@ archived in `resolved_to_do_v1_20260309.md`.
 - [x] **Implement dashboard announcements and settings**
   - [x] Replace the placeholder announcements page with persisted Prisma-backed
         announcements and an authorized Bootstrap API/UI.
+  - [x] Add announcement image upload, public announcement list/detail pages,
+        and landing-page integration backed by the same published records.
   - Dashboard configuration now persists general, registration, privacy, and
     terms settings through a validated server/API boundary.
 - [ ] **Move administrative functionality into the dashboard**

@@ -63,6 +63,7 @@ model Announcement {
     id        Int       @id @default(autoincrement())
     title     String    @db.VarChar(255)
     content   String    @db.LongText
+    imageUrl  String?   @db.LongText
     published Int       @default(1) @db.TinyInt
     authorId  Int
     createdAt DateTime  @default(now()) @db.DateTime(6)
