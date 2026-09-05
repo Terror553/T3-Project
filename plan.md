@@ -43,6 +43,8 @@
   empty, error, and disabled-action states for moderation decisions.
 - Dashboard punishments now use the shared permission shell with explicit
   loading, empty, validation, and in-flight submission states.
+- Dedicated privacy/terms and registration dashboard forms now persist through
+  the existing authorized configuration API; store work remains out of scope.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

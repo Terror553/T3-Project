@@ -17,8 +17,8 @@ archived in `resolved_to_do_v1_20260309.md`.
 - [x] **Implement dashboard configuration pages**
   - General settings
   - [x] Navigation management
-  - Privacy and terms
-  - Registration settings
+  - [x] Privacy and terms
+  - [x] Registration settings
   - Reaction configuration
 - [ ] **Implement dashboard forum management pages**
   - [x] Forum settings
