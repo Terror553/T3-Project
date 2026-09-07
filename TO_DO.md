@@ -115,6 +115,9 @@ archived in `resolved_to_do_v1_20260309.md`.
 - [x] **Enforce persisted registration availability at runtime**
   - The server-side sign-up action now rejects new accounts when dashboard
     registration is disabled.
+- [x] **Display persisted privacy and terms publicly**
+  - The public rules page now reads the dashboard policy values and shows
+    explicit empty states when staff have not published them.
 - [ ] **Unify admin and dashboard response contracts**
   - Share server helpers and types between migrated pages.
   - Remove duplicate request shapes and stale links after migration.

@@ -245,6 +245,16 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/auth/actions/signUp.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/register/page.tsx
 
+50. Public policy page persistence
+
+- Replace the public rules placeholder with persisted privacy-policy and terms
+  content from dashboard configuration, retaining the Bootstrap tab/card
+  presentation and safe empty-state messaging.
+- Validation: `npm run check`.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/rules/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/configuration/route.ts
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.

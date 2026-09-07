@@ -1,82 +1,74 @@
-export default function Rules() {
+import { db } from "~/server/db";
+
+async function getPolicies(): Promise<{
+  privacyPolicy: string;
+  termsOfService: string;
+}> {
+  const rows = await db.$queryRaw<Array<{ key: string; value: string }>>`
+    SELECT \`key\`, \`value\`
+    FROM \`dashboard_configuration\`
+    WHERE \`key\` IN ('privacyPolicy', 'termsOfService')
+  `;
+  const values = new Map(rows.map((row) => [row.key, row.value]));
+  return {
+    privacyPolicy: values.get("privacyPolicy") ?? "",
+    termsOfService: values.get("termsOfService") ?? "",
+  };
+}
+
+function PolicyCard({ content, emptyMessage }: { content: string; emptyMessage: string }) {
   return (
-    <div className="container">
-      <div className="alert alert-danger" id="alert-ie">
-        <div className="alert-heading">Internet Explorer</div>
-        Internet Explorer is not supported. Please upgrade to a more modern
-        browser.
+    <div className="card">
+      <div className="card-body">
+        {content ? (
+          <div className="text-break" style={{ whiteSpace: "pre-wrap" }}>
+            {content}
+          </div>
+        ) : (
+          <p className="text-muted mb-0">{emptyMessage}</p>
+        )}
       </div>
+    </div>
+  );
+}
 
-      <h2>Rules</h2>
+export default async function Rules() {
+  const policies = await getPolicies();
 
+  return (
+    <div className="content">
+      <h1 className="h2">Privacy, terms, and rules</h1>
       <div className="row">
         <div className="col-lg-12">
-          <div className="content">
-            <div id="chatbox-top"></div>
-
-            <ul className="nav nav-tabs">
-              <li className="nav-item">
-                <a
-                  href="#tab-home"
-                  className="nav-link active"
-                  data-bs-toggle="tab"
-                >
-                  <i className="fas fa-gavel"></i>
-                  Rules
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#tab-1" className="nav-link" data-bs-toggle="tab">
-                  <i className="fas fa-bed"></i>
-                  Bedwars
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#tab-2" className="nav-link" data-bs-toggle="tab">
-                  <i className="fas fa-comments"></i>
-                  Chat
-                </a>
-              </li>
-            </ul>
-            <div className="tab-content">
-              <div className="tab-pane active" id="tab-home">
-                <div className="card">
-                  <div className="card-body">
-                    <span>Test</span>
-                  </div>
-                </div>
-                <div className="tab-pane" id="tab-1">
-                  <div className="card">
-                    <div className="card-body">
-                      <span>test</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="tab-pane" id="tab-2">
-                  <div className="card">
-                    <div className="card-body">
-                      <span>Chat Rules:</span>
-                      <br />
-                      1. No swearing
-                      <br />
-                      <br />
-                      2. No bullying, put-downs, or other harassment
-                      <br />
-                      <br />
-                      3. No spamming
-                      <br />
-                      <br />
-                      <span style={{ color: "#c0392b" }}>
-                        <strong>Punishment:</strong>
-                      </span>{" "}
-                      Breaking any of these rules can result in a
-                      temporary/permanent mute
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div id="chatbox-bottom"></div>
+          <ul className="nav nav-tabs" role="tablist">
+            <li className="nav-item" role="presentation">
+              <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-privacy" type="button" role="tab">
+                Privacy policy
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button className="nav-link" data-bs-toggle="tab" data-bs-target="#tab-terms" type="button" role="tab">
+                Terms of service
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button className="nav-link" data-bs-toggle="tab" data-bs-target="#tab-chat" type="button" role="tab">
+                Community rules
+              </button>
+            </li>
+          </ul>
+          <div className="tab-content pt-3">
+            <div className="tab-pane fade show active" id="tab-privacy" role="tabpanel">
+              <PolicyCard content={policies.privacyPolicy} emptyMessage="No privacy policy has been published yet." />
+            </div>
+            <div className="tab-pane fade" id="tab-terms" role="tabpanel">
+              <PolicyCard content={policies.termsOfService} emptyMessage="No terms of service have been published yet." />
+            </div>
+            <div className="tab-pane fade" id="tab-chat" role="tabpanel">
+              <PolicyCard
+                content={"1. No swearing\n\n2. No bullying, put-downs, or other harassment\n\n3. No spamming"}
+                emptyMessage="No community rules have been published yet."
+              />
             </div>
           </div>
         </div>
