@@ -47,6 +47,11 @@
   the existing authorized configuration API; store work remains out of scope.
 - Announcements now support optional MinIO images, public list/detail pages,
   and shared landing-page rendering from published database records.
+- Runtime enforcement now applies persisted forum topic/reply settings,
+  registration availability, and public privacy/terms content.
+- Remaining non-store work is forum-label attachment, reaction/dashboard
+  consolidation, messaging verification, focused test coverage, and final
+  release validation. Store functionality remains intentionally deferred.
 
 ## Recently Completed Features (Session 3 Snapshot)
 
