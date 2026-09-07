@@ -29,6 +29,19 @@ export async function signUp(
   const data = validationResult.data;
 
   try {
+    const configurationRows = await db.$queryRaw<Array<{ value: string }>>`
+      SELECT \`value\`
+      FROM \`dashboard_configuration\`
+      WHERE \`key\` = 'registrationEnabled'
+      LIMIT 1
+    `;
+    if (configurationRows[0]?.value === "false") {
+      return createErrorResult(
+        "Registration is currently disabled.",
+        AuthErrorCode.UNAUTHORIZED,
+      );
+    }
+
     const existingUser = await db.forumUser.findFirst({
       where: {
         OR: [{ email: data.email }, { username: data.username }],

@@ -234,6 +234,17 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/forum/topic/[id]/reply/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/forum/forum.ts
 
+49. Runtime registration availability enforcement
+
+- Apply the persisted `registrationEnabled` dashboard setting inside the
+  server-side sign-up action so disabled registration cannot be bypassed by
+  direct requests or client-side navigation.
+- Validation: `npm run check` passed. No existing authentication test file
+  covers the sign-up action.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/auth/actions/signUp.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/register/page.tsx
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.
