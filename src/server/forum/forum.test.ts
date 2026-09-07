@@ -6,6 +6,7 @@ vi.mock("~/server/auth/utils/currentUser", () => ({
 
 vi.mock("~/server/db", () => ({
   db: {
+    $queryRaw: vi.fn().mockResolvedValue([]),
     forumTopic: {
       findFirst: vi.fn(),
       findUnique: vi.fn(),

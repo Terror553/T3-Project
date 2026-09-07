@@ -109,6 +109,9 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Add list/detail/create/update/archive operations only where the page
     requires them.
   - Provide explicit authorization failures and user-visible error messages.
+- [x] **Enforce persisted forum settings at runtime**
+  - Topic and reply creation now read the persisted dashboard configuration and
+    reject disabled mutations with explicit API errors.
 - [ ] **Unify admin and dashboard response contracts**
   - Share server helpers and types between migrated pages.
   - Remove duplicate request shapes and stale links after migration.

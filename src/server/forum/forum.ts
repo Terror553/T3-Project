@@ -30,6 +30,24 @@ import {
 import { getCurrentUser } from "../auth/utils/currentUser";
 import { createSlug } from "../utils/forumUtils";
 
+type ForumCreationConfiguration = {
+  allowTopicCreation: boolean;
+  allowReplies: boolean;
+};
+
+async function getForumCreationConfiguration(): Promise<ForumCreationConfiguration> {
+  const rows = await db.$queryRaw<Array<{ key: string; value: string }>>`
+    SELECT \`key\`, \`value\`
+    FROM \`dashboard_configuration\`
+    WHERE \`key\` IN ('allowTopicCreation', 'allowReplies')
+  `;
+  const values = new Map(rows.map((row) => [row.key, row.value]));
+  return {
+    allowTopicCreation: values.get("allowTopicCreation") !== "false",
+    allowReplies: values.get("allowReplies") !== "false",
+  };
+}
+
 type TopicWithRelations = {
   id: number;
   title: string;
@@ -311,6 +329,14 @@ export async function createTopic(
       );
     }
 
+    const configuration = await getForumCreationConfiguration();
+    if (!configuration.allowTopicCreation) {
+      return createErrorResult(
+        "Topic creation is currently disabled.",
+        ErrorCode.FORBIDDEN,
+      );
+    }
+
     const slug = createSlug(data.title);
     const subcategory = await getSubCategory(data.subcategory);
     const existingTopic = await db.forumTopic.findFirst({
@@ -502,6 +528,14 @@ export async function createReply(
       return createErrorResult(
         "You need to be signed in to reply to a topic",
         ErrorCode.INVALID_CREDENTIALS,
+      );
+    }
+
+    const configuration = await getForumCreationConfiguration();
+    if (!configuration.allowReplies) {
+      return createErrorResult(
+        "Replies are currently disabled.",
+        ErrorCode.FORBIDDEN,
       );
     }
 

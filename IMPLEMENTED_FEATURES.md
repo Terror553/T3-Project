@@ -220,6 +220,20 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/page.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/announcements
 
+48. Runtime forum configuration enforcement
+
+- Enforce the persisted dashboard forum settings at topic and reply creation
+  boundaries, returning explicit client-safe errors when creation is disabled
+  or replies are disabled. Staff moderation approval is preserved for the
+  existing forum domain flow.
+- Validation: `npm run check` passed and `npx vitest run --maxWorkers=1
+  src/server/forum/forum.test.ts` passed all 9 tests. The route-specific API
+  test files do not exist in this repository.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/forum/topic/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/forum/topic/[id]/reply/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/forum/forum.ts
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.
