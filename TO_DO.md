@@ -56,6 +56,10 @@ archived in `resolved_to_do_v1_20260309.md`.
     reaction features into the lined-up dashboard pages.
   - Avoid maintaining two separate admin implementations.
 
+- [x] **Restore the public members directory**
+  - Added a paginated, searchable member directory with profile links,
+    avatars, group badges, and explicit loading, empty, and error states.
+
 ## Priority 2 — Restore the intended messaging location
 
 - [x] **Consolidate messages under profile settings**

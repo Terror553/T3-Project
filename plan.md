@@ -59,6 +59,9 @@
   public topic threads. Remaining non-store work is reaction/dashboard
   consolidation, messaging verification, focused test coverage, and final
   release validation. Store functionality remains intentionally deferred.
+- A public `/members` route and `/api/members` endpoint now provide searchable,
+  paginated member cards with avatars, group badges, profile links, and explicit
+  loading, empty, and error states.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

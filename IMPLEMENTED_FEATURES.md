@@ -306,6 +306,27 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/topicReplyForm.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/forum/forum.ts
 
+55. Public members directory
+
+- Add the missing public member-directory route using the existing user data
+  and profile patterns, with typed search/pagination, responsive Bootstrap
+  cards, explicit loading/empty/error states, and accessible controls.
+- Validation: `npm run check`, `npx prisma validate`, and `git diff --check`
+  passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/members/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/members/route.ts
+
+56. Dashboard forum management surface
+
+- Replace the dashboard forum/category route re-export with a dashboard-native
+  permission-gated Bootstrap surface while retaining the existing authorized
+  category and subcategory API workflows.
+- Validation: pending implementation.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/forum/forums/page.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/categories/page.tsx
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.
