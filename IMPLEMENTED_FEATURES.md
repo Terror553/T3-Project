@@ -327,6 +327,17 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/forum/forums/page.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/categories/page.tsx
 
+57. Upload metadata route persistence
+
+- Persist authenticated upload metadata for every attachment target through the
+  shared MinIO metadata module, while retaining avatar profile updates and
+  explicit payload validation.
+- Validation: `npm run check`, focused upload metadata tests, and
+  `git diff --check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/upload/save/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/storage/uploadMetadata.ts
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.

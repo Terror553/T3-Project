@@ -65,6 +65,8 @@
 - Dashboard forum/category management now has a native dashboard route, and
   category, group/role, and reaction administration are all available through
   dashboard surfaces while retaining legacy compatibility routes.
+- Authenticated upload saves now persist metadata for every attachment target,
+  not only avatars, while continuing to update avatar URLs and use MinIO paths.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

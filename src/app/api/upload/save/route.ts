@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "~/server/auth/utils/currentUser";
 import { db } from "~/server/db";
+import { saveUploadMetadata } from "~/server/storage/uploadMetadata";
 
 export async function POST(request: Request) {
   try {
@@ -16,36 +17,53 @@ export async function POST(request: Request) {
       attachTo?: { type: string; id?: number } | null;
     };
 
-    if (!payload.key) {
-      return NextResponse.json({ error: "Missing key" }, { status: 400 });
+    const storagePath = payload.key?.trim();
+    const publicUrl = payload.url?.trim() || storagePath;
+    const size = payload.size;
+    if (!storagePath || !publicUrl || !payload.fileName?.trim() || !payload.contentType?.trim() ||
+      typeof size !== "number" || !Number.isInteger(size) || size < 0) {
+      return NextResponse.json(
+        { error: "A valid key, URL, file name, content type, and size are required." },
+        { status: 400 },
+      );
     }
 
     // If the upload is meant to be attached to the current user's avatar, persist it
     if (payload.attachTo?.type === "avatar") {
       // payload.url expected to be the public URL from storage adapter
-      const avatarUrl = payload.url ?? payload.key ?? null;
-      if (!avatarUrl) {
-        return NextResponse.json({ error: "Missing url for avatar" }, { status: 400 });
-      }
-
       try {
         const updated = await db.forumUser.update({
           where: { id: user.id },
-          data: { avatarUrl: avatarUrl },
+          data: { avatarUrl: publicUrl },
         });
-        console.info(`Updated avatar for user ${user.id}: ${avatarUrl}`);
-        return NextResponse.json({ success: true, data: { avatarUrl: updated.avatarUrl } }, { status: 200 });
+        await saveUploadMetadata({
+          fileName: payload.fileName.trim(),
+          contentType: payload.contentType.trim(),
+          size,
+          publicUrl,
+          storagePath,
+          ownerUserId: user.id,
+          attachTo: payload.attachTo,
+        });
+        console.info(`Updated avatar for user ${user.id}: ${publicUrl}`);
+        return NextResponse.json({ success: true, data: { avatarUrl: updated.avatarUrl } });
       } catch (dbErr) {
         console.error("Error updating user avatar:", dbErr);
         return NextResponse.json({ error: "Failed to update avatar" }, { status: 500 });
       }
     }
 
-    // Persisting to DB for other attachTo types is not implemented in this iteration.
-    // Log the payload for server-side inspection and return success.
-    console.info(`User ${user.id} uploaded file:`, payload);
+    const metadata = await saveUploadMetadata({
+      fileName: payload.fileName.trim(),
+      contentType: payload.contentType.trim(),
+      size,
+      publicUrl,
+      storagePath,
+      ownerUserId: user.id,
+      attachTo: payload.attachTo,
+    });
 
-    return NextResponse.json({ success: true, data: payload }, { status: 200 });
+    return NextResponse.json({ success: true, data: metadata });
   } catch (error) {
     console.error("Error saving upload metadata:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
