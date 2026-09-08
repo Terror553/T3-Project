@@ -196,6 +196,10 @@ Important behavior:
 - `WikiCategory`, `WikiSubCategory`
 - `UploadMetadata` — durable file records containing the stored filename, content type, size, public URL, storage path, owner, and optional attachment target.
 - `ForumReport` — authenticated community reports targeting exactly one topic or reply, with moderator status and reviewer tracking.
+- `ForumLabel`, `ForumTopicLabel`, and `ForumReplyLabel` — managed labels
+  attached to forum topics and replies.
+- `Announcement` — published dashboard announcements with optional MinIO image
+  URLs used by the landing page and public announcement routes.
 
 Many models are mapped to existing DB table names via `@@map(...)`, so keep map names intact unless doing a deliberate migration.
 
@@ -782,10 +786,15 @@ Current behavior:
 
 ### 14.4 Admin Dashboard
 
-A new admin area has been added under `src/app/admin`, while the broader dashboard remains under `src/app/dashboard`.
+A new admin area has been added under `src/app/admin`, while the canonical
+administration surfaces remain under `src/app/dashboard`.
 
 - **Layout**: `src/app/dashboard/layout.tsx` defines the new nested navigation structure.
-- **Pages**: `src/app/admin/page.tsx` provides the admin landing page; category, role, and reaction management pages provide the implemented moderation tools. The dashboard also contains user-management views for punishments and reports.
+- **Pages**: dashboard forum management, groups/roles, reactions, users,
+  punishments, reports, announcements, labels, configuration, and analytics
+  provide the canonical Bootstrap management surfaces. The legacy
+  `src/app/admin` pages remain compatibility entry points and reuse the same
+  authorized APIs where applicable.
 - **Authorization**: Admin API routes resolve the current user and enforce team or high-team access before database mutations. Ban listing and creation are available through `src/app/api/admin/bans/route.ts`.
 - **Reports**: `src/app/api/reports/route.ts` accepts authenticated topic/reply reports with a required reason, lists reports for team/high-team moderators, and supports `PATCH` status changes to `open`, `resolved`, or `dismissed` while recording the reviewer. `src/app/dashboard/user-management/reports/page.tsx` loads the report table and provides resolve/dismiss controls with visible error and empty states.
 
@@ -797,13 +806,18 @@ Public profile loading includes `ProfileWall` posts, their replies, and author m
 
 ### 14.6 Private Messaging Feature
 
-A private messaging system has been implemented, allowing users to send and receive private messages.
+A private messaging system has been implemented, allowing users to send and
+receive private messages. The canonical UI is under
+`src/app/profile/settings/messaging`; older top-level message links are retained
+only where compatibility requires them.
 
 Core files:
 
 - **Pages**:
-  - `src/app/messages/page.tsx`: Loads the inbox and opens the compose form through the global modal manager.
-  - `src/app/messages/[id]/page.tsx`: Displays a message thread and refreshes it after a reply.
+  - `src/app/profile/settings/messaging/page.tsx`: Loads the inbox and opens
+    the compose form through the global modal manager.
+  - `src/app/profile/settings/messaging/[id]/page.tsx`: Displays a message
+    thread and refreshes it after a reply.
 - **API Routes**:
   - `src/app/api/messages/route.ts`: Gets the inbox and creates new threads.
   - `src/app/api/messages/[id]/route.ts`: Gets a thread and creates replies.

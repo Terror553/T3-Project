@@ -61,7 +61,10 @@ Phase 2 — Messaging and profile polish: complete.
 Phase 3 — Admin and moderation polish: complete, including report submission and status actions.
 Phase 4 — Platform / integration backlog: complete for the current web scope, including analytics, clans, verification, forum query consolidation, and MinIO upload metadata.
 
-Remaining operational work is deployment migration application and focused coverage for any routes that are still uncovered.
+Remaining work is public route parity (including the members directory),
+dashboard canonicalization, non-store backend completion, focused coverage,
+visual validation, and documentation synchronization. Store functionality
+remains explicitly deferred.
 
 ## Delivery rules
 
