@@ -13,7 +13,7 @@ type Category = {
   }>;
 };
 
-export default function AdminCategoriesPage() {
+export function AdminCategoriesPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -57,6 +57,7 @@ export default function AdminCategoriesPage() {
       } finally {
         setLoading(false);
       }
+
     }
 
     void load();
@@ -413,3 +414,5 @@ export default function AdminCategoriesPage() {
     </div>
   );
 }
+
+export default AdminCategoriesPage;

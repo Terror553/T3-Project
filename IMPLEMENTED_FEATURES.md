@@ -322,7 +322,7 @@ This file lists every feature implemented so far in this agent session with a sh
 - Replace the dashboard forum/category route re-export with a dashboard-native
   permission-gated Bootstrap surface while retaining the existing authorized
   category and subcategory API workflows.
-- Validation: pending implementation.
+- Validation: `npm run check` and `git diff --check` passed.
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/forum/forums/page.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/admin/categories/page.tsx
