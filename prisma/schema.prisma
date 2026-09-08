@@ -81,9 +81,21 @@ model ForumLabel {
     color     String    @db.VarChar(30)
     createdAt DateTime  @default(now()) @db.DateTime(6)
     updatedAt DateTime  @default(now()) @db.DateTime(6)
+    topics    ForumTopicLabel[]
 
     @@unique([name])
     @@map("forum_labels")
+}
+
+model ForumTopicLabel {
+    topicId Int
+    labelId Int
+    topic   ForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    label   ForumLabel @relation(fields: [labelId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    @@id([topicId, labelId])
+    @@index([labelId])
+    @@map("forum_topic_labels")
 }
 
 model DashboardConfiguration {
@@ -310,6 +322,7 @@ model ForumTopic {
     author         ForumUser?           @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c228733246cf2aee0240663b354")
     hidden         Int                  @default(0) @db.TinyInt
     reports        ForumReport[]
+    labels         ForumTopicLabel[]
 
     @@index([subcategoryId], map: "FK_01d2ff4b1bbf5c9eee83310498a")
     @@index([authorId], map: "FK_c228733246cf2aee0240663b354")

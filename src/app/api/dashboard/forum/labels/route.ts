@@ -8,7 +8,6 @@ async function staff(): Promise<boolean> {
 }
 
 export async function GET(): Promise<NextResponse> {
-  if (!(await staff())) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   try {
     const labels = await db.$queryRaw<Array<{ id: number; name: string; color: string }>>`SELECT id, name, color FROM forum_labels ORDER BY name ASC`;
     return NextResponse.json(labels);

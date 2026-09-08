@@ -4,6 +4,7 @@ export const createTopicSchema = z.object({
   title: z.string().min(3).max(100),
   content: z.string().min(10).max(10000),
   subcategory: z.string({ message: "Subcategory must be a valid UUID" }),
+  labelIds: z.array(z.number().int().positive()).max(10).optional(),
 });
 
 export const editTopicSchema = z.object({

@@ -20,6 +20,7 @@ const initialValues: TopicCreationValues = {
   title: "",
   content: "",
   subcategory: "",
+  labelIds: [],
 };
 
 export const TopicCreationForm = () => {
@@ -27,6 +28,7 @@ export const TopicCreationForm = () => {
   const [categories, setCategories] = useState<
     { slug: string; name: string }[]
   >([]);
+  const [labels, setLabels] = useState<{ id: number; name: string; color: string }[]>([]);
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const { addNotification } = useNotification();
   const router = useRouter();
@@ -85,6 +87,10 @@ export const TopicCreationForm = () => {
         }
         const subCategories = result.flatMap((cat) => cat.forum_subcategories);
         setCategories(subCategories);
+        const labelsResponse = await fetch("/api/dashboard/forum/labels");
+        if (labelsResponse.ok) {
+          setLabels((await labelsResponse.json()) as { id: number; name: string; color: string }[]);
+        }
       } catch (error) {
         console.error("Topic creation error:", error);
         addNotification(
@@ -106,7 +112,7 @@ export const TopicCreationForm = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
-      <TopicCreateInner isSubmitting={isSubmitting} categories={categories} />
+      <TopicCreateInner isSubmitting={isSubmitting} categories={categories} labels={labels} />
     </FormProvider>
   );
 };
@@ -114,11 +120,13 @@ export const TopicCreationForm = () => {
 function TopicCreateInner({
   isSubmitting,
   categories,
+  labels,
 }: {
   isSubmitting: boolean;
   categories: { slug: string; name: string }[];
+  labels: { id: number; name: string; color: string }[];
 }) {
-  const { handleSubmit } = useFormContext<TopicCreationValues>();
+  const { handleSubmit, values, setFieldValue } = useFormContext<TopicCreationValues>();
 
   return (
     <form onSubmit={handleSubmit} id="form-topic-create">
@@ -133,6 +141,26 @@ function TopicCreateInner({
           label: cat.name,
         }))}
       />
+      {labels.length > 0 && (
+        <div className="form-group">
+          <label className="form-label" htmlFor="labelIds">Labels</label>
+          <select
+            id="labelIds"
+            className="form-control"
+            multiple
+            value={(values.labelIds ?? []).map(String)}
+            onChange={(event) => {
+              const selected = Array.from(event.target.selectedOptions, (option) => Number(option.value));
+              setFieldValue("labelIds", selected);
+            }}
+          >
+            {labels.map((label) => (
+              <option key={label.id} value={label.id}>{label.name}</option>
+            ))}
+          </select>
+          <small className="form-text text-muted">Hold Ctrl or Command to select multiple labels.</small>
+        </div>
+      )}
       <hr />
       <Button
         type="submit"

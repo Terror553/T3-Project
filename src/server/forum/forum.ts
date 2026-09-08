@@ -18,6 +18,7 @@ import type {
   ForumUser,
   ForumReaction,
   ForumReactionEmoji,
+  ForumLabel,
 } from "../types/forum";
 import { generateWhereClause } from "../utils/dbUtils";
 import type { z } from "zod";
@@ -80,6 +81,7 @@ type TopicWithRelations = {
     [key: string]: unknown;
   }>;
   follows?: Array<{ id: number; userId?: number | null; topicId?: number | null }>;
+  labels?: ForumLabel[];
 };
 
 function mapRepliesForTopic(topic: TopicWithRelations) {
@@ -99,9 +101,16 @@ function mapReactionsForTopic(topic: TopicWithRelations) {
   return reactions;
 }
 
-function enrichTopic(topic: TopicWithRelations): ForumTopic {
+async function enrichTopic(topic: TopicWithRelations): Promise<ForumTopic> {
   const replies = mapRepliesForTopic(topic);
   const reactions = mapReactionsForTopic(topic);
+  const labelRows = await db.$queryRaw<Array<{ id: number; name: string; color: string }>>`
+    SELECT forum_labels.id, forum_labels.name, forum_labels.color
+    FROM forum_topic_labels
+    INNER JOIN forum_labels ON forum_labels.id = forum_topic_labels.labelId
+    WHERE forum_topic_labels.topicId = ${topic.id}
+    ORDER BY forum_labels.name ASC
+  `;
   return {
     ...topic,
     forum_topic_replies: replies,
@@ -109,6 +118,7 @@ function enrichTopic(topic: TopicWithRelations): ForumTopic {
     forum_user: topic.author ?? null,
     count: replies.length,
     latestReply: replies[replies.length - 1] ?? null,
+    forum_labels: labelRows,
   } as ForumTopic;
 }
 
@@ -192,7 +202,7 @@ export async function getSubCategories(id: number | string) {
       const sc = subcategory as unknown as ForumSubcategory & {
         topics: TopicWithRelations[];
       };
-      const topics = await Promise.all(sc.topics.map(async (topic) => enrichTopic(topic)));
+      const topics = await Promise.all(sc.topics.map((topic) => enrichTopic(topic)));
 
       const topicsCount = topics.length;
       const repliesCount = topics.reduce(
@@ -234,7 +244,7 @@ export async function getSubCategory(id: number | string) {
   };
 
   const topics = await Promise.all(
-    subcategoryWithTopics.topics.map(async (topic) => enrichTopic(topic)),
+    subcategoryWithTopics.topics.map((topic) => enrichTopic(topic)),
   );
 
   return {
@@ -265,7 +275,7 @@ export async function getTopic(id: number | string) {
   }
 
   // Use the shared enrichment helper to normalize topic shape
-  const enriched = enrichTopic(topic);
+  const enriched = await enrichTopic(topic);
   return {
     ...enriched,
     forum_topic_follow: topic.follows,
@@ -296,7 +306,7 @@ export async function getLatestTopic(id: number | string) {
   const firstTopic = topics[0]!; // Assert that we have a topic since we checked length
 
   // Enrich the topic using the shared helper to keep mapping consistent
-  const enriched = enrichTopic(firstTopic);
+  const enriched = await enrichTopic(firstTopic);
   return {
     ...firstTopic,
     ...enriched,
@@ -374,6 +384,22 @@ export async function createTopic(
         },
       },
     });
+
+    const labelIds = data.labelIds ?? [];
+    if (labelIds.length > 0) {
+      const labels = await db.$queryRaw<Array<{ id: number }>>`
+        SELECT id FROM forum_labels
+      `;
+      const validLabelIds = new Set(labels.map((label) => label.id));
+      for (const labelId of labelIds) {
+        if (validLabelIds.has(labelId)) {
+          await db.$executeRaw`
+            INSERT INTO forum_topic_labels (topicId, labelId)
+            VALUES (${newTopic.id}, ${labelId})
+          `;
+        }
+      }
+    }
 
     return createSuccessResult({
       slug, // Placeholder slug, replace with actual slug generation logic

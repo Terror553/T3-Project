@@ -237,6 +237,19 @@ export default function Topic() {
                 )}
 
                 {topic.title}
+                {topic.forum_labels && topic.forum_labels.length > 0 && (
+                  <div className="d-flex flex-wrap gap-1 mt-2">
+                    {topic.forum_labels.map((label) => (
+                      <span
+                        className="badge"
+                        key={label.id}
+                        style={{ backgroundColor: label.color }}
+                      >
+                        {label.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="meta">
                   Gestartet von{"  "}
                   <Link

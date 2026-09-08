@@ -24,6 +24,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - [x] Forum settings
   - Forum/category management under the dashboard route
   - [x] Forum labels (persisted model, authorized API, and Bootstrap UI)
+  - [x] Topic label attachment and public topic display
   - Reuse the existing forum and admin server logic instead of creating
     duplicate APIs.
 - [ ] **Implement dashboard user and group management pages**
@@ -118,6 +119,9 @@ archived in `resolved_to_do_v1_20260309.md`.
 - [x] **Display persisted privacy and terms publicly**
   - The public rules page now reads the dashboard policy values and shows
     explicit empty states when staff have not published them.
+- [x] **Attach managed labels to forum topics**
+  - Topic creation can select persisted labels, stores the many-to-many
+    relation, and displays labels on public topic pages.
 - [ ] **Unify admin and dashboard response contracts**
   - Share server helpers and types between migrated pages.
   - Remove duplicate request shapes and stale links after migration.

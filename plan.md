@@ -49,6 +49,8 @@
   and shared landing-page rendering from published database records.
 - Runtime enforcement now applies persisted forum topic/reply settings,
   registration availability, and public privacy/terms content.
+- Forum topics now support persisted managed labels selected during creation and
+  displayed on public topic pages.
 - Remaining non-store work is forum-label attachment, reaction/dashboard
   consolidation, messaging verification, focused test coverage, and final
   release validation. Store functionality remains intentionally deferred.

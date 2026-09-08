@@ -120,6 +120,13 @@ export interface ForumTopic {
   forum_topic_follow?: ForumTopicFollow[];
   forum_reactions?: ForumReaction[];
   hidden: number;
+  forum_labels?: ForumLabel[];
+}
+
+export interface ForumLabel {
+  id: number;
+  name: string;
+  color: string;
 }
 
 /**
