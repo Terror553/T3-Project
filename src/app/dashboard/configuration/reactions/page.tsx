@@ -15,6 +15,7 @@ export default function DashboardReactionsPage() {
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState("");
   const [negative, setNegative] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -40,9 +41,14 @@ export default function DashboardReactionsPage() {
     setMessage(null);
     try {
       const response = await fetch("/api/admin/reactions", {
-        method: "POST",
+        method: editingId === null ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, emoji, negative: negative ? 1 : 0 }),
+        body: JSON.stringify({
+          id: editingId ?? undefined,
+          name,
+          emoji,
+          negative: negative ? 1 : 0,
+        }),
       });
       if (!response.ok) {
         const result = (await response.json()) as { error?: string };
@@ -51,13 +57,36 @@ export default function DashboardReactionsPage() {
       setName("");
       setEmoji("");
       setNegative(false);
-      setMessage("Reaction created.");
+      setEditingId(null);
+      setMessage(editingId === null ? "Reaction created." : "Reaction updated.");
       await loadReactions();
     } catch (error) {
       console.error("Failed to create reaction", error);
       setMessage(error instanceof Error ? error.message : "Reaction could not be created.");
     } finally {
       setSaving(false);
+    }
+
+  }
+
+  async function deleteReaction(id: number): Promise<void> {
+    if (!window.confirm("Delete this reaction? Existing uses will also be removed.")) return;
+    setMessage(null);
+    try {
+      const response = await fetch("/api/admin/reactions", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) {
+        const result = (await response.json()) as { error?: string };
+        throw new Error(result.error ?? "Reaction could not be deleted.");
+      }
+      setMessage("Reaction deleted.");
+      await loadReactions();
+    } catch (error) {
+      console.error("Failed to delete reaction", error);
+      setMessage(error instanceof Error ? error.message : "Reaction could not be deleted.");
     }
   }
 
@@ -90,7 +119,7 @@ export default function DashboardReactionsPage() {
                 </div>
                 <div className="col-md-2">
                   <button className="btn btn-primary w-100" type="submit" disabled={saving}>
-                    {saving ? "Creating..." : "Create"}
+                    {saving ? "Saving..." : editingId === null ? "Create" : "Save"}
                   </button>
                 </div>
               </div>
@@ -110,7 +139,24 @@ export default function DashboardReactionsPage() {
                           {reaction.negative ? "Negative reaction" : "Positive reaction"}
                         </small>
                       </div>
-                      <span className="fs-3" aria-label={reaction.name}>{reaction.emoji}</span>
+                      <div className="d-flex align-items-center gap-2">
+                        <span className="fs-3" aria-label={reaction.name}>{reaction.emoji}</span>
+                        <button
+                          className="btn btn-sm btn-outline-secondary"
+                          type="button"
+                          onClick={() => {
+                            setEditingId(reaction.id);
+                            setName(reaction.name);
+                            setEmoji(reaction.emoji);
+                            setNegative(Boolean(reaction.negative));
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => void deleteReaction(reaction.id)}>
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </article>
                 </div>
