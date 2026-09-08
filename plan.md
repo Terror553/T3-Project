@@ -62,6 +62,9 @@
 - A public `/members` route and `/api/members` endpoint now provide searchable,
   paginated member cards with avatars, group badges, profile links, and explicit
   loading, empty, and error states.
+- Dashboard forum/category management now has a native dashboard route, and
+  category, group/role, and reaction administration are all available through
+  dashboard surfaces while retaining legacy compatibility routes.
 
 ## Recently Completed Features (Session 3 Snapshot)
 

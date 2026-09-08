@@ -20,7 +20,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - [x] Privacy and terms
   - [x] Registration settings
   - [x] Reaction configuration
-- [ ] **Implement dashboard forum management pages**
+- [x] **Implement dashboard forum management pages**
   - [x] Forum settings
   - Forum/category management under the dashboard route
   - [x] Forum labels (persisted model, authorized API, and Bootstrap UI)
@@ -50,11 +50,11 @@ archived in `resolved_to_do_v1_20260309.md`.
         and landing-page integration backed by the same published records.
   - Dashboard configuration now persists general, registration, privacy, and
     terms settings through a validated server/API boundary.
-- [ ] **Move administrative functionality into the dashboard**
+- [x] **Move administrative functionality into the dashboard**
   - Treat `src/app/dashboard` as the canonical administration surface.
-  - Integrate or redirect the existing `src/app/admin` category, role, and
-    reaction features into the lined-up dashboard pages.
-  - Avoid maintaining two separate admin implementations.
+  - Category, group/role, and reaction management are now reachable from
+    dashboard-native pages that reuse the existing authorized APIs/workflows.
+  - The legacy `/admin` routes remain compatibility entry points.
 
 - [x] **Restore the public members directory**
   - Added a paginated, searchable member directory with profile links,
