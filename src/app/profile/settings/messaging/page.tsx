@@ -20,6 +20,7 @@ export default function MessagesInbox() {
   const [isComposing, setIsComposing] = useState(false);
   const [formData, setFormData] = useState(initialThreadValues);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { showLoadingBar, hideLoadingBar } = useTheme();
   const { addNotification } = useNotification();
   const { openModal, closeModal } = useModalManager();
@@ -28,6 +29,7 @@ export default function MessagesInbox() {
     try {
       showLoadingBar("messages");
       setLoading(true);
+      setError(null);
       const res = await fetch("/api/messages");
       if (!res.ok) throw new Error(`Failed fetching messages ${res.status}`);
       const data = (await res.json()) as ForumMessage[];
@@ -35,6 +37,7 @@ export default function MessagesInbox() {
     } catch (error) {
       console.error("Error loading messages", error);
       setMessages([]);
+      setError("Messages are currently unavailable. Please try again.");
     } finally {
       setLoading(false);
       hideLoadingBar("messages");
@@ -103,6 +106,18 @@ export default function MessagesInbox() {
       <p className="alert alert-info" role="status">
         Loading messages...
       </p>
+    );
+  if (error)
+    return (
+      <div>
+        <h2>Inbox</h2>
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+        <button className="btn btn-outline-primary" type="button" onClick={() => void loadInbox()}>
+          Try again
+        </button>
+      </div>
     );
 
   return (
@@ -202,9 +217,10 @@ export default function MessagesInbox() {
       ) : (
         <ul className="list-group">
           {messages.map((m) => (
-            <li key={m.id} className="list-group-item">
+            <li key={m.id} className={`list-group-item ${m.seen ? "" : "fw-bold"}`}>
               <Link href={`/profile/settings/messaging/${m.id}`}>
                 <strong>{m.title}</strong> — {m.sender?.username ?? "Unknown"}
+                {!m.seen && <span className="badge bg-primary ms-2">Unread</span>}
                 <div className="small text-muted">
                   {new Date(m.createdAt).toLocaleString()}
                 </div>

@@ -67,7 +67,7 @@ archived in `resolved_to_do_v1_20260309.md`.
 - [ ] **Finish messaging UX using existing project patterns**
   - Use the existing notification, loading-bar, modal manager, UserPicker,
     form validation, and Bootstrap components.
-  - Verify compose, inbox, thread, reply, unread, empty, error, and mobile
+  - [x] Verify compose, inbox, thread, reply, unread, empty, error, and mobile
     states.
 
 ## Priority 3 — Replace non-project UI patterns with Bootstrap 5.0.1

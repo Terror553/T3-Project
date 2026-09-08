@@ -11,12 +11,14 @@ export default function MessageThread() {
   const { id } = useParams<{ id: string }>();
   const [message, setMessage] = useState<ForumMessage | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { showLoadingBar, hideLoadingBar } = useTheme();
 
   const loadThread = useCallback(async () => {
     try {
       showLoadingBar("message-thread");
       setLoading(true);
+      setError(null);
       const res = await fetch(`/api/messages/${id}`);
       if (!res.ok) throw new Error(`Failed to load message ${res.status}`);
       const data = (await res.json()) as ForumMessage;
@@ -24,6 +26,7 @@ export default function MessageThread() {
     } catch (err) {
       console.error("Error loading message", err);
       setMessage(null);
+      setError("This conversation is currently unavailable. Please try again.");
     } finally {
       setLoading(false);
       hideLoadingBar("message-thread");
@@ -42,9 +45,12 @@ export default function MessageThread() {
     );
   if (!message)
     return (
-      <p className="alert alert-warning" role="alert">
-        Message not found.
-      </p>
+      <div>
+        <p className="alert alert-warning" role="alert">
+          {error ?? "Message not found."}
+        </p>
+        {error && <button className="btn btn-outline-primary" type="button" onClick={() => void loadThread()}>Try again</button>}
+      </div>
     );
 
   return (
