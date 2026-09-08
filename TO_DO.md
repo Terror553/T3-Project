@@ -25,6 +25,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Forum/category management under the dashboard route
   - [x] Forum labels (persisted model, authorized API, and Bootstrap UI)
   - [x] Topic label attachment and public topic display
+  - [x] Reply label attachment and public reply display
   - Reuse the existing forum and admin server logic instead of creating
     duplicate APIs.
 - [ ] **Implement dashboard user and group management pages**

@@ -2,6 +2,17 @@ generator client {
     provider = "prisma-client-js"
 }
 
+model ForumReplyLabel {
+    replyId Int
+    labelId Int
+    reply   ForumTopicReply @relation(fields: [replyId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    label   ForumLabel      @relation(fields: [labelId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    @@id([replyId, labelId])
+    @@index([labelId])
+    @@map("forum_reply_labels")
+}
+
 datasource db {
     provider = "mysql"
     url      = env("DATABASE_URL")
@@ -82,6 +93,7 @@ model ForumLabel {
     createdAt DateTime  @default(now()) @db.DateTime(6)
     updatedAt DateTime  @default(now()) @db.DateTime(6)
     topics    ForumTopicLabel[]
+    replies   ForumReplyLabel[]
 
     @@unique([name])
     @@map("forum_labels")
@@ -280,6 +292,7 @@ model ForumTopicReply {
     topic          ForumTopic?               @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_9a56eaee984340cdc2ff1b383df")
     replyReactions ForumTopicReplyReaction[]
     reports        ForumReport[]
+    labels         ForumReplyLabel[]
 
     @@index([authorId], map: "FK_3487d2b211836d6fff2cb39eeb0")
     @@index([topicId], map: "FK_9a56eaee984340cdc2ff1b383df")

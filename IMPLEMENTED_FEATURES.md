@@ -294,6 +294,18 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/profile/settings/messaging/[id]/page.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/messageReplyForm.tsx
 
+54. Forum reply label attachment
+
+- Extend the managed-label relation to replies, allow label selection in the
+  existing reply form, persist selected labels during reply creation, and
+  render reply labels in topic threads.
+- Validation: `npm run check`, `npx prisma validate`, forum tests, and migration
+  deployment passed. The migration was applied with `npm run db:migrate`.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/prisma/schema.prisma
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/topicReplyForm.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/forum/forum.ts
+
 1. Baseline stabilization
 
 - Stabilized TypeScript and ESLint issues so the project builds and typechecks cleanly. Fixed tsconfig and multiple small typing errors across the codebase.

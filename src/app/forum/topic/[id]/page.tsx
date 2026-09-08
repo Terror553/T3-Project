@@ -817,6 +817,15 @@ export default function Topic() {
                                                 __html: reply.content,
                                               }}
                                             />
+                                            {reply.forum_labels && reply.forum_labels.length > 0 && (
+                                              <div className="d-flex flex-wrap gap-1 mt-2">
+                                                {reply.forum_labels.map((label) => (
+                                                  <span className="badge" style={{ backgroundColor: label.color }} key={label.id}>
+                                                    {label.name}
+                                                  </span>
+                                                ))}
+                                              </div>
+                                            )}
                                           </div>
                                           <div className="forum-post-reactions">
                                             <Link

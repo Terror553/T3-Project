@@ -55,7 +55,8 @@
   page backed by the existing reaction API.
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
-- Remaining non-store work is forum-label attachment, reaction/dashboard
+- Reply labels are now persisted, selectable in reply creation, and rendered in
+  public topic threads. Remaining non-store work is reaction/dashboard
   consolidation, messaging verification, focused test coverage, and final
   release validation. Store functionality remains intentionally deferred.
 

@@ -96,6 +96,7 @@ export interface ForumTopicReply {
   authorId: number | null;
   topicIdId: number | null;
   forum_user: ForumUser;
+  forum_labels?: ForumLabel[];
 }
 
 /**

@@ -84,11 +84,21 @@ type TopicWithRelations = {
   labels?: ForumLabel[];
 };
 
-function mapRepliesForTopic(topic: TopicWithRelations) {
-  const replies = (topic.replies ?? []).map((reply) => ({
+async function mapRepliesForTopic(topic: TopicWithRelations): Promise<ForumTopicReply[]> {
+  const replies = await Promise.all((topic.replies ?? []).map(async (reply) => {
+    const labelRows = await db.$queryRaw<Array<{ id: number; name: string; color: string }>>`
+      SELECT forum_labels.id, forum_labels.name, forum_labels.color
+      FROM forum_reply_labels
+      INNER JOIN forum_labels ON forum_labels.id = forum_reply_labels.labelId
+      WHERE forum_reply_labels.replyId = ${reply.id}
+      ORDER BY forum_labels.name ASC
+    `;
+    return {
     ...reply,
     topicIdId: topic.id,
     forum_user: reply.author ?? null,
+      forum_labels: labelRows,
+    };
   })) as ForumTopicReply[];
   return replies;
 }
@@ -102,7 +112,7 @@ function mapReactionsForTopic(topic: TopicWithRelations) {
 }
 
 async function enrichTopic(topic: TopicWithRelations): Promise<ForumTopic> {
-  const replies = mapRepliesForTopic(topic);
+  const replies = await mapRepliesForTopic(topic);
   const reactions = mapReactionsForTopic(topic);
   const labelRows = await db.$queryRaw<Array<{ id: number; name: string; color: string }>>`
     SELECT forum_labels.id, forum_labels.name, forum_labels.color
@@ -591,6 +601,22 @@ export async function createReply(
         },
       },
     });
+
+    const labelIds = data.labelIds ?? [];
+    if (labelIds.length > 0) {
+      const labels = await db.$queryRaw<Array<{ id: number }>>`
+        SELECT id FROM forum_labels
+      `;
+      const validLabelIds = new Set(labels.map((label) => label.id));
+      for (const labelId of labelIds) {
+        if (validLabelIds.has(labelId)) {
+          await db.$executeRaw`
+            INSERT INTO forum_reply_labels (replyId, labelId)
+            VALUES (${reply.id}, ${labelId})
+          `;
+        }
+      }
+    }
 
     return createSuccessResult({
       id: reply.id,

@@ -23,6 +23,7 @@ export const createReplySchema = z.object({
   content: z.string().min(1).max(10000),
   topicId: z.number().int().nullable().optional(),
   slug: z.string().nullable().optional(),
+  labelIds: z.array(z.number().int().positive()).max(10).optional(),
 });
 
 export const editReplySchema = z.object({
