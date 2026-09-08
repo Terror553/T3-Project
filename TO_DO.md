@@ -19,7 +19,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - [x] Navigation management
   - [x] Privacy and terms
   - [x] Registration settings
-  - Reaction configuration
+  - [x] Reaction configuration
 - [ ] **Implement dashboard forum management pages**
   - [x] Forum settings
   - Forum/category management under the dashboard route
@@ -122,6 +122,9 @@ archived in `resolved_to_do_v1_20260309.md`.
 - [x] **Attach managed labels to forum topics**
   - Topic creation can select persisted labels, stores the many-to-many
     relation, and displays labels on public topic pages.
+- [x] **Use a dashboard-native reaction configuration page**
+  - The dashboard now owns the Bootstrap reaction UI while continuing to use
+    the existing authorized reaction API.
 - [ ] **Unify admin and dashboard response contracts**
   - Share server helpers and types between migrated pages.
   - Remove duplicate request shapes and stale links after migration.
