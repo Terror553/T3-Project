@@ -368,6 +368,18 @@ This file lists every feature implemented so far in this agent session with a sh
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/login/page.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/register/page.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/loginForm.tsx
+
+45. Rolled-back broad visual parity pass
+
+- The broad parity edits recorded in entries 41-44 were reverted after review
+  because they disrupted established page layouts, especially forum categories,
+  subcategories, and the dashboard shell. The rendered-site reference remains
+  documentation only until each page can be matched without changing existing
+  working structure.
+- Validation: `npm run check` passed; focused forum, profile, and settings
+  regressions passed (22 tests).
+- Key commit:
+  - 076c779 fix(ui): restore established page layouts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/dashboard/DashboardSection.tsx
 

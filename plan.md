@@ -57,18 +57,11 @@
 - Re-crawled the local public and StaffCP route families and recorded stable
   rendered HTML templates, live example data, element/class inventories, and
   route-to-template guidance in `SITE_HTML_REFERENCE.md`.
-- Updated shared public navigation, footer, announcement cards, dashboard
-  sidebar/page framing, and form validation primitives to use the captured
-  Lithium/Bootstrap element and class patterns across their consuming pages.
-- Updated the forum index and category/subcategory components with the captured
-  breadcrumb/search, forum-card, responsive row, loading, error, and empty
-  state patterns.
-- Updated the members directory, public profile fallback/loading states, and
-  profile utility bar to use the audited content, card, badge, and alert
-  patterns.
-- Updated login and registration pages/forms with the audited card headers,
-  labeled controls, action buttons, alert structure, and English reference
-  labels; corrected the registration success branch while changing the form.
+- A broad visual parity pass was attempted against the rendered-site reference,
+  but it changed established layouts and was rolled back. The existing forum,
+  category, subcategory, dashboard, profile, authentication, navigation, and
+  form structures are the current source of truth; future parity work must be
+  targeted and verified page by page.
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
 - Reply labels are now persisted, selectable in reply creation, and rendered in
