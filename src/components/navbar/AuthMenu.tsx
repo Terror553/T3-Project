@@ -14,7 +14,7 @@ export const AuthMenu = () => {
           <div className="nav-link-icon">
             <i className="fas fa-key icon"></i>
           </div>
-          <div className="nav-link-text">Einloggen</div>
+          <div className="nav-link-text">Log In</div>
         </Link>
       </li>
       <li className="nav-item">

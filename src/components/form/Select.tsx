@@ -40,8 +40,7 @@ export function Select<T extends Record<string, string>>({
           </option>
         ))}
       </select>
-      <br />
-      {errors[name] && <p className="alert alert-danger">{errors[name]}</p>}
+      {errors[name] && <div className="alert alert-danger" role="alert">{errors[name]}</div>}
     </div>
   );
 }

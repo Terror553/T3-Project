@@ -57,6 +57,9 @@
 - Re-crawled the local public and StaffCP route families and recorded stable
   rendered HTML templates, live example data, element/class inventories, and
   route-to-template guidance in `SITE_HTML_REFERENCE.md`.
+- Updated shared public navigation, footer, announcement cards, dashboard
+  sidebar/page framing, and form validation primitives to use the captured
+  Lithium/Bootstrap element and class patterns across their consuming pages.
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
 - Reply labels are now persisted, selectable in reply creation, and rendered in

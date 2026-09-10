@@ -321,6 +321,20 @@ This file lists every feature implemented so far in this agent session with a sh
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/SITE_HTML_REFERENCE.md
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/SITE_STRUCTURE_AUDIT.md
+
+41. Shared Lithium/Bootstrap UI parity
+
+- Updated the shared public footer and navigation icon/text structure, aligned
+  announcement cards with the captured `card-news` template, improved the
+  dashboard sidebar/page header framing, and standardized form validation
+  alerts with Bootstrap roles and spacing.
+- Validation: `npm run check` passed; representative component and forum page
+  tests passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/footer.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/navbar/MainNavigation.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/announcement/AnnouncementCard.tsx
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/client/navUtils.tsx
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/dashboard/DashboardSection.tsx
 

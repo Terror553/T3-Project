@@ -36,8 +36,7 @@ export function TextArea<T extends Record<string, string>>({
         onChange={handleTextAreaChange}
         initialValue={values[name]}
       />
-      <br />
-      {errors[name] && <p className="alert alert-danger">{errors[name]}</p>}
+      {errors[name] && <div className="alert alert-danger" role="alert">{errors[name]}</div>}
     </div>
   );
 }

@@ -28,8 +28,7 @@ export function TextInput<T extends Record<string, string>>({
         onChange={handleChange(name)}
         className="form-control"
       />
-      <br />
-      {errors[name] && <p className="alert alert-danger">{errors[name]}</p>}
+      {errors[name] && <div className="alert alert-danger" role="alert">{errors[name]}</div>}
     </div>
   );
 }

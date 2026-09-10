@@ -20,7 +20,10 @@ export const MainNavigation = ({
             className={`nav-link ${isActive(nav.fullLink)}`}
             href={nav.fullLink}
           >
-            {nav.name}
+            <div className="nav-link-icon">
+              <i className={nav.icon || "fas fa-link"} aria-hidden="true" />
+            </div>
+            <div className="nav-link-text">{nav.name}</div>
           </Link>
         </li>
       ))}
