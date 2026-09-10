@@ -140,6 +140,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Test authorization for each dashboard management area.
   - Test messaging relocation links, inbox/thread behavior, and mutations.
   - Test configuration, store, announcement, and report validation.
+  - [x] Configuration, reaction, members, reports, and bans API coverage.
 - [ ] **Run visual and responsive checks**
   - Check light/dark themes, desktop/tablet/mobile layouts, modal focus,
     dropdown behavior, tables, forms, and empty/error states.

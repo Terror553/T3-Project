@@ -102,7 +102,8 @@ coverage; forum report coverage now includes submission, target validation,
 staff authorization, and status updates; bans now have staff authorization,
 payload validation, and creation coverage. The deployment
 database is now baselined and has the upload metadata and forum report
-migrations applied. Storage-provider switching is intentionally out of scope
-because MinIO is the configured deployment.
+migrations applied. The full suite now passes 21 test files and 86 tests, and
+Prisma schema validation passes. Storage-provider switching is intentionally
+out of scope because MinIO is the configured deployment.
 
 Prioritize report submission and moderation workflow, followed by focused validation tests for the remaining API and UI milestones.
