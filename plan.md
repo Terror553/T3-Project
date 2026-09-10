@@ -60,6 +60,9 @@
 - Updated shared public navigation, footer, announcement cards, dashboard
   sidebar/page framing, and form validation primitives to use the captured
   Lithium/Bootstrap element and class patterns across their consuming pages.
+- Updated the forum index and category/subcategory components with the captured
+  breadcrumb/search, forum-card, responsive row, loading, error, and empty
+  state patterns.
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
 - Reply labels are now persisted, selectable in reply creation, and rendered in

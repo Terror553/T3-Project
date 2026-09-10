@@ -12,12 +12,12 @@ export const ForumSubcategoryItem = ({ subcategory }: ForumSubcategoryItemProps)
   const totalPosts = (subcategory.repliesCount || 0) + (subcategory.count || 0);
   
   return (
-    <div className="card-body">
-      <div className="forum-node">
+    <div className="card-body forum-subcategory-row">
+      <div className="forum-node row align-items-center">
         <div className="forum-node-icon">
           <i className="fas fa-comment"></i>
         </div>
-        <div className="forum-node-info">
+        <div className="forum-node-info col-md-7">
           <div className="forum-node-title">
             <Link href={`/forum/subcategory/${subcategory.id}`}>
               {subcategory.name}
@@ -43,7 +43,7 @@ export const ForumSubcategoryItem = ({ subcategory }: ForumSubcategoryItemProps)
             </div>
           </div>
         </div>
-        <div className="forum-node-stats">
+        <div className="forum-node-stats col-md-2">
           <div className="forum-node-stats-item">
             <div className="forum-node-stats-key">Topics</div>
             <div className="forum-node-stats-value">
@@ -57,7 +57,7 @@ export const ForumSubcategoryItem = ({ subcategory }: ForumSubcategoryItemProps)
             </div>
           </div>
         </div>
-        <div className="forum-node-latest">
+        <div className="forum-node-latest col-md-3">
           {subcategory.latestEntry ? (
             <LastTopicInfo topic={subcategory.latestEntry} />
           ) : (
