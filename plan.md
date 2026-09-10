@@ -95,7 +95,9 @@
 
 **Remaining validation and platform work**: continue adding focused tests for
 uncovered routes and management APIs. Reaction lifecycle coverage now includes
-authorization, payload validation, updates, and deletes. The deployment
+authorization, payload validation, updates, and deletes; dashboard
+configuration coverage now includes authorization, defaults, validation, and
+persistence. The deployment
 database is now baselined and has the upload metadata and forum report
 migrations applied. Storage-provider switching is intentionally out of scope
 because MinIO is the configured deployment.

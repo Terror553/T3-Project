@@ -279,6 +279,14 @@ This file lists every feature implemented so far in this agent session with a sh
   the repository.
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/configuration/reactions/page.tsx
+
+36. Dashboard configuration API coverage
+
+- Added focused tests for staff authorization, default configuration values,
+  invalid partial updates, and persisted configuration updates.
+- Validation: the focused Vitest suite and `npm run check` passed.
+- Key file:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/configuration/route.test.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/dashboard/DashboardSection.tsx
 
