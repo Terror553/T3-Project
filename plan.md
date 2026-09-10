@@ -52,13 +52,14 @@
 - Forum topics now support persisted managed labels selected during creation and
   displayed on public topic pages.
 - Dashboard reaction configuration now has a native permission-gated Bootstrap
-  page backed by the existing reaction API.
+  page backed by a validated reaction API with create, list, update, and delete
+  lifecycle operations.
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
 - Reply labels are now persisted, selectable in reply creation, and rendered in
-  public topic threads. Remaining non-store work is reaction/dashboard
-  consolidation, messaging verification, focused test coverage, and final
-  release validation. Store functionality remains intentionally deferred.
+  public topic threads. Remaining non-store work is messaging verification,
+  broader focused test coverage, visual checks, and final release validation.
+  Store functionality remains intentionally deferred.
 - A public `/members` route and `/api/members` endpoint now provide searchable,
   paginated member cards with avatars, group badges, profile links, and explicit
   loading, empty, and error states.
@@ -92,6 +93,11 @@
 
 ## Next work item
 
-**Remaining validation and platform work**: continue adding focused tests for uncovered routes. The deployment database is now baselined and has the upload metadata and forum report migrations applied. Storage-provider switching is intentionally out of scope because MinIO is the configured deployment.
+**Remaining validation and platform work**: continue adding focused tests for
+uncovered routes and management APIs. Reaction lifecycle coverage now includes
+authorization, payload validation, updates, and deletes. The deployment
+database is now baselined and has the upload metadata and forum report
+migrations applied. Storage-provider switching is intentionally out of scope
+because MinIO is the configured deployment.
 
 Prioritize report submission and moderation workflow, followed by focused validation tests for the remaining API and UI milestones.

@@ -472,6 +472,19 @@ If anything is missing or you want more detail in any entry, tell me which featu
 
 - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/PLAN_FOR_TO_DO.md
 
+35. Reaction lifecycle API and focused coverage
+
+- Added strict Zod validation and shared staff authorization for reaction
+creation, listing, updating, and deletion. The dashboard now exposes edit
+and delete controls in addition to creation.
+- Added focused API tests for authorization, invalid payloads, updates, and
+deletes.
+- Validation: `npm run check` and the focused Vitest suite passed.
+- Key files:
+- C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.ts
+- C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.test.ts
+- C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/dashboard/configuration/reactions/page.tsx
+
 31. Upload metadata persistence tests
 
 - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/server/storage/uploadMetadata.test.ts
