@@ -13,13 +13,13 @@ type ForumCategoryItemProps = {
 export const ForumCategoryItem = ({ category }: ForumCategoryItemProps) => {
   return (
     <div className="card card-forum">
-      <div className="card-header card-header-content">
+      <div className="card-header">
         <a
           href={`#collapse-forum-${category.id}`}
           className="float-end"
           data-bs-toggle="collapse"
           aria-expanded="true"
-          aria-label={`Toggle ${category.name} discussion`}
+          aria-label="Toggle discussion"
         >
           <span className="collapse-icon">
             <i className="fas fa-angle-up fa-fw"></i>
@@ -37,7 +37,7 @@ export const ForumCategoryItem = ({ category }: ForumCategoryItemProps) => {
             />
           ))
         ) : (
-          <p className="m-3 text-muted">This category has no subcategories yet.</p>
+          <p className="m-3">Diese Kategorie hat noch keine Subkategorien!</p>
         )}
       </div>
     </div>

@@ -45,7 +45,7 @@ export default function RegisterPage() {
         passwordConfirm,
       });
       console.log(error);
-      if (error.success) {
+      if(!error.success) {
         addNotification("Registration successful! Please log in.", "success", 5000);
         window.location.href = `/`;
         return;
@@ -56,16 +56,15 @@ export default function RegisterPage() {
 
   return (
     <div className="content">
-      <div className="page-header mb-3"><h1 className="h3">Sign Up</h1></div>
-      {error && <div className="alert alert-danger" role="alert"><strong>Please fix the following error:</strong> {error}</div>}
+      <h2>Sign Up</h2>
+      {error && <p className="alert alert-danger" dangerouslySetInnerHTML={{ __html: `<b>Please fix the following errors:</b><br />${error}` }}></p>}
       <div className="card">
-      <div className="card-header">Create account</div>
         <div className="card-body">
           <div className="row justify-content-center">
             <div className="col-lg-5">
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="email">Email</label>
+                  <label className="form-label">eMail</label>
                   <input
                     className="form-control"
                     type="email"
@@ -74,7 +73,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="username">Username</label>
+                  <label className="form-label">Benutzername</label>
                   <input
                     className="form-control"
                     type="text"
@@ -83,7 +82,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="password">Password</label>
+                  <label className="form-label">Passwort</label>
                   <input
                     className="form-control"
                     type="password"
@@ -92,7 +91,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="passwordConfirm">Confirm password</label>
+                  <label className="form-label">Passwort Bestätigen</label>
                   <input
                     className="form-control"
                     type="password"
@@ -109,7 +108,7 @@ export default function RegisterPage() {
                       name="remember"
                       value="1"
                     />
-                    <label className="form-check-label" htmlFor="input-remember">Remember me</label>
+                    <label className="form-check-label">Remember me</label>
                   </div>
                   <a href="/forgot_password" className="form-meta mt-0 ms-auto">
                     Forgot password?
@@ -123,7 +122,7 @@ export default function RegisterPage() {
               </form>
               <div>
                 <div className="separator">Already registered?</div>
-                <a href="/login" className="btn btn-secondary btn-block">
+                <a href="/login" className="btn btn-success btn-block">
                   Login
                 </a>
               </div>

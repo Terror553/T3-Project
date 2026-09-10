@@ -52,22 +52,19 @@ export default function SubNavBar({
 
   return (
     <>
-      <div className="container-fluid py-3">
-      <div className="page-header mb-3">
-        <h1 className="h3 mb-0">
+      <h2>
         {pathname
           .split("/")
           .pop()
           ?.replace(/-/g, " ")
           .replace(/\b\w/g, (char) => char.toUpperCase())}
-        </h1>
-      </div>
+      </h2>
       <div className="row">
-        <div className="col-12">
+        <div className="col">
           <div className="content">
             <div className="row">
               <div className="col-xl-3 col-lg-4">
-                <aside className="card card-secondary" aria-label={`${title} navigation`}>
+                <div className="card card-secondary">
                   <div className="card-header">{title}</div>
                   <div className="card-body">
                     <ul className="nav nav-vertical">
@@ -125,13 +122,12 @@ export default function SubNavBar({
                       ))}
                     </ul>
                   </div>
-                </aside>
+                </div>
               </div>
               <div className="col-xl-9 col-lg-8">{children}</div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     </>
   );

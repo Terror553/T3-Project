@@ -8,7 +8,7 @@ type AnnouncementCardProps = {
 
 export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
   return (
-    <article className="card card-news">
+    <article className="card card-gpost card-gpost-index card-gpost-big">
       {announcement.imageUrl && (
         <div className="card-image">
           <Link href={`/announcements/${announcement.id}`} className="card-image-inner">

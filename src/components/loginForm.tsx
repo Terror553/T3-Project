@@ -81,15 +81,16 @@ function LoginFormInner({ isSubmitting }: { isSubmitting: boolean }) {
 
   return (
     <form onSubmit={handleSubmit} id="form-login">
-      <TextInput name="email" label="Email" type="email" />
-      <TextInput name="password" label="Password" type="password" />
+      <TextInput name="email" label="eMail" />
+      <TextInput name="password" label="Passwort" type="password" />
+      <hr />
       <Button
         type="submit"
         variant="primary"
         className="btn-block"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Logging in..." : "Log In"}
+        {isSubmitting ? "Logging in..." : "Einloggen"}
       </Button>
     </form>
   );

@@ -66,8 +66,8 @@ export default function MembersPage() {
   }
 
   return (
-    <main className="content">
-      <div className="page-header d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <main className="container py-4">
+      <div className="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
           <h1 className="mb-1">Members</h1>
           <p className="text-muted mb-0">Find members of the community.</p>
@@ -99,7 +99,7 @@ export default function MembersPage() {
           <div className="row g-3">
             {data.users.map((member) => (
               <div className="col-12 col-sm-6 col-lg-4 col-xl-3" key={member.id}>
-                <article className="card card-secondary h-100">
+                <article className="card h-100">
                   <div className="card-body d-flex align-items-center gap-3">
                     <Image
                       src={member.avatarUrl}
