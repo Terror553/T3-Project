@@ -303,6 +303,14 @@ This file lists every feature implemented so far in this agent session with a sh
 - Validation: the focused Vitest suite and `npm run check` passed.
 - Key file:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/reports/route.test.ts
+
+39. Admin bans API coverage
+
+- Added focused tests for staff authorization, incomplete payload rejection,
+  and normalized ban creation.
+- Validation: the focused Vitest suite and `npm run check` passed.
+- Key file:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/bans/route.test.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/dashboard/DashboardSection.tsx
 

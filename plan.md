@@ -99,7 +99,8 @@ authorization, payload validation, updates, and deletes; dashboard
 configuration coverage now includes authorization, defaults, validation, and
 persistence; the members API now has search, pagination, and safe error
 coverage; forum report coverage now includes submission, target validation,
-staff authorization, and status updates. The deployment
+staff authorization, and status updates; bans now have staff authorization,
+payload validation, and creation coverage. The deployment
 database is now baselined and has the upload metadata and forum report
 migrations applied. Storage-provider switching is intentionally out of scope
 because MinIO is the configured deployment.
