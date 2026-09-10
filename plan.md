@@ -66,6 +66,9 @@
 - Updated the members directory, public profile fallback/loading states, and
   profile utility bar to use the audited content, card, badge, and alert
   patterns.
+- Updated login and registration pages/forms with the audited card headers,
+  labeled controls, action buttons, alert structure, and English reference
+  labels; corrected the registration success branch while changing the form.
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
 - Reply labels are now persisted, selectable in reply creation, and rendered in
