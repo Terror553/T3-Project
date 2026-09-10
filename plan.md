@@ -98,7 +98,8 @@ uncovered routes and management APIs. Reaction lifecycle coverage now includes
 authorization, payload validation, updates, and deletes; dashboard
 configuration coverage now includes authorization, defaults, validation, and
 persistence; the members API now has search, pagination, and safe error
-coverage. The deployment
+coverage; forum report coverage now includes submission, target validation,
+staff authorization, and status updates. The deployment
 database is now baselined and has the upload metadata and forum report
 migrations applied. Storage-provider switching is intentionally out of scope
 because MinIO is the configured deployment.
