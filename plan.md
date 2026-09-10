@@ -63,6 +63,9 @@
 - Updated the forum index and category/subcategory components with the captured
   breadcrumb/search, forum-card, responsive row, loading, error, and empty
   state patterns.
+- Updated the members directory, public profile fallback/loading states, and
+  profile utility bar to use the audited content, card, badge, and alert
+  patterns.
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
 - Reply labels are now persisted, selectable in reply creation, and rendered in

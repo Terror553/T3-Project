@@ -53,9 +53,9 @@ const ProfilePage = () => {
   return (
     <>
       {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          Loading...
-        </div>
+        <main className="content" aria-busy="true">
+          <p className="alert alert-info" role="status">Loading profile...</p>
+        </main>
       ) : user ? (
         <div>
           <div className="profile-header">
@@ -695,7 +695,12 @@ const ProfilePage = () => {
           </div>
         </div>
       ) : (
-        <div>User not found</div>
+        <main className="content">
+          <div className="alert alert-warning" role="alert">
+            <h1 className="h4">User not found</h1>
+            <p className="mb-0">The requested user could not be found.</p>
+          </div>
+        </main>
       )}
     </>
   );

@@ -42,7 +42,7 @@ export const ProfileBar = async () => {
                       <div className="nav-link-icon">
                         <i className="fas fa-key icon"></i>
                       </div>
-                      <div className="nav-link-text">Einloggen</div>
+                      <div className="nav-link-text">Log In</div>
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -151,7 +151,7 @@ export const ProfileBar = async () => {
                       <div id="list-account">
                         <li>
                           <Link
-                            href="/profile/{user.id}"
+                            href={`/profile/${user.id}`}
                             className="dropdown-item"
                           >
                             Profile
@@ -162,7 +162,7 @@ export const ProfileBar = async () => {
                             href="/profile/settings/overview"
                             className="dropdown-item"
                           >
-                            Einstellungen
+                            Account Settings
                           </Link>
                         </li>
                         <li>
