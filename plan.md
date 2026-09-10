@@ -54,6 +54,9 @@
 - Dashboard reaction configuration now has a native permission-gated Bootstrap
   page backed by a validated reaction API with create, list, update, and delete
   lifecycle operations.
+- Re-crawled the local public and StaffCP route families and recorded stable
+  rendered HTML templates, live example data, element/class inventories, and
+  route-to-template guidance in `SITE_HTML_REFERENCE.md`.
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
 - Reply labels are now persisted, selectable in reply creation, and rendered in

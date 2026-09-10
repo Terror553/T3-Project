@@ -144,6 +144,8 @@ archived in `resolved_to_do_v1_20260309.md`.
 - [ ] **Run visual and responsive checks**
   - Check light/dark themes, desktop/tablet/mobile layouts, modal focus,
     dropdown behavior, tables, forms, and empty/error states.
+  - [x] Re-crawl the public and StaffCP route families and record the
+    rendered DOM/class reference for implementation.
 - [ ] **Run the existing validation pipeline**
   - `npm run check`
   - `npx vitest run --maxWorkers=1`

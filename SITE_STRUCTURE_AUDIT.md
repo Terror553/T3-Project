@@ -14,6 +14,10 @@ application. Credentials are intentionally not recorded.
 - Read-only crawl rules: action-style links such as logout, delete, update,
   enable, disable, and explicit action query URLs were not submitted.
 - Store routes were observed but not treated as implementation scope.
+- A second authenticated read-only crawl was completed on 2026-09-11 using
+  the route families below. Rendered DOM patterns and representative HTML are
+  preserved in `SITE_HTML_REFERENCE.md`; credentials and cookies remain
+  excluded.
 
 ## Shared public layout
 
@@ -304,3 +308,21 @@ compatibility constraint and the light/dark CSS variable contract.
    into one navigation component.
 3. Several discovered links are action/query URLs for forum moderation and store
    checkout. They were catalogued but not activated during the crawl.
+
+## Latest rendered crawl reference
+
+The latest crawl covered the public shell, authentication, forum, members,
+profiles, account settings, legal pages, dashboard, core configuration, forum
+and member administration, user/security administration, integrations, user
+detail, update, and store route families. It recorded:
+
+- rendered route title and heading patterns
+- forms and input/select/textarea/button names
+- semantic counts for `main`, `nav`, `form`, `table`, `.card`, `.alert`,
+  `.pagination`, and `.modal`
+- Bootstrap/Lithium class families
+- representative `main` HTML fragments for home/news and management layouts
+
+Use [SITE_HTML_REFERENCE.md](./SITE_HTML_REFERENCE.md) as the implementation
+template. It intentionally stores stable structure and class names rather than
+an opaque full dump containing volatile session data.
