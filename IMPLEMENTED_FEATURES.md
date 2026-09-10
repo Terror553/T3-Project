@@ -287,6 +287,14 @@ This file lists every feature implemented so far in this agent session with a sh
 - Validation: the focused Vitest suite and `npm run check` passed.
 - Key file:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/configuration/route.test.ts
+
+37. Members directory API coverage
+
+- Added focused tests for member search, pagination, invalid-page
+  normalization, and safe database error responses.
+- Validation: the focused Vitest suite and `npm run check` passed.
+- Key file:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/members/route.test.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/reactions/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/components/dashboard/DashboardSection.tsx
 
