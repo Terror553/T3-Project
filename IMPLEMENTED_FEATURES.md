@@ -802,9 +802,10 @@ deletes.
 - Added focused regression coverage for invalid messaging identifiers,
   malformed message payloads, and non-integer report targets.
 - Validation: focused messaging tests passed (12 tests), focused report tests
-  passed (6 tests), `npm run check` passed, and `npx prisma validate` passed.
-  The full suite had one intermittent timeout in the existing unauthenticated
-  forum test and requires a clean rerun.
+  passed (6 tests), the full suite passed (21 files, 90 tests),
+  `npm run check` passed, `npx prisma validate` passed, and `npm run build`
+  passed. The first full-suite run had one transient timeout in the existing
+  unauthenticated forum test; the immediate rerun passed.
 - Commits:
   - `4fc6174` — messaging API boundary validation
   - `ada9b7b` — report API payload validation
