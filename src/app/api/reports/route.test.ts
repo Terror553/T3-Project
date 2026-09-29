@@ -74,6 +74,7 @@ describe("forum reports API", () => {
       id: 4,
       group: { team: 0, highTeam: 0 },
     });
+
     const route = await import("./route");
 
     expect((await route.GET()).status).toBe(403);
@@ -84,6 +85,18 @@ describe("forum reports API", () => {
         } as Request)
       ).status,
     ).toBe(403);
+  });
+
+  it("rejects non-integer report targets", async () => {
+    vi.mocked(getCurrentUser).mockResolvedValue({ id: 4 });
+    const route = await import("./route");
+
+    const response = await route.POST({
+      json: async () => ({ reason: "Spam", topicId: 7.5 }),
+    } as Request);
+
+    expect(response.status).toBe(400);
+    expect(db.$executeRaw).not.toHaveBeenCalled();
   });
 
   it("updates a report for staff with a valid status", async () => {
