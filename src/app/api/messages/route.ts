@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createMessageThreadSchema } from "~/lib/schemas/messagingSchemas";
 import { createMessageThread, getInboxMessages } from "~/server/messaging/messaging";
 
 export async function GET() {
@@ -15,12 +16,17 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
-    const result = await createMessageThread({
-      receiverId: Number(body.receiverId),
-      title: String(body.title ?? ""),
-      message: String(body.message ?? ""),
-    });
+    const body: unknown = await request.json();
+    const parsed = createMessageThreadSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, error: { message: "Invalid message data." } },
+        { status: 400 },
+      );
+    }
+
+    const result = await createMessageThread(parsed.data);
 
     if (!result.success) {
       return NextResponse.json(result, { status: 400 });

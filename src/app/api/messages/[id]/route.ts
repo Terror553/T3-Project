@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { replyMessageSchema } from "~/lib/schemas/messagingSchemas";
 import {
   getMessageThread,
   replyToMessageThread,
@@ -12,7 +13,7 @@ export async function GET(
     const { id } = await params;
     const messageId = Number(id);
 
-    if (!Number.isFinite(messageId)) {
+    if (!Number.isInteger(messageId) || messageId <= 0) {
       return NextResponse.json({ error: "Invalid message id" }, { status: 400 });
     }
 
@@ -38,15 +39,24 @@ export async function POST(
     const { id } = await params;
     const messageId = Number(id);
 
-    if (!Number.isFinite(messageId)) {
+    if (!Number.isInteger(messageId) || messageId <= 0) {
       return NextResponse.json({ error: "Invalid message id" }, { status: 400 });
     }
 
-    const body = (await request.json()) as Record<string, unknown>;
-    const result = await replyToMessageThread({
+    const body: unknown = await request.json();
+    const parsed = replyMessageSchema.safeParse({
       messageId,
-      message: String(body.message ?? ""),
+      ...(typeof body === "object" && body !== null ? body : {}),
     });
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, error: { message: "Invalid reply data." } },
+        { status: 400 },
+      );
+    }
+
+    const result = await replyToMessageThread(parsed.data);
 
     if (!result.success) {
       return NextResponse.json(result, { status: 400 });

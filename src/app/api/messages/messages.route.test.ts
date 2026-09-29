@@ -30,7 +30,7 @@ describe("API /api/messages route", () => {
 
     const route = await import("~/app/api/messages/route");
     // mock Request with json method
-    const fakeReq = { json: async () => ({ receiverId: 2, title: "t", message: "m" }) } as any;
+    const fakeReq = { json: async () => ({ receiverId: 2, title: "hello", message: "m" }) } as any;
     const res = await route.POST(fakeReq);
 
     expect(res.status).toBe(400);
@@ -38,12 +38,23 @@ describe("API /api/messages route", () => {
     expect(body.success).toBe(false);
   });
 
+  it("POST returns 400 for invalid input without calling the service", async () => {
+    const { createMessageThread } = await import("~/server/messaging/messaging");
+    const route = await import("~/app/api/messages/route");
+    const fakeReq = { json: async () => ({ receiverId: "2", title: "", message: "" }) } as Request;
+
+    const res = await route.POST(fakeReq);
+
+    expect(res.status).toBe(400);
+    expect(createMessageThread).not.toHaveBeenCalled();
+  });
+
   it("POST returns 201 when createMessageThread succeeds", async () => {
     const { createMessageThread } = await import("~/server/messaging/messaging");
     (createMessageThread as any).mockResolvedValue({ success: true, data: { id: 123 } });
 
     const route = await import("~/app/api/messages/route");
-    const fakeReq = { json: async () => ({ receiverId: 2, title: "t", message: "m" }) } as any;
+    const fakeReq = { json: async () => ({ receiverId: 2, title: "hello", message: "m" }) } as any;
     const res = await route.POST(fakeReq);
 
     expect(res.status).toBe(201);

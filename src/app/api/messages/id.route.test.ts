@@ -46,6 +46,25 @@ describe("API /api/messages/[id] route", () => {
     expect(res.status).toBe(400);
   });
 
+  it("POST returns 400 for a non-integer id", async () => {
+    const route = await import("~/app/api/messages/[id]/route");
+    const fakeReq = { json: async () => ({ message: "hi" }) } as Request;
+    const res = await route.POST(fakeReq, { params: Promise.resolve({ id: "1.5" }) });
+
+    expect(res.status).toBe(400);
+  });
+
+  it("POST returns 400 for invalid reply data without calling the service", async () => {
+    const { replyToMessageThread } = await import("~/server/messaging/messaging");
+    const route = await import("~/app/api/messages/[id]/route");
+    const fakeReq = { json: async () => ({ message: "" }) } as Request;
+
+    const res = await route.POST(fakeReq, { params: Promise.resolve({ id: "1" }) });
+
+    expect(res.status).toBe(400);
+    expect(replyToMessageThread).not.toHaveBeenCalled();
+  });
+
   it("POST returns 400 when replyToMessageThread fails", async () => {
     const { replyToMessageThread } = await import("~/server/messaging/messaging");
     (replyToMessageThread as any).mockResolvedValue({ success: false, error: { message: "err", code: "app/err" } });
