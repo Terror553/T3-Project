@@ -792,3 +792,23 @@ deletes.
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/TO_DO.md
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/plan.md
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/PLAN_FOR_TO_DO.md
+
+40. Messaging and report API boundary validation
+
+- Added route-level Zod validation for message thread creation, message
+  replies, report submissions, and report moderation status updates. Thread
+  identifiers now require positive integers, and invalid payloads are rejected
+  before server services or database operations are called.
+- Added focused regression coverage for invalid messaging identifiers,
+  malformed message payloads, and non-integer report targets.
+- Validation: focused messaging tests passed (12 tests), focused report tests
+  passed (6 tests), `npm run check` passed, and `npx prisma validate` passed.
+  The full suite had one intermittent timeout in the existing unauthenticated
+  forum test and requires a clean rerun.
+- Commits:
+  - `4fc6174` — messaging API boundary validation
+  - `ada9b7b` — report API payload validation
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/messages/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/messages/[id]/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/reports/route.ts
