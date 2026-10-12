@@ -841,3 +841,15 @@ deletes.
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/roles/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/roles/route.test.ts
+
+43. Admin bans API validation
+
+- Added a strict Zod schema for ban creation, preserving trimmed UUID and
+  reason values while rejecting non-string or empty fields before database
+  writes.
+- Added focused coverage for malformed ban payloads.
+- Validation: focused bans API tests passed (4 tests) and `npm run check`
+  passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/bans/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/bans/route.test.ts
