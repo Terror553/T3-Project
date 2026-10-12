@@ -853,3 +853,13 @@ deletes.
 - Key files:
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/bans/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/admin/bans/route.test.ts
+
+44. Documentation pipeline refresh
+
+- Regenerated `FILES.md` from only the `src/` and `prisma/` trees with
+  current modification timestamps.
+- Reconciled the members directory, dashboard configuration and management
+  APIs, announcement and label routes, messaging relocation, and upload-save
+  behavior in the canonical documentation and active backlog.
+- Store persistence and the full release-validation pipeline remain pending;
+  no commit was created without explicit approval.

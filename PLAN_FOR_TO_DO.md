@@ -61,10 +61,10 @@ Phase 2 — Messaging and profile polish: complete.
 Phase 3 — Admin and moderation polish: complete, including report submission and status actions.
 Phase 4 — Platform / integration backlog: complete for the current web scope, including analytics, clans, verification, forum query consolidation, and MinIO upload metadata.
 
-Remaining work is public route parity (including the members directory),
-dashboard canonicalization, non-store backend completion, focused coverage,
-visual validation, and documentation synchronization. Store functionality
-remains explicitly deferred.
+Remaining work is non-store backend cleanup, focused coverage, visual
+validation, release checks, and documentation synchronization. The public
+members directory and dashboard canonicalization are complete. Store
+functionality remains explicitly deferred.
 
 ## Delivery rules
 

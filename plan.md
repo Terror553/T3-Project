@@ -18,11 +18,12 @@
 - Dashboard placeholder routes now have a shared permission-gated Bootstrap
   section shell, existing admin features are reachable from dashboard routes,
   and messaging is canonical under profile settings.
-- The active next cycle is tracked in `TO_DO.md`, with remaining dashboard
-  configuration, store, announcement, labels, backend, and style-audit work
-  still open.
-- Dashboard announcements and forum labels are now implemented and deployed;
-  remaining gaps are configuration persistence and store domain/API design.
+- The active next cycle is tracked in `TO_DO.md`, with remaining store
+  persistence, backend contract cleanup, focused coverage, visual checks, and
+  release validation still open.
+- Dashboard announcements, forum labels, and configuration persistence are
+  implemented and deployed; the remaining domain/API gap is the deferred
+  dashboard store.
 - The current continuation completed announcement and label deletion with
   strict authorization and validation. Next work remains dashboard
   store domain/API implementation, and focused dashboard tests.
@@ -65,8 +66,8 @@
 - Messaging inbox and thread surfaces now expose retryable errors, unread
   indicators, empty states, and responsive Bootstrap layouts.
 - Reply labels are now persisted, selectable in reply creation, and rendered in
-  public topic threads. Remaining non-store work is messaging verification,
-  broader focused test coverage, visual checks, and final release validation.
+  public topic threads. Remaining non-store work is broader focused test
+  coverage, visual checks, and final release validation.
   Store functionality remains intentionally deferred.
 - A public `/members` route and `/api/members` endpoint now provide searchable,
   paginated member cards with avatars, group badges, profile links, and explicit
@@ -114,4 +115,6 @@ migrations applied. The full suite now passes 21 test files and 86 tests, and
 Prisma schema validation passes. Storage-provider switching is intentionally
 out of scope because MinIO is the configured deployment.
 
-Prioritize report submission and moderation workflow, followed by focused validation tests for the remaining API and UI milestones.
+Prioritize focused validation tests for the remaining API and UI milestones,
+followed by visual checks and the full release-validation pipeline. Store
+functionality remains deferred.

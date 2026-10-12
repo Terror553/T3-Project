@@ -28,7 +28,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - [x] Reply label attachment and public reply display
   - Reuse the existing forum and admin server logic instead of creating
     duplicate APIs.
-- [ ] **Implement dashboard user and group management pages**
+- [x] **Implement dashboard user and group management pages**
   - [x] Users
   - [x] Groups
   - [x] Punishments
@@ -69,7 +69,7 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Update all links, navigation items, redirects, and imports.
   - The duplicate `/messages` page surface has been removed after migrating
     its inbox and thread implementation.
-- [ ] **Finish messaging UX using existing project patterns**
+- [x] **Finish messaging UX using existing project patterns**
   - Use the existing notification, loading-bar, modal manager, UserPicker,
     form validation, and Bootstrap components.
   - [x] Verify compose, inbox, thread, reply, unread, empty, error, and mobile
@@ -111,10 +111,12 @@ archived in `resolved_to_do_v1_20260309.md`.
   - Add typed Zod schemas and permission checks for missing dashboard
     endpoints.
   - Keep database operations in `src/server` and route parsing in API routes.
-- [ ] **Complete missing store, announcement, configuration, and group APIs**
-  - Add list/detail/create/update/archive operations only where the page
-    requires them.
-  - Provide explicit authorization failures and user-visible error messages.
+- [ ] **Complete remaining store APIs**
+  - Add list/detail/create/update/archive operations only where the store
+    pages require them and a persistence model is available.
+  - Keep explicit authorization failures and user-visible error messages.
+  - Announcement, configuration, and group workflows are already backed by
+    authorized routes and should not be duplicated.
 - [x] **Enforce persisted forum settings at runtime**
   - Topic and reply creation now read the persisted dashboard configuration and
     reject disabled mutations with explicit API errors.

@@ -808,8 +808,9 @@ Public profile loading includes `ProfileWall` posts, their replies, and author m
 
 A private messaging system has been implemented, allowing users to send and
 receive private messages. The canonical UI is under
-`src/app/profile/settings/messaging`; older top-level message links are retained
-only where compatibility requires them.
+`src/app/profile/settings/messaging`. The inbox and thread pages were migrated
+there, and the duplicate top-level `/messages` page surface is not the
+canonical UI. API compatibility remains under `/api/messages`.
 
 Core files:
 
@@ -834,10 +835,12 @@ Core files:
 
 **Flow for Replying to a Message:**
 
-1.  The user opens the inbox at `src/app/messages/page.tsx`.
+1.  The user opens the inbox at
+    `src/app/profile/settings/messaging/page.tsx`.
 2.  The compose action opens a shared modal containing `UserPicker`, title, and message fields.
 3.  The client validates receiver ID, title, and message with `createMessageThreadSchema` before calling `POST /api/messages`.
-4.  The user views a message at `src/app/messages/[id]/page.tsx`.
+4.  The user views a message at
+    `src/app/profile/settings/messaging/[id]/page.tsx`.
 5.  The `MessageReplyForm` component validates and submits a reply to the thread route.
 6.  The page reloads the thread after success and reports failures through the notification context.
 
@@ -1515,6 +1518,7 @@ The subcategory response now includes its latest topic derived from the loaded t
 ```ts
 const inbox = await fetch("/api/messages").then((r) => r.json());
 const thread = await fetch(`/api/messages/${messageId}`).then((r) => r.json());
+const members = await fetch("/api/members?q=ali&page=1").then((r) => r.json());
 const stats = await fetch("/api/dashboard/stats").then((r) => r.json());
 const clans = await fetch("/api/clan").then((r) => r.json());
 const verification = await fetch("/api/profile/verification").then((r) =>
@@ -1533,7 +1537,22 @@ await fetch(signed.url, {
 });
 ```
 
-The protected messaging and verification routes require the authenticated session. Upload responses can be passed to `POST /api/upload/save` with `ownerUserId` and an optional `attachTo` target; the save route validates the target before persisting `UploadMetadata`.
+`GET /api/members` is public and returns an alphabetically ordered,
+paginated response with `users`, `page`, `pageSize`, `total`, and
+`totalPages`. The optional `q` parameter performs a username substring
+search; invalid or non-positive page values fall back to page 1. Each user
+contains the public profile fields `id`, `username`, `avatarUrl`,
+`createdAt`, and the selected group badge fields. Database failures return a
+safe `500` response with an explicit error message.
+
+The protected messaging and verification routes require the authenticated session. Upload responses can be passed to `POST /api/upload/save` with the current user's session and an optional `attachTo` target; the save route validates the metadata before persisting `UploadMetadata`. Avatar attachments also update the user's `avatarUrl`.
+
+The dashboard configuration endpoint is staff-only: `GET /api/dashboard/configuration`
+returns defaults merged with persisted values, while `PUT` accepts a partial
+configuration payload and validates strings, booleans, and maximum lengths
+with Zod. Announcement and forum-label management are likewise staff-only;
+their dashboard routes provide validated list/create/delete operations and
+return explicit `400`, `403`, and `500` responses.
 
 The reports endpoint requires an authenticated user for `POST`; send `{ reason, topicId }` or `{ reason, replyId }` with exactly one target. Team or high-team users can `GET` the moderation list and `PATCH` a report with `{ id, status }`, where `status` is `open`, `resolved`, or `dismissed`.
 

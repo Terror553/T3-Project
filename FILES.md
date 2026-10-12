@@ -1,260 +1,423 @@
-﻿# Project Files
+# Project Files
 
 This file contains a tree of all files and folders in the project, along with their last modified date.
 
-**Last Updated:** 2026-09-09 01:30:01
+**Last Updated:** 2026-10-12 22:59:47
 
 Only `src/` and `prisma/` are inventoried here, as required by `DOC_AGENT.md`.
 
 ## prisma/
-- `prisma/migrations/20250630130906_t3/migration.sql` - Modified: 2026-09-01 20:22:59
-- `prisma/migrations/20260428125523_yes/migration.sql` - Modified: 2026-09-01 20:22:59
-- `prisma/migrations/20260902215000_add_upload_metadata/migration.sql` - Modified: 2026-09-02 23:54:15
-- `prisma/migrations/20260903093000_add_forum_reports/migration.sql` - Modified: 2026-09-03 10:03:05
-- `prisma/migrations/20260903221500_add_announcements/migration.sql` - Modified: 2026-09-03 22:07:59
-- `prisma/migrations/20260903223000_add_forum_labels/migration.sql` - Modified: 2026-09-03 22:10:18
-- `prisma/migrations/20260903224500_add_dashboard_configuration/migration.sql` - Modified: 2026-09-03 22:25:00
-- `prisma/migrations/20260906003000_add_announcement_image/migration.sql` - Modified: 2026-09-06 00:29:33
-- `prisma/migrations/20260908201500_add_forum_topic_labels/migration.sql` - Modified: 2026-09-08 20:02:19
-- `prisma/migrations/20260908203000_add_forum_reply_labels/migration.sql` - Modified: 2026-09-08 20:10:24
-- `prisma/migrations/migration_lock.toml` - Modified: 2026-09-01 20:22:59
-- `prisma/schema.prisma` - Modified: 2026-09-08 20:10:24
-- `prisma/seed.ts` - Modified: 2026-09-03 22:13:26
+  - `prisma/migrations/`
+    - `prisma/migrations/20250630130906_t3/`
+      - `prisma/migrations/20250630130906_t3/migration.sql` - Modified: 2026-09-01 20:22:59
+    - `prisma/migrations/20260428125523_yes/`
+      - `prisma/migrations/20260428125523_yes/migration.sql` - Modified: 2026-09-01 20:22:59
+    - `prisma/migrations/20260902215000_add_upload_metadata/`
+      - `prisma/migrations/20260902215000_add_upload_metadata/migration.sql` - Modified: 2026-09-02 23:54:15
+    - `prisma/migrations/20260903093000_add_forum_reports/`
+      - `prisma/migrations/20260903093000_add_forum_reports/migration.sql` - Modified: 2026-09-03 10:03:05
+    - `prisma/migrations/20260903221500_add_announcements/`
+      - `prisma/migrations/20260903221500_add_announcements/migration.sql` - Modified: 2026-09-03 22:07:59
+    - `prisma/migrations/20260903223000_add_forum_labels/`
+      - `prisma/migrations/20260903223000_add_forum_labels/migration.sql` - Modified: 2026-09-03 22:10:18
+    - `prisma/migrations/20260903224500_add_dashboard_configuration/`
+      - `prisma/migrations/20260903224500_add_dashboard_configuration/migration.sql` - Modified: 2026-09-03 22:25:00
+    - `prisma/migrations/20260906003000_add_announcement_image/`
+      - `prisma/migrations/20260906003000_add_announcement_image/migration.sql` - Modified: 2026-09-06 00:29:33
+    - `prisma/migrations/20260908201500_add_forum_topic_labels/`
+      - `prisma/migrations/20260908201500_add_forum_topic_labels/migration.sql` - Modified: 2026-09-08 20:02:19
+    - `prisma/migrations/20260908203000_add_forum_reply_labels/`
+      - `prisma/migrations/20260908203000_add_forum_reply_labels/migration.sql` - Modified: 2026-09-08 20:10:24
+    - `prisma/migrations/migration_lock.toml` - Modified: 2026-09-01 20:22:59
+  - `prisma/schema.prisma` - Modified: 2026-09-08 20:10:24
+  - `prisma/seed.ts` - Modified: 2026-09-03 22:13:26
 
 ## src/
-- `src/app/admin/categories/page.tsx` - Modified: 2026-09-09 01:19:08
-- `src/app/admin/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/admin/reactions/page.tsx` - Modified: 2026-09-02 23:42:31
-- `src/app/admin/roles/page.tsx` - Modified: 2026-09-02 23:42:31
-- `src/app/announcements/[id]/page.tsx` - Modified: 2026-09-06 00:31:24
-- `src/app/announcements/page.tsx` - Modified: 2026-09-06 00:31:24
-- `src/app/api/admin/bans/route.ts` - Modified: 2026-09-02 23:48:52
-- `src/app/api/admin/categories/[categoryId]/subcategories/route.ts` - Modified: 2026-09-01 23:00:05
-- `src/app/api/admin/categories/admin.categories.test.ts` - Modified: 2026-09-01 22:30:32
-- `src/app/api/admin/categories/route.ts` - Modified: 2026-09-01 22:59:47
-- `src/app/api/admin/reactions/route.test.ts` - Modified: 2026-09-02 23:59:57
-- `src/app/api/admin/reactions/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/admin/roles/route.test.ts` - Modified: 2026-09-02 23:59:57
-- `src/app/api/admin/roles/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/auth/navigation/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/auth/user/[id]/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/auth/user/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/clan/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/dashboard/announcements/route.ts` - Modified: 2026-09-06 00:29:44
-- `src/app/api/dashboard/configuration/navigation/route.ts` - Modified: 2026-09-03 22:30:00
-- `src/app/api/dashboard/configuration/route.ts` - Modified: 2026-09-03 22:28:54
-- `src/app/api/dashboard/forum/labels/route.ts` - Modified: 2026-09-08 20:02:44
-- `src/app/api/dashboard/stats/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/category/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/forum.api.test.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/subcategory/[id]/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/subcategory/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/topic/[id]/follow/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/topic/[id]/react/route.ts` - Modified: 2026-09-02 23:56:25
-- `src/app/api/forum/topic/[id]/reply/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/topic/[id]/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/forum/topic/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/members/route.ts` - Modified: 2026-09-09 01:15:07
-- `src/app/api/messages/[id]/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/messages/id.route.test.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/messages/messages.route.test.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/messages/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/profile/settings/route.test.ts` - Modified: 2026-09-01 22:55:40
-- `src/app/api/profile/settings/route.ts` - Modified: 2026-09-03 10:00:54
-- `src/app/api/profile/verification/route.ts` - Modified: 2026-09-02 23:46:53
-- `src/app/api/reports/route.ts` - Modified: 2026-09-03 10:05:08
-- `src/app/api/upload/[path]/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/upload/save/route.ts` - Modified: 2026-09-09 01:28:37
-- `src/app/api/user/messages/[id]/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/user/messages/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/user/search/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/api/wiki/route.ts` - Modified: 2026-09-01 20:22:59
-- `src/app/clans/page.tsx` - Modified: 2026-09-02 23:45:09
-- `src/app/dashboard/analytics/page.tsx` - Modified: 2026-09-03 09:54:38
-- `src/app/dashboard/announcements/page.tsx` - Modified: 2026-09-06 00:30:56
-- `src/app/dashboard/configuration/general/page.tsx` - Modified: 2026-09-03 22:25:08
-- `src/app/dashboard/configuration/navigation/page.tsx` - Modified: 2026-09-03 22:30:00
-- `src/app/dashboard/configuration/privacy/page.tsx` - Modified: 2026-09-06 00:19:50
-- `src/app/dashboard/configuration/reactions/page.tsx` - Modified: 2026-09-08 20:05:06
-- `src/app/dashboard/configuration/registration/page.tsx` - Modified: 2026-09-06 00:19:50
-- `src/app/dashboard/forum/forums/page.tsx` - Modified: 2026-09-09 01:17:45
-- `src/app/dashboard/forum/labels/page.tsx` - Modified: 2026-09-03 22:15:50
-- `src/app/dashboard/forum/settings/page.tsx` - Modified: 2026-09-03 22:28:54
-- `src/app/dashboard/groups/page.tsx` - Modified: 2026-09-04 11:22:48
-- `src/app/dashboard/layout.tsx` - Modified: 2026-09-03 09:54:38
-- `src/app/dashboard/overview/page.tsx` - Modified: 2026-09-02 23:43:24
-- `src/app/dashboard/page.tsx` - Modified: 2026-09-03 10:49:36
-- `src/app/dashboard/settings/page.tsx` - Modified: 2026-09-03 10:48:59
-- `src/app/dashboard/store/configuration/page.tsx` - Modified: 2026-09-03 10:48:25
-- `src/app/dashboard/store/coupons/page.tsx` - Modified: 2026-09-03 10:48:25
-- `src/app/dashboard/store/payments/page.tsx` - Modified: 2026-09-03 10:48:25
-- `src/app/dashboard/store/products/page.tsx` - Modified: 2026-09-03 10:48:25
-- `src/app/dashboard/store/sales/page.tsx` - Modified: 2026-09-03 10:48:25
-- `src/app/dashboard/store/subscriptions/page.tsx` - Modified: 2026-09-03 10:48:25
-- `src/app/dashboard/user-management/punishments/page.tsx` - Modified: 2026-09-04 11:29:10
-- `src/app/dashboard/user-management/reports/page.tsx` - Modified: 2026-09-04 11:26:20
-- `src/app/dashboard/user-management/users/page.tsx` - Modified: 2026-09-03 10:48:18
-- `src/app/forum/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/forum/subcategory/[id]/page.tsx` - Modified: 2026-09-02 23:49:41
-- `src/app/forum/topic/[id]/page.test.tsx` - Modified: 2026-09-01 20:23:48
-- `src/app/forum/topic/[id]/page.tsx` - Modified: 2026-09-08 20:10:54
-- `src/app/forum/topic/add/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/forum/topic/new/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/layout.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/login/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/members/page.tsx` - Modified: 2026-09-09 01:15:07
-- `src/app/page.tsx` - Modified: 2026-09-06 00:31:24
-- `src/app/profile/[id]/page.tsx` - Modified: 2026-09-03 09:56:05
-- `src/app/profile/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/profile/settings/alerts/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/profile/settings/change-password/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/profile/settings/connections/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/profile/settings/followed-topics/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/profile/settings/layout.tsx` - Modified: 2026-09-02 23:47:08
-- `src/app/profile/settings/messaging/[id]/page.tsx` - Modified: 2026-09-08 20:05:50
-- `src/app/profile/settings/messaging/page.tsx` - Modified: 2026-09-08 20:05:50
-- `src/app/profile/settings/overview/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/profile/settings/profile-settings/page.tsx` - Modified: 2026-09-03 10:00:54
-- `src/app/profile/settings/verification/page.tsx` - Modified: 2026-09-02 23:46:53
-- `src/app/register/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/app/rules/page.tsx` - Modified: 2026-09-08 00:06:39
-- `src/app/wiki/page.tsx` - Modified: 2026-09-01 20:22:59
-- `src/client/bootstrap.ts` - Modified: 2026-09-01 20:22:59
-- `src/client/modal.tsx` - Modified: 2026-09-01 20:22:59
-- `src/client/modalUtils.tsx` - Modified: 2026-09-01 20:22:59
-- `src/client/navUtils.tsx` - Modified: 2026-09-01 20:22:59
-- `src/client/notification.tsx` - Modified: 2026-09-01 20:22:59
-- `src/client/theme.ts` - Modified: 2026-09-01 20:22:59
-- `src/client/user.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/announcement/AnnouncementCard.tsx` - Modified: 2026-09-06 00:29:34
-- `src/components/changePasswordForm.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/dashboard/DashboardSection.tsx` - Modified: 2026-09-03 22:27:38
-- `src/components/dashboard/DashboardUsers.tsx` - Modified: 2026-09-04 11:25:20
-- `src/components/dashboard/StoreSection.tsx` - Modified: 2026-09-03 10:48:25
-- `src/components/editor.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/footer.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/form/button.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/form/FormProvider.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/form/Select.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/form/TextArea.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/form/TextInput.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/forum/ForumCategoryItem.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/forum/ForumSubcategoryItem.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/forum/index.ts` - Modified: 2026-09-01 20:22:59
-- `src/components/forum/LastTopicInfo.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/loginForm.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/loginModal.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/logOut.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/messageReplyForm.tsx` - Modified: 2026-09-03 22:27:38
-- `src/components/navbar.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/navbar/AuthMenu.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/navbar/HeaderStatus.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/navbar/index.ts` - Modified: 2026-09-01 20:22:59
-- `src/components/navbar/MainNavigation.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/navbar/MobileNavigation.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/navbar/Navbar.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/navbar/UserMenu.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/notifcation.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/profileBar.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/Test.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/ThemeToggle.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/Toast.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/toastContainer.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/topicCreationForm.tsx` - Modified: 2026-09-08 20:04:02
-- `src/components/topicReplyForm.tsx` - Modified: 2026-09-08 20:10:54
-- `src/components/ui/Alert.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/ui/Button.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/ui/Card.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/ui/index.ts` - Modified: 2026-09-01 20:22:59
-- `src/components/uploadForm.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/uploads/uploadFile.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/userPicker/UserPicker.test.tsx` - Modified: 2026-09-01 20:22:59
-- `src/components/userPicker/UserPicker.tsx` - Modified: 2026-09-03 22:27:38
-- `src/components/wiki.tsx` - Modified: 2026-09-01 20:22:59
-- `src/env.js` - Modified: 2026-09-02 23:57:31
-- `src/global.d.ts` - Modified: 2026-09-01 20:22:59
-- `src/hooks/useForum.ts` - Modified: 2026-09-01 20:22:59
-- `src/lib/sanitize.ts` - Modified: 2026-09-01 20:22:59
-- `src/lib/schemas/loginSchema.ts` - Modified: 2026-09-01 20:22:59
-- `src/lib/schemas/messageSchema.ts` - Modified: 2026-09-01 20:22:59
-- `src/lib/schemas/messagingSchemas.test.ts` - Modified: 2026-09-03 10:07:20
-- `src/lib/schemas/messagingSchemas.ts` - Modified: 2026-09-01 20:22:59
-- `src/lib/schemas/topicSchemas.ts` - Modified: 2026-09-08 20:10:24
-- `src/lib/useFormManager.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/announcements/announcements.ts` - Modified: 2026-09-06 00:29:54
-- `src/server/auth/actions/changePassword.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/actions/logOut.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/actions/messageActions.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/actions/signIn.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/actions/signUp.ts` - Modified: 2026-09-08 00:05:46
-- `src/server/auth/authSchemas.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/lib.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/session.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/utils/currentUser.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/utils/defaultRole.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/utils/getUser.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/utils/getUserMessages.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/auth/utils/passwordHasher.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/clan/clan.test.ts` - Modified: 2026-09-03 00:00:44
-- `src/server/clan/clan.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/db.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/forum/forum.edgecases.test.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/forum/forum.interactions.test.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/forum/forum.replies.edgecases.test.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/forum/forum.test.ts` - Modified: 2026-09-08 00:02:50
-- `src/server/forum/forum.ts` - Modified: 2026-09-08 20:10:32
-- `src/server/messaging/messaging.test.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/messaging/messaging.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/navigation/navGetter.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/s3.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/seed.ts.backup` - Modified: 2026-09-01 20:22:59
-- `src/server/storage/uploadMetadata.test.ts` - Modified: 2026-09-02 23:58:11
-- `src/server/storage/uploadMetadata.ts` - Modified: 2026-09-02 23:52:57
-- `src/server/types/clan.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/db.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/forum.ts` - Modified: 2026-09-08 20:10:24
-- `src/server/types/messaging.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/minecraft.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/navigation.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/profile.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/role.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/settings.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/user.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/user-data.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/verification.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/types/wiki.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/utils/colorUtils.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/utils/dateUtils.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/utils/dbUtils.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/utils/forumUtils.ts` - Modified: 2026-09-01 20:22:59
-- `src/server/wiki/wiki.ts` - Modified: 2026-09-01 20:22:59
-- `src/styles/bootstrap/bootstrap.min.css` - Modified: 2026-09-01 20:22:59
-- `src/styles/cookies/cookieconsent.min.css` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/all.min.css` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/webfonts/fa-brands-400.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/webfonts/fa-brands-400.woff2` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/webfonts/fa-regular-400.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/webfonts/fa-regular-400.woff2` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/webfonts/fa-solid-900.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/webfonts/fa-solid-900.woff2` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/webfonts/fa-v4compatibility.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fontawesome-free/webfonts/fa-v4compatibility.woff2` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/css.css` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/webfonts/fa-montserrat-200.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/webfonts/fa-montserrat-300.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/webfonts/fa-montserrat-400.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/webfonts/fa-montserrat-500.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/webfonts/fa-montserrat-600.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/webfonts/fa-montserrat-700.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/webfonts/fa-montserrat-800.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/fonts/webfonts/fa-montserrat-900.ttf` - Modified: 2026-09-01 20:22:59
-- `src/styles/prism/prism_light_default.css` - Modified: 2026-09-01 20:22:59
-- `src/styles/theme/theme.css` - Modified: 2026-09-03 10:50:03
-- `src/styles/theme/theme-dark.css` - Modified: 2026-09-03 10:50:03
-- `src/styles/toastr/toastr.min.css` - Modified: 2026-09-01 20:22:59
-- `src/utils/apiHandler.ts` - Modified: 2026-09-01 20:22:59
-- `src/utils/authUtils.ts` - Modified: 2026-09-01 20:22:59
-- `src/utils/dateUtils.ts` - Modified: 2026-09-01 20:22:59
-- `src/utils/errorHandler.ts` - Modified: 2026-09-01 20:22:59
-- `src/utils/styleUtils.ts` - Modified: 2026-09-01 20:22:59
+  - `src/app/`
+    - `src/app/admin/`
+      - `src/app/admin/categories/`
+        - `src/app/admin/categories/page.tsx` - Modified: 2026-09-09 01:19:08
+      - `src/app/admin/page.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/app/admin/reactions/`
+        - `src/app/admin/reactions/page.tsx` - Modified: 2026-09-02 23:42:31
+      - `src/app/admin/roles/`
+        - `src/app/admin/roles/page.tsx` - Modified: 2026-09-02 23:42:31
+    - `src/app/announcements/`
+      - `src/app/announcements/[id]/`
+        - `src/app/announcements/[id]/page.tsx` - Modified: 2026-09-06 00:31:24
+      - `src/app/announcements/page.tsx` - Modified: 2026-09-06 00:31:24
+    - `src/app/api/`
+      - `src/app/api/admin/`
+        - `src/app/api/admin/bans/`
+          - `src/app/api/admin/bans/route.test.ts` - Modified: 2026-10-12 22:54:49
+          - `src/app/api/admin/bans/route.ts` - Modified: 2026-10-12 22:54:49
+        - `src/app/api/admin/categories/`
+          - `src/app/api/admin/categories/[categoryId]/`
+            - `src/app/api/admin/categories/[categoryId]/subcategories/`
+              - `src/app/api/admin/categories/[categoryId]/subcategories/route.ts` - Modified: 2026-09-01 23:00:05
+          - `src/app/api/admin/categories/admin.categories.test.ts` - Modified: 2026-09-01 22:30:32
+          - `src/app/api/admin/categories/route.ts` - Modified: 2026-09-01 22:59:47
+        - `src/app/api/admin/reactions/`
+          - `src/app/api/admin/reactions/route.test.ts` - Modified: 2026-09-11 00:50:07
+          - `src/app/api/admin/reactions/route.ts` - Modified: 2026-09-09 01:31:55
+        - `src/app/api/admin/roles/`
+          - `src/app/api/admin/roles/route.test.ts` - Modified: 2026-10-12 22:54:11
+          - `src/app/api/admin/roles/route.ts` - Modified: 2026-10-12 22:54:11
+      - `src/app/api/auth/`
+        - `src/app/api/auth/navigation/`
+          - `src/app/api/auth/navigation/route.ts` - Modified: 2026-09-01 20:22:59
+        - `src/app/api/auth/user/`
+          - `src/app/api/auth/user/[id]/`
+            - `src/app/api/auth/user/[id]/route.ts` - Modified: 2026-09-01 20:22:59
+          - `src/app/api/auth/user/route.ts` - Modified: 2026-09-01 20:22:59
+      - `src/app/api/clan/`
+        - `src/app/api/clan/route.ts` - Modified: 2026-09-01 20:22:59
+      - `src/app/api/dashboard/`
+        - `src/app/api/dashboard/announcements/`
+          - `src/app/api/dashboard/announcements/route.test.ts` - Modified: 2026-10-12 22:52:40
+          - `src/app/api/dashboard/announcements/route.ts` - Modified: 2026-10-12 22:52:39
+        - `src/app/api/dashboard/configuration/`
+          - `src/app/api/dashboard/configuration/navigation/`
+            - `src/app/api/dashboard/configuration/navigation/route.ts` - Modified: 2026-09-03 22:30:00
+          - `src/app/api/dashboard/configuration/route.test.ts` - Modified: 2026-09-11 00:51:07
+          - `src/app/api/dashboard/configuration/route.ts` - Modified: 2026-09-03 22:28:54
+        - `src/app/api/dashboard/forum/`
+          - `src/app/api/dashboard/forum/labels/`
+            - `src/app/api/dashboard/forum/labels/route.test.ts` - Modified: 2026-10-12 22:52:40
+            - `src/app/api/dashboard/forum/labels/route.ts` - Modified: 2026-10-12 22:53:19
+        - `src/app/api/dashboard/stats/`
+          - `src/app/api/dashboard/stats/route.ts` - Modified: 2026-09-01 20:22:59
+      - `src/app/api/forum/`
+        - `src/app/api/forum/category/`
+          - `src/app/api/forum/category/route.ts` - Modified: 2026-09-01 20:22:59
+        - `src/app/api/forum/forum.api.test.ts` - Modified: 2026-09-01 20:22:59
+        - `src/app/api/forum/latest-topic/`
+          - `src/app/api/forum/latest-topic/[id]/`
+        - `src/app/api/forum/route.ts` - Modified: 2026-09-01 20:22:59
+        - `src/app/api/forum/subcategory/`
+          - `src/app/api/forum/subcategory/[id]/`
+            - `src/app/api/forum/subcategory/[id]/route.ts` - Modified: 2026-09-01 20:22:59
+          - `src/app/api/forum/subcategory/route.ts` - Modified: 2026-09-01 20:22:59
+        - `src/app/api/forum/topic/`
+          - `src/app/api/forum/topic/[id]/`
+            - `src/app/api/forum/topic/[id]/follow/`
+              - `src/app/api/forum/topic/[id]/follow/route.ts` - Modified: 2026-09-01 20:22:59
+            - `src/app/api/forum/topic/[id]/react/`
+              - `src/app/api/forum/topic/[id]/react/route.ts` - Modified: 2026-09-02 23:56:25
+            - `src/app/api/forum/topic/[id]/reply/`
+              - `src/app/api/forum/topic/[id]/reply/route.ts` - Modified: 2026-09-01 20:22:59
+            - `src/app/api/forum/topic/[id]/route.ts` - Modified: 2026-09-01 20:22:59
+          - `src/app/api/forum/topic/route.ts` - Modified: 2026-09-01 20:22:59
+      - `src/app/api/members/`
+        - `src/app/api/members/route.test.ts` - Modified: 2026-09-11 00:53:37
+        - `src/app/api/members/route.ts` - Modified: 2026-09-09 01:15:07
+      - `src/app/api/messages/`
+        - `src/app/api/messages/[id]/`
+          - `src/app/api/messages/[id]/route.ts` - Modified: 2026-09-30 00:22:08
+        - `src/app/api/messages/id.route.test.ts` - Modified: 2026-09-30 00:22:08
+        - `src/app/api/messages/messages.route.test.ts` - Modified: 2026-09-30 00:22:40
+        - `src/app/api/messages/route.ts` - Modified: 2026-09-30 00:22:08
+      - `src/app/api/profile/`
+        - `src/app/api/profile/settings/`
+          - `src/app/api/profile/settings/route.test.ts` - Modified: 2026-09-01 22:55:40
+          - `src/app/api/profile/settings/route.ts` - Modified: 2026-09-03 10:00:54
+        - `src/app/api/profile/verification/`
+          - `src/app/api/profile/verification/route.ts` - Modified: 2026-09-02 23:46:53
+      - `src/app/api/reports/`
+        - `src/app/api/reports/route.test.ts` - Modified: 2026-09-30 00:24:32
+        - `src/app/api/reports/route.ts` - Modified: 2026-09-30 00:23:32
+      - `src/app/api/upload/`
+        - `src/app/api/upload/[path]/`
+          - `src/app/api/upload/[path]/route.ts` - Modified: 2026-09-01 20:22:59
+        - `src/app/api/upload/save/`
+          - `src/app/api/upload/save/route.ts` - Modified: 2026-09-09 01:28:37
+      - `src/app/api/uploads/`
+        - `src/app/api/uploads/form/`
+      - `src/app/api/user/`
+        - `src/app/api/user/messages/`
+          - `src/app/api/user/messages/[id]/`
+            - `src/app/api/user/messages/[id]/route.ts` - Modified: 2026-09-01 20:22:59
+          - `src/app/api/user/messages/route.ts` - Modified: 2026-09-01 20:22:59
+        - `src/app/api/user/search/`
+          - `src/app/api/user/search/route.ts` - Modified: 2026-09-01 20:22:59
+      - `src/app/api/wiki/`
+        - `src/app/api/wiki/route.ts` - Modified: 2026-09-01 20:22:59
+    - `src/app/clans/`
+      - `src/app/clans/page.tsx` - Modified: 2026-09-02 23:45:09
+    - `src/app/dashboard/`
+      - `src/app/dashboard/analytics/`
+        - `src/app/dashboard/analytics/page.tsx` - Modified: 2026-09-03 09:54:38
+      - `src/app/dashboard/announcements/`
+        - `src/app/dashboard/announcements/page.tsx` - Modified: 2026-09-06 00:30:56
+      - `src/app/dashboard/configuration/`
+        - `src/app/dashboard/configuration/general/`
+          - `src/app/dashboard/configuration/general/page.tsx` - Modified: 2026-09-03 22:25:08
+        - `src/app/dashboard/configuration/navigation/`
+          - `src/app/dashboard/configuration/navigation/page.tsx` - Modified: 2026-09-03 22:30:00
+        - `src/app/dashboard/configuration/privacy/`
+          - `src/app/dashboard/configuration/privacy/page.tsx` - Modified: 2026-09-06 00:19:50
+        - `src/app/dashboard/configuration/reactions/`
+          - `src/app/dashboard/configuration/reactions/page.tsx` - Modified: 2026-09-09 01:32:26
+        - `src/app/dashboard/configuration/registration/`
+          - `src/app/dashboard/configuration/registration/page.tsx` - Modified: 2026-09-06 00:19:50
+      - `src/app/dashboard/forum/`
+        - `src/app/dashboard/forum/forums/`
+          - `src/app/dashboard/forum/forums/page.tsx` - Modified: 2026-09-09 01:17:45
+        - `src/app/dashboard/forum/labels/`
+          - `src/app/dashboard/forum/labels/page.tsx` - Modified: 2026-09-03 22:15:50
+        - `src/app/dashboard/forum/settings/`
+          - `src/app/dashboard/forum/settings/page.tsx` - Modified: 2026-09-03 22:28:54
+      - `src/app/dashboard/groups/`
+        - `src/app/dashboard/groups/page.tsx` - Modified: 2026-09-04 11:22:48
+      - `src/app/dashboard/layout.tsx` - Modified: 2026-09-03 09:54:38
+      - `src/app/dashboard/overview/`
+        - `src/app/dashboard/overview/page.tsx` - Modified: 2026-09-02 23:43:24
+      - `src/app/dashboard/page.tsx` - Modified: 2026-09-03 10:49:36
+      - `src/app/dashboard/settings/`
+        - `src/app/dashboard/settings/page.tsx` - Modified: 2026-09-03 10:48:59
+      - `src/app/dashboard/store/`
+        - `src/app/dashboard/store/configuration/`
+          - `src/app/dashboard/store/configuration/page.tsx` - Modified: 2026-09-03 10:48:25
+        - `src/app/dashboard/store/coupons/`
+          - `src/app/dashboard/store/coupons/page.tsx` - Modified: 2026-09-03 10:48:25
+        - `src/app/dashboard/store/payments/`
+          - `src/app/dashboard/store/payments/page.tsx` - Modified: 2026-09-03 10:48:25
+        - `src/app/dashboard/store/products/`
+          - `src/app/dashboard/store/products/page.tsx` - Modified: 2026-09-03 10:48:25
+        - `src/app/dashboard/store/sales/`
+          - `src/app/dashboard/store/sales/page.tsx` - Modified: 2026-09-03 10:48:25
+        - `src/app/dashboard/store/subscriptions/`
+          - `src/app/dashboard/store/subscriptions/page.tsx` - Modified: 2026-09-03 10:48:25
+      - `src/app/dashboard/user-management/`
+        - `src/app/dashboard/user-management/punishments/`
+          - `src/app/dashboard/user-management/punishments/page.tsx` - Modified: 2026-09-04 11:29:10
+        - `src/app/dashboard/user-management/reports/`
+          - `src/app/dashboard/user-management/reports/page.tsx` - Modified: 2026-09-04 11:26:20
+        - `src/app/dashboard/user-management/users/`
+          - `src/app/dashboard/user-management/users/page.tsx` - Modified: 2026-09-03 10:48:18
+    - `src/app/forum/`
+      - `src/app/forum/page.tsx` - Modified: 2026-09-11 01:15:53
+      - `src/app/forum/subcategory/`
+        - `src/app/forum/subcategory/[id]/`
+          - `src/app/forum/subcategory/[id]/page.tsx` - Modified: 2026-09-02 23:49:41
+      - `src/app/forum/topic/`
+        - `src/app/forum/topic/[id]/`
+          - `src/app/forum/topic/[id]/page.test.tsx` - Modified: 2026-09-01 20:23:48
+          - `src/app/forum/topic/[id]/page.tsx` - Modified: 2026-09-08 20:10:54
+        - `src/app/forum/topic/add/`
+          - `src/app/forum/topic/add/page.tsx` - Modified: 2026-09-01 20:22:59
+        - `src/app/forum/topic/new/`
+          - `src/app/forum/topic/new/page.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/app/layout.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/app/login/`
+      - `src/app/login/page.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/app/members/`
+      - `src/app/members/page.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/app/messages/`
+      - `src/app/messages/[id]/`
+    - `src/app/page.tsx` - Modified: 2026-09-06 00:31:24
+    - `src/app/profile/`
+      - `src/app/profile/[id]/`
+        - `src/app/profile/[id]/page.tsx` - Modified: 2026-09-11 01:15:53
+      - `src/app/profile/page.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/app/profile/settings/`
+        - `src/app/profile/settings/alerts/`
+          - `src/app/profile/settings/alerts/page.tsx` - Modified: 2026-09-01 20:22:59
+        - `src/app/profile/settings/change-password/`
+          - `src/app/profile/settings/change-password/page.tsx` - Modified: 2026-09-01 20:22:59
+        - `src/app/profile/settings/connections/`
+          - `src/app/profile/settings/connections/page.tsx` - Modified: 2026-09-01 20:22:59
+        - `src/app/profile/settings/followed-topics/`
+          - `src/app/profile/settings/followed-topics/page.tsx` - Modified: 2026-09-01 20:22:59
+        - `src/app/profile/settings/layout.tsx` - Modified: 2026-09-02 23:47:08
+        - `src/app/profile/settings/messaging/`
+          - `src/app/profile/settings/messaging/[id]/`
+            - `src/app/profile/settings/messaging/[id]/page.tsx` - Modified: 2026-09-08 20:05:50
+          - `src/app/profile/settings/messaging/page.tsx` - Modified: 2026-09-08 20:05:50
+        - `src/app/profile/settings/overview/`
+          - `src/app/profile/settings/overview/page.tsx` - Modified: 2026-09-01 20:22:59
+        - `src/app/profile/settings/profile-settings/`
+          - `src/app/profile/settings/profile-settings/page.tsx` - Modified: 2026-09-03 10:00:54
+        - `src/app/profile/settings/verification/`
+          - `src/app/profile/settings/verification/page.tsx` - Modified: 2026-09-02 23:46:53
+    - `src/app/register/`
+      - `src/app/register/page.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/app/rules/`
+      - `src/app/rules/page.tsx` - Modified: 2026-09-08 00:06:39
+    - `src/app/wiki/`
+      - `src/app/wiki/page.tsx` - Modified: 2026-09-01 20:22:59
+  - `src/client/`
+    - `src/client/bootstrap.ts` - Modified: 2026-09-01 20:22:59
+    - `src/client/modal.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/client/modalUtils.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/client/navUtils.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/client/notification.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/client/theme.ts` - Modified: 2026-09-01 20:22:59
+    - `src/client/user.tsx` - Modified: 2026-09-01 20:22:59
+  - `src/components/`
+    - `src/components/announcement/`
+      - `src/components/announcement/AnnouncementCard.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/components/changePasswordForm.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/dashboard/`
+      - `src/components/dashboard/DashboardSection.tsx` - Modified: 2026-09-03 22:27:38
+      - `src/components/dashboard/DashboardUsers.tsx` - Modified: 2026-09-04 11:25:20
+      - `src/components/dashboard/StoreSection.tsx` - Modified: 2026-09-03 10:48:25
+    - `src/components/editor.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/footer.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/components/form/`
+      - `src/components/form/button.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/form/FormProvider.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/form/Select.tsx` - Modified: 2026-09-11 01:15:53
+      - `src/components/form/TextArea.tsx` - Modified: 2026-09-11 01:15:53
+      - `src/components/form/TextInput.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/components/forum/`
+      - `src/components/forum/ForumCategoryItem.tsx` - Modified: 2026-09-11 01:15:53
+      - `src/components/forum/ForumSubcategoryItem.tsx` - Modified: 2026-09-11 01:15:53
+      - `src/components/forum/index.ts` - Modified: 2026-09-01 20:22:59
+      - `src/components/forum/LastTopicInfo.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/loginForm.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/components/loginModal.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/logOut.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/messageReplyForm.tsx` - Modified: 2026-09-03 22:27:38
+    - `src/components/navbar/`
+    - `src/components/navbar.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/navbar/AuthMenu.tsx` - Modified: 2026-09-11 01:15:53
+      - `src/components/navbar/HeaderStatus.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/navbar/index.ts` - Modified: 2026-09-01 20:22:59
+      - `src/components/navbar/MainNavigation.tsx` - Modified: 2026-09-11 01:15:53
+      - `src/components/navbar/MobileNavigation.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/navbar/Navbar.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/navbar/UserMenu.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/notifcation.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/profileBar.tsx` - Modified: 2026-09-11 01:15:53
+    - `src/components/Test.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/ThemeToggle.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/Toast.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/toastContainer.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/topicCreationForm.tsx` - Modified: 2026-09-08 20:04:02
+    - `src/components/topicReplyForm.tsx` - Modified: 2026-09-08 20:10:54
+    - `src/components/ui/`
+      - `src/components/ui/Alert.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/ui/Button.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/ui/Card.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/ui/index.ts` - Modified: 2026-09-01 20:22:59
+    - `src/components/uploadForm.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/uploads/`
+      - `src/components/uploads/uploadFile.tsx` - Modified: 2026-09-01 20:22:59
+    - `src/components/userPicker/`
+      - `src/components/userPicker/UserPicker.test.tsx` - Modified: 2026-09-01 20:22:59
+      - `src/components/userPicker/UserPicker.tsx` - Modified: 2026-09-03 22:27:38
+    - `src/components/wiki.tsx` - Modified: 2026-09-01 20:22:59
+  - `src/env.js` - Modified: 2026-09-02 23:57:31
+  - `src/global.d.ts` - Modified: 2026-09-01 20:22:59
+  - `src/hooks/`
+    - `src/hooks/useForum.ts` - Modified: 2026-09-01 20:22:59
+  - `src/lib/`
+    - `src/lib/sanitize.ts` - Modified: 2026-09-01 20:22:59
+    - `src/lib/schemas/`
+      - `src/lib/schemas/loginSchema.ts` - Modified: 2026-09-01 20:22:59
+      - `src/lib/schemas/messageSchema.ts` - Modified: 2026-09-01 20:22:59
+      - `src/lib/schemas/messagingSchemas.test.ts` - Modified: 2026-09-03 10:07:20
+      - `src/lib/schemas/messagingSchemas.ts` - Modified: 2026-09-01 20:22:59
+      - `src/lib/schemas/topicSchemas.ts` - Modified: 2026-09-08 20:10:24
+    - `src/lib/useFormManager.ts` - Modified: 2026-09-01 20:22:59
+  - `src/server/`
+    - `src/server/announcements/`
+      - `src/server/announcements/announcements.ts` - Modified: 2026-09-06 00:29:54
+    - `src/server/auth/`
+      - `src/server/auth/actions/`
+        - `src/server/auth/actions/changePassword.ts` - Modified: 2026-09-01 20:22:59
+        - `src/server/auth/actions/logOut.ts` - Modified: 2026-09-01 20:22:59
+        - `src/server/auth/actions/messageActions.ts` - Modified: 2026-09-01 20:22:59
+        - `src/server/auth/actions/signIn.ts` - Modified: 2026-09-01 20:22:59
+        - `src/server/auth/actions/signUp.ts` - Modified: 2026-09-08 00:05:46
+      - `src/server/auth/authSchemas.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/auth/lib.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/auth/session.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/auth/utils/`
+        - `src/server/auth/utils/currentUser.ts` - Modified: 2026-09-01 20:22:59
+        - `src/server/auth/utils/defaultRole.ts` - Modified: 2026-09-01 20:22:59
+        - `src/server/auth/utils/getUser.ts` - Modified: 2026-09-01 20:22:59
+        - `src/server/auth/utils/getUserMessages.ts` - Modified: 2026-09-01 20:22:59
+        - `src/server/auth/utils/passwordHasher.ts` - Modified: 2026-09-01 20:22:59
+    - `src/server/clan/`
+      - `src/server/clan/clan.test.ts` - Modified: 2026-09-03 00:00:44
+      - `src/server/clan/clan.ts` - Modified: 2026-09-01 20:22:59
+    - `src/server/db.ts` - Modified: 2026-09-01 20:22:59
+    - `src/server/forum/`
+      - `src/server/forum/forum.edgecases.test.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/forum/forum.interactions.test.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/forum/forum.replies.edgecases.test.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/forum/forum.test.ts` - Modified: 2026-09-08 00:02:50
+      - `src/server/forum/forum.ts` - Modified: 2026-09-08 20:10:32
+    - `src/server/messaging/`
+      - `src/server/messaging/messaging.test.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/messaging/messaging.ts` - Modified: 2026-09-01 20:22:59
+    - `src/server/navigation/`
+      - `src/server/navigation/navGetter.ts` - Modified: 2026-09-01 20:22:59
+    - `src/server/s3.ts` - Modified: 2026-09-01 20:22:59
+    - `src/server/seed.ts.backup` - Modified: 2026-09-01 20:22:59
+    - `src/server/storage/`
+      - `src/server/storage/uploadMetadata.test.ts` - Modified: 2026-09-02 23:58:11
+      - `src/server/storage/uploadMetadata.ts` - Modified: 2026-09-02 23:52:57
+    - `src/server/types/`
+      - `src/server/types/clan.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/db.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/forum.ts` - Modified: 2026-09-08 20:10:24
+      - `src/server/types/messaging.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/minecraft.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/navigation.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/profile.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/role.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/settings.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/user.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/user-data.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/verification.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/types/wiki.ts` - Modified: 2026-09-01 20:22:59
+    - `src/server/utils/`
+      - `src/server/utils/colorUtils.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/utils/dateUtils.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/utils/dbUtils.ts` - Modified: 2026-09-01 20:22:59
+      - `src/server/utils/forumUtils.ts` - Modified: 2026-09-01 20:22:59
+    - `src/server/wiki/`
+      - `src/server/wiki/wiki.ts` - Modified: 2026-09-01 20:22:59
+  - `src/styles/`
+    - `src/styles/bootstrap/`
+      - `src/styles/bootstrap/bootstrap.min.css` - Modified: 2026-09-01 20:22:59
+    - `src/styles/cookies/`
+      - `src/styles/cookies/cookieconsent.min.css` - Modified: 2026-09-01 20:22:59
+    - `src/styles/fontawesome-free/`
+      - `src/styles/fontawesome-free/all.min.css` - Modified: 2026-09-01 20:22:59
+      - `src/styles/fontawesome-free/webfonts/`
+        - `src/styles/fontawesome-free/webfonts/fa-brands-400.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fontawesome-free/webfonts/fa-brands-400.woff2` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fontawesome-free/webfonts/fa-regular-400.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fontawesome-free/webfonts/fa-regular-400.woff2` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fontawesome-free/webfonts/fa-solid-900.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fontawesome-free/webfonts/fa-solid-900.woff2` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fontawesome-free/webfonts/fa-v4compatibility.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fontawesome-free/webfonts/fa-v4compatibility.woff2` - Modified: 2026-09-01 20:22:59
+    - `src/styles/fonts/`
+      - `src/styles/fonts/css.css` - Modified: 2026-09-01 20:22:59
+      - `src/styles/fonts/webfonts/`
+        - `src/styles/fonts/webfonts/fa-montserrat-200.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fonts/webfonts/fa-montserrat-300.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fonts/webfonts/fa-montserrat-400.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fonts/webfonts/fa-montserrat-500.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fonts/webfonts/fa-montserrat-600.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fonts/webfonts/fa-montserrat-700.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fonts/webfonts/fa-montserrat-800.ttf` - Modified: 2026-09-01 20:22:59
+        - `src/styles/fonts/webfonts/fa-montserrat-900.ttf` - Modified: 2026-09-01 20:22:59
+    - `src/styles/prism/`
+      - `src/styles/prism/prism_light_default.css` - Modified: 2026-09-01 20:22:59
+    - `src/styles/theme/`
+      - `src/styles/theme/theme.css` - Modified: 2026-09-03 10:50:03
+      - `src/styles/theme/theme-dark.css` - Modified: 2026-09-03 10:50:03
+    - `src/styles/toastr/`
+      - `src/styles/toastr/toastr.min.css` - Modified: 2026-09-01 20:22:59
+  - `src/utils/`
+    - `src/utils/apiHandler.ts` - Modified: 2026-09-01 20:22:59
+    - `src/utils/authUtils.ts` - Modified: 2026-09-01 20:22:59
+    - `src/utils/dateUtils.ts` - Modified: 2026-09-01 20:22:59
+    - `src/utils/errorHandler.ts` - Modified: 2026-09-01 20:22:59
+    - `src/utils/styleUtils.ts` - Modified: 2026-09-01 20:22:59
