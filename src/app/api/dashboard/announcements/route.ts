@@ -3,6 +3,10 @@ import { getCurrentUser } from "~/server/auth/utils/currentUser";
 import { db } from "~/server/db";
 import { z } from "zod";
 
+const announcementDeleteSchema = z.object({
+  id: z.number().int().positive(),
+});
+
 function isStaff(user: Awaited<ReturnType<typeof getCurrentUser>>): boolean {
   return Boolean(user?.group?.team || user?.group?.highTeam);
 }
@@ -41,9 +45,9 @@ export async function DELETE(request: Request): Promise<NextResponse> {
   const user = await getCurrentUser();
   if (!user || !isStaff(user)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   try {
-    const payload = (await request.json()) as Record<string, unknown>;
-    const id = Number(payload.id);
-    if (!Number.isInteger(id) || id <= 0) return NextResponse.json({ error: "A valid announcement id is required." }, { status: 400 });
+    const payload = announcementDeleteSchema.safeParse(await request.json());
+    if (!payload.success) return NextResponse.json({ error: "A valid announcement id is required." }, { status: 400 });
+    const { id } = payload.data;
     await db.$executeRaw`DELETE FROM announcements WHERE id = ${id}`;
     return NextResponse.json({ success: true });
   } catch (error) {
