@@ -813,3 +813,19 @@ deletes.
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/messages/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/messages/[id]/route.ts
   - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/reports/route.ts
+
+41. Dashboard announcement and forum-label API validation
+
+- Added strict request schemas for announcement deletion and forum-label
+  creation/deletion. Dashboard label listing is now staff-authorized instead
+  of exposing the management collection to unauthenticated or non-staff
+  callers.
+- Added focused tests covering malformed announcement IDs, label payloads,
+  and label-list authorization.
+- Validation: focused dashboard API tests passed (3 tests) and
+  `npm run check` passed.
+- Key files:
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/announcements/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/forum/labels/route.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/announcements/route.test.ts
+  - C:/Users/win11/Desktop/Backup/T3-Project.worktrees/todo-list-prioritization-plan/src/app/api/dashboard/forum/labels/route.test.ts
