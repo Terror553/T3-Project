@@ -72,4 +72,19 @@ describe("admin bans API", () => {
       data: { bannerUUID: "4", bannedUUID: "uuid", reason: "Rule violation" },
     });
   });
+
+  it("rejects non-string ban fields before writing", async () => {
+    vi.mocked(getCurrentUser).mockResolvedValue({
+      id: 4,
+      group: { team: 1, highTeam: 0 },
+    });
+    const route = await import("./route");
+
+    const response = await route.POST({
+      json: async () => ({ bannedUUID: 42, reason: "Rule violation" }),
+    } as Request);
+
+    expect(response.status).toBe(400);
+    expect(db.userBan.create).not.toHaveBeenCalled();
+  });
 });
