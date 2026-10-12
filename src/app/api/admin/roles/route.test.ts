@@ -26,4 +26,15 @@ describe("admin roles API", () => {
       data: { name: "Helper", color: "&7", priority: 999, team: 0, highTeam: 0, default: 0, gradient: 0 },
     });
   });
+
+  it("rejects malformed numeric role fields before writing", async () => {
+    vi.mocked(getCurrentUser).mockResolvedValue({ id: 2, group: { team: 1, highTeam: 0 } });
+    const route = await import("./route");
+    const response = await route.POST({
+      json: async () => ({ name: "Helper", priority: "not-a-number" }),
+    } as Request);
+
+    expect(response.status).toBe(400);
+    expect(db.group.create).not.toHaveBeenCalled();
+  });
 });
